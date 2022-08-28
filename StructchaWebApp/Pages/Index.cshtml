@@ -1,4 +1,8 @@
 ﻿@page
+@using StructchaWebApp.Pages.Shared;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -16,4 +20,33 @@
         <li><a href="./">Construction management tools</a> - Keep track of what is happening with onsite and offsite manufacture and construction</li>
         <li><a href="./">Logistics management</a> - Keep track of where parts are when being transported</li>
     </ul>
+
+    @if (SignInManager.IsSignedIn(User)) {
+        //AppManager app = new AppManager(UserManager.GetUserId(User),"JointDraw");
+        <div name="StartJD" class="appButtonLarge">
+            <form name="formJointDraw" method="post">
+                <h3>JointDraw</h3>
+                @{
+                    if (_Common.userSoftwareActive(User.Claims.First().Value, "JointDraw"))
+                    {
+                        <p>You currently have a session open for JointDraw</p>
+                        <input type="submit" name="jointDrawClose" />
+                    } else {
+                        <p>There are @_Common.numberOfSeat("JointDraw") seats free for JointDraw</p>
+                        @*<a href="Structcha:JointDraw:Test:Test">Start Structcha Joint Designer</a>*@
+                        @*<input type="hidden" name="StartJointDraw"/>*@
+                        <input type="submit" name="jointDrawSubmit" />
+                    }
+
+
+
+                }
+
+            </form>
+
+            @*<a href="Structcha:JointDraw:@app.user:@app.session">Start Structcha Joint Designer</a>*@
+            @*Looking to load a div saying that saying the session is starting, then another hyperlink to start the program once the database has the required infomation stored *@
+        </div>
+    }
+
 </div>

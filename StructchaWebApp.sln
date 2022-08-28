@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructchaWebApp", "StructchaWebApp\StructchaWebApp.csproj", "{541F13AA-4385-43BC-86CA-884AA1217269}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructchaWebApp", "StructchaWebApp\StructchaWebApp.csproj", "{541F13AA-4385-43BC-86CA-884AA1217269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

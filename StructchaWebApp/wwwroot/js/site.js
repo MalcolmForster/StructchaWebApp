@@ -2,3 +2,19 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+
+
+/*This method is used when a software (such as Joint Draw) is started from the webapp.
+ *  0. Might need to check if the app is already loaded?
+ *  
+ *  TODO: Add columns to DB to say if webapp has made connection and if localapp has too?
+ *  
+    1. Refresh div, replacing it with loading symbol, create alert when closing tab stating that "If this tab is closed, app connection will be lost"
+    2. Initilise a new app object in C# which creates a session ID etc
+    3. Periodically check database using C# to see if sessionID exists in database
+    4. When sessionID exists, start the local app and pass info such as user, company, app requested and sessionID information to it.
+    5. Change div to say that the app is started
+    6. Check every minute or so to see if the app is still connected
+*/
+
