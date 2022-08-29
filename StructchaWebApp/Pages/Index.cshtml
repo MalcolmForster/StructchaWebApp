@@ -27,23 +27,18 @@
             <form name="formJointDraw" method="post">
                 <h3>JointDraw</h3>
                 @{
-                    if (_Common.userSoftwareActive(User.Claims.First().Value, "JointDraw"))
+                    string softwareKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
+                    if (softwareKey != "")
                     {
-                        <p>You currently have a session open for JointDraw</p>
-                        <input type="submit" name="jointDrawClose" />
+                            <p>You currently have a session open for JointDraw</p>
+                            <a href="Structcha:@softwareKey">Start Structcha Joint Designer</a>
+                            <input type="submit" name="jointDrawClose" />
                     } else {
-                        <p>There are @_Common.numberOfSeat("JointDraw") seats free for JointDraw</p>
-                        @*<a href="Structcha:JointDraw:Test:Test">Start Structcha Joint Designer</a>*@
-                        @*<input type="hidden" name="StartJointDraw"/>*@
-                        <input type="submit" name="jointDrawSubmit" />
+                            <p>There are @_Common.numberOfSeat("JointDraw") seats free for JointDraw</p>
+                            <input type="submit" name="jointDrawSubmit" />
                     }
-
-
-
                 }
-
             </form>
-
             @*<a href="Structcha:JointDraw:@app.user:@app.session">Start Structcha Joint Designer</a>*@
             @*Looking to load a div saying that saying the session is starting, then another hyperlink to start the program once the database has the required infomation stored *@
         </div>

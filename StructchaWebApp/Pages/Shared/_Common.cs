@@ -16,7 +16,9 @@ namespace StructchaWebApp.Pages.Shared
             return conn;
         }
 
-        public static bool userSoftwareActive(string uId, string software)
+        
+
+        public static string userSoftwareActive(string uId, string software)
         {
             SqlConnection conn = connDB();
 
@@ -25,19 +27,15 @@ namespace StructchaWebApp.Pages.Shared
             comm.Parameters.AddWithValue("@software", software);
             comm.Parameters.AddWithValue("@userId", uId);
 
-            using (SqlDataReader rdr = comm.ExecuteReader())
+            string softwareKey = comm.ExecuteScalar()?.ToString();
+            conn.Close();
+
+            if(softwareKey == null)
             {
-                
-                if (rdr.HasRows)
-                {
-                    conn.Close();
-                    return true;
-                } else
-                {
-                    conn.Close();
-                    return false;
-                }
+                softwareKey = "";
             }
+            return softwareKey;
+
         }
 
         public static int numberOfSeat(string software)
@@ -71,9 +69,7 @@ namespace StructchaWebApp.Pages.Shared
             comm.Parameters.AddWithValue("@uId", uId);
             comm.ExecuteNonQuery();
 
-            conn.Close();
-
-            
+            conn.Close();            
         }
 
         public static string userCompany(string uId)
