@@ -23,19 +23,34 @@
 
     @if (SignInManager.IsSignedIn(User)) {
         //AppManager app = new AppManager(UserManager.GetUserId(User),"JointDraw");
+        //Unsure if need a connect to GUI function
+@*        <div name="guiConnect" class="guiConnect">
+            <form name="guiConForm" method="post">
+                <p>Enter your one time password shown on the GUI:</p>
+                <input type="text" width="20" name="guiOTP" id="guiOTP"/>
+                <input type="submit" value="Connect to GUI"/>
+            </form>
+        </div>
+        <br />*@
         <div name="StartJD" class="appButtonLarge">
             <form name="formJointDraw" method="post">
                 <h3>JointDraw</h3>
                 @{
+                    //Turn this into a forloop for each software available to the user. A method ofreturning string[] (or perhaps move to objects) is needed to find the users softwares
+                    
                     string softwareKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
                     if (softwareKey != "")
                     {
-                            <p>You currently have a session open for JointDraw</p>
-                            <a href="Structcha:@softwareKey">Start Structcha Joint Designer</a>
-                            <input type="submit" name="jointDrawClose" />
-                    } else {
-                            <p>There are @_Common.numberOfSeat("JointDraw") seats free for JointDraw</p>
-                            <input type="submit" name="jointDrawSubmit" />
+                        <p>You currently have a session open for JointDraw</p>
+                        <a href="Structcha:@softwareKey">Start Structcha Joint Designer</a>
+                        <br />
+                        <input type="submit" name="jointDrawClose" value="Stop session" />
+                    }
+                    else
+                    {
+                        <p>There are @_Common.numberOfSeat("JointDraw") seats free for JointDraw</p>
+                        <br />
+                        <input type="submit" name="jointDrawSubmit" value="Start session" />
                     }
                 }
             </form>

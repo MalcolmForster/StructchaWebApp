@@ -1,3 +1,9 @@
+:root {
+    --dark-bg: lightslategray;
+    --light-bg: lightsteelblue;
+}
+
+
 html {
   font-size: 14px;
 }
@@ -23,10 +29,11 @@ body {
 }
 
 .appButtonLarge {
-    background-color:bisque;
+    background-color:var(--light-bg);
     width:400px;
     height:200px;
     text-align:center;
     padding-top:35px;
-    font-size:40px;
+    border-radius:10px;
+    /*font-size:40px;*/
 }

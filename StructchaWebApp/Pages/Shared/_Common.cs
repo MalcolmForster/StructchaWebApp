@@ -50,7 +50,6 @@ namespace StructchaWebApp.Pages.Shared
             conn.Close();
 
             return count;
-
         }
 
         public static void closeSoftware(string uId, string software)
