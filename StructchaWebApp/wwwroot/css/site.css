@@ -1,8 +1,20 @@
 :root {
     --dark-bg: lightslategray;
     --light-bg: lightsteelblue;
+    --background-colour: rgb(18 18 18);
+    --highlight-1: rgb(255 171 111);
+    --highlight-2: rgb(187 78 0);
+    --highlight-3: rgb(255 106 0);
 }
 
+.bodyContainer {
+    width:100%;
+    /*margin:0;*/
+    padding:0;
+    margin-left:0;
+    margin-right:0;
+    max-width:100%;
+}
 
 html {
   font-size: 14px;
@@ -21,11 +33,18 @@ html {
 
 body {
   margin-bottom: 60px;
+  color:gray;
+  background-color: var(--background-colour)
+}
+
+p {
+    text-align:justify;
 }
 
 .text-center li {
     text-align:center;
     list-style:circle inside;
+    width:100vw;
 }
 
 .appButtonLarge {
@@ -36,4 +55,31 @@ body {
     padding-top:35px;
     border-radius:10px;
     /*font-size:40px;*/
+}
+
+.fadeIn {
+    opacity: 1;
+}
+
+.fullView {
+    /*margin-top: 50px;*/
+    padding: 50px;
+    background-color: var(--background-colour);
+    height: 60vh;
+    color: white;
+    position:sticky;
+    top:0;
+}
+
+.fillView {
+    min-height:30vh;
+    /*height:100%;*/
+}
+
+.defaultPage {
+    max-width:1400px;
+    padding:20px;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
 }

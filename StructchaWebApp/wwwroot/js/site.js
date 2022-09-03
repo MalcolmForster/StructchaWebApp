@@ -18,5 +18,31 @@
     6. Check every minute or so to see if the app is still connected
 */
 
+$(window).on("load", function () {
+    var navHeight = $('#header').height();
+    $(window).scroll(function () {
+        var windowBottom = $(this).scrollTop() + $(this).innerHeight();
+        $(".fadeIn").each(function () {
+            $(this).css("top", navHeight);
+            $(this).css("height", window.innerHeight - navHeight);
+            /* Check the location of each desired element */
+            var objectBottom = $(this).offset().top + $(this).outerHeight();
+            var objectTop = $(this).offset().top - $(window).scrollTop();
+            //console.log($(this).attr('name'));          
+
+
+            /* If the element is completely within bounds of the window, fade it in */
+            //if (objectBottom < windowBottom) { //object comes into view (scrolling down)
+            if (objectTop == navHeight) {
+                if ($(this).css("opacity") == 0) {
+                    $(this).fadeTo(500, 1);
+                }
+            } else { //object goes out of view (scrolling up)
+                if ($(this).css("opacity") == 1) { $(this).fadeTo(0, 0); }
+            }
+        });
+    }).scroll(); //invoke scroll-handler on page-load
+});
+
 
 

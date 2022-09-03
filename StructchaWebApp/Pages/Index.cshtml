@@ -8,20 +8,12 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Structcha Homepage</h1>
-    <p>Here the user can select and open analysis applications to use, check current tasks, manage other team members, keep track of work both onsite and offsite, and plan their next structuralsteps</p>
-    <p>The applications below are containerised</p>
-    <ul>
-        <li><a href="./">Joint Drawer</a> - Allows for input of a joint from 3rd party software or the ability to draw one from scratch using Structcha's own inhouse designed drafting software.</li>
-        <li><a href="./">Steel Joint Designer</a> - Specialised design and detailer software for structural steel joints</li>
-        <li><a href="./">Concrete Joint Designer</a> - Specialised design and detailer software for concrete joints</li>
-        <li><a href="./">Joint FEA</a> - Niche finite element software for structural joint analysis</li>
-        <li><a href="./">Construction management tools</a> - Keep track of what is happening with onsite and offsite manufacture and construction</li>
-        <li><a href="./">Logistics management</a> - Keep track of where parts are when being transported</li>
-    </ul>
+<div class="text-center bodyContainer">
+    <h1 class="display-4">Structcha</h1>
 
     @if (SignInManager.IsSignedIn(User)) {
+        <p>Here the user can select and open analysis applications to use, check current tasks, manage other team members, keep track of work both onsite and offsite, and plan their next structural engineering steps</p>
+
         //AppManager app = new AppManager(UserManager.GetUserId(User),"JointDraw");
         //Unsure if need a connect to GUI function
 @*        <div name="guiConnect" class="guiConnect">
@@ -37,7 +29,6 @@
                 <h3>JointDraw</h3>
                 @{
                     //Turn this into a forloop for each software available to the user. A method ofreturning string[] (or perhaps move to objects) is needed to find the users softwares
-                    
                     string softwareKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
                     if (softwareKey != "")
                     {
@@ -58,5 +49,33 @@
             @*Looking to load a div saying that saying the session is starting, then another hyperlink to start the program once the database has the required infomation stored *@
         </div>
     }
+    else
+    {
+        <div class="defaultPage">
+            <h2>The advanced structural toolbox</h2>
+            <h4>Designed by stuctural engineers, for structural engineers</h4><br />
+            <h3>What is Structcha?</h3>
+            <p>
+                Structcha is a collection of useful software tools that every structural engineer should have to perform their daily duties. These include software packages for inital project arrangements, detailing, drafting, team management, contractor management, logistics management, offsite fabrication management and onsite fabrication management, and almost everything inbetween! These packages are designed by engineers feedback from the field, and are designed around two key ideas, increasing efficiency and increasing accuracy.<br />
+                <h3>Why use Structcha?</h3>
+            <p>
+                We are dedicated to producing the most useful array of software for the structrual engineering industry. Made by passionate Software and Structural engineers, we provide the best service we can for those who utilise our services.<br />
+                Stuctcha allows it's clients the ablity to pay for what they actually use, allowing for more streamlined select of software specific to their needs, and saving them money as well.<br />
+                Our datacentres are the best in class at allowing engineers, contractors, architechs and management staff access to their projects information, be it drafting, analysis or mangement tools. We also offer packages that take advantage of cloud Software as a Service strucutal analysis and FEA programs, specific to the strucutral engineering field and can also be adjusted to suit the style required by our clients.
+            </p>
 
+            <h3>Drafting and Detailing</h3>
+            <p>Allows for in put of a joint from 3rd party software or the ability to draw one from scratch using Structcha's own inhouse designed drafting software.</p>
+            <a asp-page="/PackagesDraft">Click here to see available drafting packages</a>
+
+            <h3>Engineering and Analysis</h3>
+            <p>Allows for in put of a joint from 3rd party software or the ability to draw one from scratch using Structcha's own inhouse designed drafting software.</p>
+            <a asp-page="/PackagesAnalysis">Click here to see available engineering and analysis packages</a>
+
+            <h3>Logistics and Fabrication manangement</h3>
+            <p>Allows for in put of a joint from 3rd party software or the ability to draw one from scratch using Structcha's own inhouse designed drafting software.</p>
+            <a asp-page="/PackagesManage">Click here to see available management packages</a>
+
+        </div>
+    }
 </div>
