@@ -28,15 +28,11 @@ $(window).on("load", function () {
             /* Check the location of each desired element */
             var objectBottom = $(this).offset().top + $(this).outerHeight();
             var objectTop = $(this).offset().top - $(window).scrollTop();
-            //console.log($(this).attr('name'));          
-
-
+            //console.log($(this).attr('name')); 
             /* If the element is completely within bounds of the window, fade it in */
             //if (objectBottom < windowBottom) { //object comes into view (scrolling down)
             if (objectTop == navHeight) {
-                if ($(this).css("opacity") == 0) {
-                    $(this).fadeTo(500, 1);
-                }
+                if ($(this).css("opacity") == 0) { $(this).fadeTo(500, 1); }
             } else { //object goes out of view (scrolling up)
                 if ($(this).css("opacity") == 1) { $(this).fadeTo(0, 0); }
             }
