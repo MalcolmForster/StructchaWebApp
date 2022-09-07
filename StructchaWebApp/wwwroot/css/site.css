@@ -5,6 +5,10 @@
     --highlight-1: rgb(255 171 111);
     --highlight-2: rgb(187 78 0);
     --highlight-3: rgb(255 106 0);
+    --userInterfaceHeight: 90vh;
+    --task-bar-width: 300px;
+    --main-view-width: calc(100vw - var(--task-bar-width));
+    --softwareManagerHeight: 120px;
 }
 
 .bodyContainer {
@@ -57,6 +61,19 @@ p {
     /*font-size:40px;*/
 }
 
+.appButtonSmall {
+    background-color: var(--light-bg);
+    width: 250px;
+    margin: 20px;
+    height: calc(100% - 40px);
+    text-align: center;
+    padding: 10px;
+}
+
+.appButtonSmall h3 {
+    font-size:20px;
+}
+
 .fadeIn {
     opacity: 1;
 }
@@ -83,3 +100,88 @@ p {
     margin-right:auto;
     text-align:center;
 }
+
+.task-bar {
+    /*max-width:600px;*/
+    width:var(--task-bar-width);
+    /*min-width:200px;*/
+    height:var(--userInterfaceHeight);
+    background-color: white;
+    float:left;
+}
+
+.software-manager {
+    width: var(--main-view-width);
+    height: var(--softwareManagerHeight);
+    float: right;
+    background-color: darkslateblue;
+}
+
+.task-bar h3 {
+    background-color: darkgrey;
+    padding:10px;
+}
+
+.user-interface {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+}
+
+
+.appButtonSoftwareManager {
+    float:left;
+    display:inline-block;
+}
+
+
+.taskBarSection {
+    height: 30vh;
+}
+
+.taskBarList {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height:25vh;
+    
+}
+
+    .taskBarList li {
+        text-align: left;
+    }
+
+.main-view {
+    height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight));
+    width: var(--main-view-width);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    float: right;
+    background-color: wheat;
+}
+
+.main-display {
+    width: var(--main-view-width)-40px;
+    margin:20px;
+    background-color:aliceblue;
+    min-height: 50vh;
+}
+
+
+
+.dash-div {
+    background: var(--dark-bg);
+    width:100%;
+    border-radius:10px;
+    padding:10px;
+    margin-top:10px;
+    color:black;
+}
+    .dash-div h4 {
+        text-align: center;
+        color: black;
+    }
+
+    .dash-div h3 {
+        text-align:center;
+        color:var(--light-bg)
+    }
+

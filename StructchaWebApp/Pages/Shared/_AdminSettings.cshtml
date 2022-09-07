@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@using Microsoft.Data.Sql;
+@{
+    <div class="dash-div">
+        <h3>Admin Tools</h3>
+
+        <h4>Add/delete current roles</h4>
+        @{            
+            var roles = RoleManager.Roles.ToList();
+            if (roles.Count == 0){
+                <p>No Roles Found</p>
+            } else {
+                <ul>
+                @foreach (IdentityRole s in roles) {                                                               
+                    <li>@s.Name</li>
+                }
+                </ul>
+            }            
+        }
+
+        <b>Create a New Role: </b>
+        <form asp-page-handler="NewRoleSubmit" method="post">
+            <input type="text" id="RoleName" runat="server"></input>
+            <button type="submit" id="CreateRoleButton">Create New Role</button>
+        </form>
+
+        <h4>Add/delete companys</h4>
+        <h4>Assign roles to users</h4>
+    </div>
+}

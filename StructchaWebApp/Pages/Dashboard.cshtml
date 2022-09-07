@@ -1,0 +1,19 @@
+﻿@page
+@using StructchaWebApp.Pages.Shared;
+@using Microsoft.AspNetCore.Identity
+@model DashboardModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@using Microsoft.Data.Sql;
+@{
+    ViewData["Title"] = @User.Identity?.Name! + "'s Dashboard";
+}
+
+@{
+    <h2>@User.Identity?.Name's dashboard</h2>
+    if (DashboardModel.superAdmin(User.Claims.First().Value)) {
+        <partial name="~/Pages/Shared/_AdminSettings.cshtml" />
+    }
+}
+
+

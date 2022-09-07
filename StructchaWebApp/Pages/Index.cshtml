@@ -9,14 +9,13 @@
 }
 
 <div class="text-center bodyContainer">
-    <h1 class="display-4">Structcha</h1>
+
 
     @if (SignInManager.IsSignedIn(User)) {
-        <p>Here the user can select and open analysis applications to use, check current tasks, manage other team members, keep track of work both onsite and offsite, and plan their next structural engineering steps</p>
 
         //AppManager app = new AppManager(UserManager.GetUserId(User),"JointDraw");
         //Unsure if need a connect to GUI function
-@*        <div name="guiConnect" class="guiConnect">
+        @*        <div name="guiConnect" class="guiConnect">
             <form name="guiConForm" method="post">
                 <p>Enter your one time password shown on the GUI:</p>
                 <input type="text" width="20" name="guiOTP" id="guiOTP"/>
@@ -24,34 +23,91 @@
             </form>
         </div>
         <br />*@
-        <div name="StartJD" class="appButtonLarge">
-            <form name="formJointDraw" method="post">
-                <h3>JointDraw</h3>
-                @{
-                    //Turn this into a forloop for each software available to the user. A method ofreturning string[] (or perhaps move to objects) is needed to find the users softwares
-                    string softwareKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
-                    if (softwareKey != "")
-                    {
-                        <p>You currently have a session open for JointDraw</p>
-                        <a href="Structcha:@softwareKey">Start Structcha Joint Designer</a>
-                        <br />
-                        <input type="submit" name="jointDrawClose" value="Stop session" />
-                    }
-                    else
-                    {
-                        <p>There are @_Common.numberOfSeat("JointDraw") seats free for JointDraw</p>
-                        <br />
-                        <input type="submit" name="jointDrawSubmit" value="Start session" />
-                    }
-                }
-            </form>
-            @*<a href="Structcha:JointDraw:@app.user:@app.session">Start Structcha Joint Designer</a>*@
-            @*Looking to load a div saying that saying the session is starting, then another hyperlink to start the program once the database has the required infomation stored *@
+
+        <div name="userInterface" class="user-interface">
+            <div name="softwareManager" class="software-manager">
+                <div name="StartJD" class="appButtonSmall appButtonSoftwareManager">
+                    <form name="formJointDraw" method="post">
+                        @{
+                            //Turn this into a forloop for each software available to the user. A method ofreturning string[] (or perhaps move to objects) is needed to find the users softwares
+                            string jointDrawKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
+                            if (jointDrawKey != "")
+                            {
+                                <a href="Structcha:@jointDrawKey">Open Current JointDraw Session</a>
+                                <input type="submit" name="jointDrawClose" value="Stop session" />
+                            }
+                            else
+                            {
+                                <h3>JointDraw</h3>
+                                <label>@_Common.numberOfSeat("JointDraw") seats free</label>
+                                <input type="submit" name="jointDrawSubmit" value="Start session" />
+                            }
+                        }
+                    </form>
+                </div>
+
+                <div name="StartJD" class="appButtonSmall appButtonSoftwareManager">
+                    <form name="formJointDraw" method="post">
+                        @{
+                            //Turn this into a forloop for each software available to the user. A method ofreturning string[] (or perhaps move to objects) is needed to find the users softwares
+                            string anotherKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
+                            if (anotherKey != "")
+                            {
+                                            <a href="Structcha:@anotherKey">Open Current JointDraw Session</a>
+                                            <input type="submit" name="jointDrawClose" value="Stop session" />
+                            }
+                            else
+                            {
+                                            <h3>JointDraw</h3>
+                                            <label>@_Common.numberOfSeat("JointDraw") seats free</label>
+                                            <input type="submit" name="jointDrawSubmit" value="Start session" />
+                            }
+                        }
+                    </form>
+                </div>
+            </div>
+
+
+            <div name="taskBar" class="task-bar">
+                <div class="taskBarSection">
+                    <h3>Project Updates/Messages</h3>              
+                        @{
+                            string[] updates = { "Here is an update", "And another update", "How about another update", "Oh look, another update!", "And another update", "How about another update", "Oh look, another update!"};
+                        }
+                        <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="updates"/>
+                </div>
+                <div class="taskBarSection">
+                    <h3>Assigned Tasks</h3>
+                    @{string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };}
+                    <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="assignments"/>
+                </div>
+                <div class="taskBarSection">
+                    <h3>Selfset Tasks</h3>
+                        @{
+                            //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
+                            string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
+                        }
+                        <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="selfAssigned" />
+                </div>
+            </div>
+
+
+            <div name="mainView" class="main-view">
+                <h2>@User.Identity?.Name's dashboard</h2>
+                <div name="mainDisplay" class="main-display">
+
+                </div>
+            </div>
         </div>
+
+@*            <a href="Structcha:JointDraw:@app.user:@app.session">Start Structcha Joint Designer</a>
+            Looking to load a div saying that saying the session is starting, then another hyperlink to start the program once the database has the required infomation stored *@
+        
     }
     else
     {
         <div class="defaultPage">
+            <h1 class="display-4">Structcha</h1>
             <h2>The advanced structural toolbox</h2>
             <h4>Designed by stuctural engineers, for structural engineers</h4><br />
             <h3>What is Structcha?</h3>
@@ -78,4 +134,9 @@
 
         </div>
     }
+
+
+
+
+
 </div>
