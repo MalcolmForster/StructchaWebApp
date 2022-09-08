@@ -9,14 +9,16 @@ using System.Runtime.CompilerServices;
 namespace StructchaWebApp.Pages
 {
     public class DashboardModel : PageModel
-    {               
+    {
+        public AdminDash adminDash { get; set; }
         public void OnGet()
         {
+
         }
 
         public void OnPostNewRoleSubmit()
         {
-            Console.WriteLine("Test");
+            adminDash.addRole();
         }
 
         public static bool superAdmin(string userID)
@@ -27,7 +29,6 @@ namespace StructchaWebApp.Pages
             
             comm.Parameters.AddWithValue("@userID", userID);
 
-
             if(comm.ExecuteScalar() != null)
             {
                 conn.Close();
@@ -36,7 +37,7 @@ namespace StructchaWebApp.Pages
             {
                 conn.Close();
                 return false;
-            }             
+            }
         }
     }
 }

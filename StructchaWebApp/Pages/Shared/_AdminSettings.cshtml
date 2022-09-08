@@ -2,14 +2,17 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 @inject RoleManager<IdentityRole> RoleManager
-@using Microsoft.Data.Sql;
+@using Microsoft.Data.Sql
+@model DashboardModel
+
 @{
     <div class="dash-div">
         <h3>Admin Tools</h3>
 
         <h4>Add/delete current roles</h4>
-        @{            
-            var roles = RoleManager.Roles.ToList();
+        @{
+            Model.adminDash = new AdminDash(RoleManager);
+            var roles = Model.adminDash.AllUserRoles();
             if (roles.Count == 0){
                 <p>No Roles Found</p>
             } else {
