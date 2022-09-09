@@ -5,6 +5,7 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 @using Microsoft.Data.Sql;
+
 @{
     ViewData["Title"] = @User.Identity?.Name! + "'s Dashboard";
 }
