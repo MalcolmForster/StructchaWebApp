@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Data;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -13,6 +14,14 @@ namespace StructchaWebApp.Pages.Shared
         public List<IdentityRole> AllUserRoles()
         {
             var roles = roleManager.Roles.ToList();
+            foreach(IdentityRole role in roles)
+            {
+                if(role.Name == "admin")
+                {
+                    roles.Remove(role);
+                    break;
+                }                
+            }            
             return roles;
         }
 
@@ -30,7 +39,6 @@ namespace StructchaWebApp.Pages.Shared
 
             if (!dup)
             {
-
                 IdentityRole identityRole = new IdentityRole();
                 identityRole.Name = role;
 
@@ -42,9 +50,22 @@ namespace StructchaWebApp.Pages.Shared
             //method to report if the role was added or not (as it was a duplicate)
         }
 
-        public void deleteRole()
+        public async Task deleteRole(string role)
         {
+            string _remove = "_remove";
+            int len = role.Length - _remove.Length;
+            role = role.Substring(0,len);
+            IdentityRole identityRole;
 
+            foreach (IdentityRole ir in AllUserRoles())
+            {
+                if (ir.Name == role)
+                {
+                    identityRole = ir;
+                    await roleManager.DeleteAsync(identityRole);
+                    break;
+                }
+            }            
         }
 
         public void assignRole()

@@ -14,16 +14,18 @@
             if (roles.Count == 0){
                 <p>No Roles Found</p>
             } else {
-                <ul>
-                @foreach (IdentityRole s in roles) {                                                               
-                    <li>@s.Name</li>
-                }
-                </ul>
+                <form asp-page-handler="RoleRemove" method="post" style="text-align:center">
+                    @foreach (IdentityRole s in roles)
+                    {
+                        <l>@s.Name </l><button type="submit" name = "deleteRoleButton"  value=@String.Concat(s.Name,"_Remove")>Remove</button><br/>
+                    }                
+                </form>
+
             }            
         }
 
-        <b>Create a New Role: </b>
-        <form asp-page-handler="NewRoleSubmit" method="post">
+        <h5 style="text-align:center">Create a New Role: </h5>
+        <form asp-page-handler="NewRoleSubmit" method="post" style="text-align:center">
             <input type="text" name="roleName"/>
             <button type="submit" id="CreateRoleButton">Create New Role</button>
         </form>

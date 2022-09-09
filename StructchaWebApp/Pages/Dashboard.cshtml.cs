@@ -28,12 +28,16 @@ namespace StructchaWebApp.Pages
 
         public async Task OnPostNewRoleSubmit()
         {
-            
-            int i = ModelState.Count;
             string s = Request.Form["roleName"];
             //adminDash.addRole(s);
 
             await adminDash.addRole(s);
+        }
+
+        public async Task OnPostRoleRemove()
+        {
+            string s = Request.Form["deleteRoleButton"];
+            await adminDash.deleteRole(s);
         }
 
         public static bool superAdmin(string userID)
