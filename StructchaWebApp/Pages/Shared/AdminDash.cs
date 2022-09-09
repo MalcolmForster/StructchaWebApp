@@ -25,9 +25,9 @@ namespace StructchaWebApp.Pages.Shared
             return roles;
         }
 
-
         public async Task addRole(string role)
         {
+            role = role.Replace(" ", "_");
             List<string> allRoles = new List<string>();                
             AllUserRoles().ForEach(s => allRoles.Add(s.Name));
 
