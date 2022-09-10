@@ -3,34 +3,83 @@
 @using Microsoft.Data.Sql
 
 @{
-    <div class="dash-div">
+
+
+    
+    <div class="dash-div" name="superAdminTools">
         <h3>Admin Tools</h3>
+        @*---------------------------Role tools--------------------------*@
+        <div name="roleAdminTools">
+            <h4>Add/delete current roles</h4>
+            @{
+                var roles = Model.adminDash.AllUserRoles();
+                if (roles.Count == 0)
+                {
+                    <p>No Roles Found</p>
+                }
+                else
+                {
+                    <form asp-page-handler="RoleRemove" method="post" style="text-align:center">
+                        @foreach (IdentityRole s in roles)
+                        {
+                            <l>@s.Name </l>
 
-        <h4>Add/delete current roles</h4>
-        @{
-            //Model.adminDash = new AdminDash(RoleManager);
-             
-            var roles = Model.adminDash.AllUserRoles();
-            if (roles.Count == 0){
-                <p>No Roles Found</p>
-            } else {
-                <form asp-page-handler="RoleRemove" method="post" style="text-align:center">
-                    @foreach (IdentityRole s in roles)
-                    {
-                        <l>@s.Name </l><button type="submit" name = "deleteRoleButton"  value=@String.Concat(s.Name,"_Remove")>Remove</button><br/>
-                    }                
-                </form>
+                            <button type="submit" name="deleteRoleButton" value=@String.Concat(s.Name,"_Remove")>Remove</button>
 
-            }            
-        }
+                            <br />
+                        }
+                    </form>
+                }
+            }
 
-        <h5 style="text-align:center">Create a New Role: </h5>
-        <form asp-page-handler="NewRoleSubmit" method="post" style="text-align:center">
-            <input type="text" name="roleName"/>
-            <button type="submit" id="CreateRoleButton">Create New Role</button>
-        </form>
+            <h5 style="text-align:center">Create a New Role: </h5>
+            <form asp-page-handler="NewRoleSubmit" method="post" style="text-align:center">
+                <input type="text" name="roleName" />
+                <button type="submit" id="CreateRoleButton">Create New Role</button>
+            </form>
+        </div>
+        <br>
 
-        <h4>Add/delete companys</h4>
-        <h4>Assign roles to users</h4>
+
+        @*---------------------------Company tools--------------------------*@
+
+        <div name="companyAdminTools">
+
+            <h4>Add/delete companys</h4>
+            @{
+                var companies = Model.adminDash.ActivatedCompanies();
+                if (companies.Count == 0)
+                {
+                    <p>No Companies Found</p>
+                }
+                else
+                {
+                    <form asp-page-handler="CompanyRemove" method="post" style="text-align:center">
+                        @foreach (String s in companies)
+                        {
+                            <l>@s </l>
+                            <button type="submit" name="deleteCompanyButton" value=@String.Concat(s,"_Remove")>Remove</button>
+                            <br />
+                        }
+                    </form>
+                }
+            }
+
+
+
+            <h5 style="text-align:center">Register New Company: </h5>
+
+            <form asp-page-handler="NewCompanySubmit" method="post" style="text-align:center">
+                <label>Company Name: </label><input type="text" name="companyName" /><br>
+                <label>Company Admin Email: </label><input type="text" name="companyAdmin" /><br>
+                <button type="submit" id="CreateRoleButton">Create New Company</button>
+            </form>
+
+            <h4>Assign roles to users</h4>
+
+
+        </div>
+
+
     </div>
 }

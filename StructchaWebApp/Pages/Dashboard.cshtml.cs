@@ -30,8 +30,15 @@ namespace StructchaWebApp.Pages
         {
             string s = Request.Form["roleName"];
             //adminDash.addRole(s);
-
             await adminDash.addRole(s);
+        }
+
+        public void OnPostNewCompanySubmit()
+        {
+            //check if company already exists - if doesn't create and activate, if does just activate
+            string company = Request.Form["companyName"];
+            string adminUser = Request.Form["companyAdmin"];
+            adminDash.addCompany(company, adminUser);
         }
 
         public async Task OnPostRoleRemove()
@@ -40,10 +47,16 @@ namespace StructchaWebApp.Pages
             await adminDash.deleteRole(s);
         }
 
+        public void OnPostCompanyRemove()
+        {
+            string s = Request.Form["deleteCompanyButton"];
+            adminDash.deleteCompany(s);
+        }
+
         public static bool superAdmin(string userID)
         {
             SqlConnection conn = _Common.connDB();
-            string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID";
+            string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID AND [Company] = 'Structcha'";
             var comm = new SqlCommand(query, conn);            
             comm.Parameters.AddWithValue("@userID", userID);
 
