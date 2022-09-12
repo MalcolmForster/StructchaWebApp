@@ -1,0 +1,40 @@
+﻿@using StructchaWebApp.Pages.Shared;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Data.Sql
+@model DashboardModel
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    <div class="dash-div" name="companyAdminTools">
+        <h3>Owner Tools</h3>
+        <div name="editCompanyRoles">
+            <h4>Assign roles to users</h4>
+            <form id="assignRoles" method="post" asp-page-handler="AssignRole">
+                <label>Select user:</label>
+                <select id="userSelect">
+                    @{
+                        foreach (ApplicationUser compUser in Model.companyDash.CompanyUsers())
+                        {
+                            <option value="@compUser.Id">
+                                @compUser.Email
+                            </option>
+                        }
+                    }
+                </select><br />
+                <label>Select role:</label>
+                <select id="userSelect">
+                    @{
+                        var roles = Model.adminDash.AllUserRoles();
+                        foreach (IdentityRole role in roles)
+                        {
+                            <option value="@role.Id">@role.Name</option>
+                        }
+                    }
+                </select><br />
+            </form>
+        </div>
+
+    </div>
+
+}

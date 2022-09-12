@@ -16,12 +16,26 @@ namespace StructchaWebApp.Pages.Shared
             return conn;
         }
 
-        
+        public static string? findUserID(string input)
+        {
+            string? userID = null;
+            if(input.Contains('@'))
+            {
+                SqlConnection conn = connDB();
+                string query = "Select Id FROM [dbo].[AspNetUsers] WHERE [NormalizedEmail] = @email";
+                SqlCommand comm = new SqlCommand(query, conn);
+                comm.Parameters.AddWithValue("@email", input.ToUpper());
+                userID = comm.ExecuteScalar().ToString();
+
+                conn.Close();
+            }
+
+            return userID;
+        }
 
         public static string userSoftwareActive(string uId, string software)
         {
             SqlConnection conn = connDB();
-
             string query = "Select SessionKey FROM [dbo].[ActiveSoftware] WHERE Software = @software AND CurrentUserId = @userID";
             SqlCommand comm = new SqlCommand(query, conn);
             comm.Parameters.AddWithValue("@software", software);

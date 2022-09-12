@@ -1,11 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject RoleManager<IdentityRole> RoleManager
 @using Microsoft.Data.Sql
+@*@inject RoleManager<IdentityRole> RoleManager*@
 
 @{
-
-
-    
     <div class="dash-div" name="superAdminTools">
         <h3>Admin Tools</h3>
         @*---------------------------Role tools--------------------------*@
@@ -24,7 +21,7 @@
                         {
                             <l>@s.Name </l>
 
-                            <button type="submit" name="deleteRoleButton" value=@String.Concat(s.Name,"_Remove")>Remove</button>
+                            <button type="submit" name="deleteRoleButton" value=@String.Concat(s.Name.Replace(" ","_"),"_Remove")>Remove</button>
 
                             <br />
                         }
@@ -39,7 +36,6 @@
             </form>
         </div>
         <br>
-
 
         @*---------------------------Company tools--------------------------*@
 
@@ -58,14 +54,12 @@
                         @foreach (String s in companies)
                         {
                             <l>@s </l>
-                            <button type="submit" name="deleteCompanyButton" value=@String.Concat(s,"_Remove")>Remove</button>
+                            <button type="submit" name="deleteCompanyButton" value=@String.Concat(s.Replace(" ","_"),"_Remove")>Remove</button>
                             <br />
                         }
                     </form>
                 }
             }
-
-
 
             <h5 style="text-align:center">Register New Company: </h5>
 
@@ -74,10 +68,7 @@
                 <label>Company Admin Email: </label><input type="text" name="companyAdmin" /><br>
                 <button type="submit" id="CreateRoleButton">Create New Company</button>
             </form>
-
-            <h4>Assign roles to users</h4>
-
-
+                        
         </div>
 
 

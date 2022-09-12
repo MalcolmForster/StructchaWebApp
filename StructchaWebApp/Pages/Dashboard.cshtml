@@ -4,16 +4,24 @@
 @model DashboardModel
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-@using Microsoft.Data.Sql;
 
 @{
-    ViewData["Title"] = @User.Identity?.Name! + "'s Dashboard";
+    ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name);
+    ViewData["Title"] = user.FirstName + " " + user.LastName + "'s Dashboard";
 }
 
 @{
-    <h2>@User.Identity?.Name's dashboard</h2>
-    if (DashboardModel.superAdmin(User.Claims.First().Value)) {
+    <h2>@user.FirstName @user.LastName's dashboard</h2>
+    <label>@user.Company</label>
+
+    if (DashboardModel.superAdmin(User.Claims.First().Value))
+    {       
         <partial name="~/Pages/Shared/_AdminSettings.cshtml" />
+    }
+
+    if (DashboardModel.companyOwner(User.Claims.First().Value))
+    {
+        <partial name="~/Pages/Shared/_CompanyAdminSettings.cshtml" />
     }
 }
 

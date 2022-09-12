@@ -1,25 +1,28 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.Sql;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
+using StructchaWebApp.Data;
 using StructchaWebApp.Pages.Shared;
 using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace StructchaWebApp.Pages
 {
     public class DashboardModel : PageModel
     {
         public AdminDash adminDash { get; set; }
+        public CompanyDash companyDash { get; set; }
 
-        public DashboardModel(RoleManager<IdentityRole> rm)
+        public DashboardModel(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
         {
-
             adminDash = new AdminDash(rm);
+            companyDash = new CompanyDash(rm, um, um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result);
         }
-
 
         public void OnGet()
         {
@@ -53,22 +56,35 @@ namespace StructchaWebApp.Pages
             adminDash.deleteCompany(s);
         }
 
-        public static bool superAdmin(string userID)
+        private static bool adminCheck(string query, string userID)
         {
             SqlConnection conn = _Common.connDB();
-            string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID AND [Company] = 'Structcha'";
-            var comm = new SqlCommand(query, conn);            
+            var comm = new SqlCommand(query, conn);
             comm.Parameters.AddWithValue("@userID", userID);
 
-            if(comm.ExecuteScalar() != null)
+            if (comm.ExecuteScalar() != null)
             {
                 conn.Close();
                 return true;
-            } else
+            }
+            else
             {
                 conn.Close();
                 return false;
             }
+        }
+
+        public static bool superAdmin(string userID)
+        {            
+            string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID AND [Company] = 'Structcha'";
+            return adminCheck(query, userID);
+
+        }
+
+        public static bool companyOwner(string userID)
+        {
+            string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID";
+            return adminCheck(query, userID);
         }
     }
 }

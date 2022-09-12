@@ -8,13 +8,15 @@ namespace StructchaWebApp.Pages.Shared
     public class AdminDash
     {
         private RoleManager<IdentityRole> roleManager { get; set; }
+
         public AdminDash(RoleManager<IdentityRole> rm)
         {
             roleManager = rm;
         }
 
-        public List<IdentityRole> AllUserRoles()
+        public List<IdentityRole> AllUserRoles() // moved to company dash
         {
+            //Perhaps add ability to order alphabetically 
             var roles = roleManager.Roles.ToList();
             foreach(IdentityRole role in roles)
             {
@@ -26,6 +28,7 @@ namespace StructchaWebApp.Pages.Shared
             }            
             return roles;
         }
+
 
         public List<string> AllCompanies()
         {
@@ -86,14 +89,13 @@ namespace StructchaWebApp.Pages.Shared
 
         public async Task addRole(string role)
         {
-            role = role.Replace(" ", "_");
             List<string> allRoles = new List<string>();                
             AllUserRoles().ForEach(s => allRoles.Add(s.Name));
 
             bool dup = false;
             foreach(string roleName in allRoles)
-            {
-                if(roleName == role) { dup = true; break; }
+            {                
+                if (roleName == role) { Console.WriteLine(role + " already exists"); dup = true; break; }
             }
 
             if (!dup)
@@ -103,7 +105,7 @@ namespace StructchaWebApp.Pages.Shared
 
                 await roleManager.CreateAsync(identityRole);
 
-                Console.WriteLine(role + "created");
+                Console.WriteLine(role + " created");
             }
 
             //method to report if the role was added or not (as it was a duplicate)
@@ -114,6 +116,7 @@ namespace StructchaWebApp.Pages.Shared
             string _remove = "_remove";
             int len = role.Length - _remove.Length;
             role = role.Substring(0,len);
+            role = role.Replace("_"," ");
             IdentityRole identityRole;
 
             foreach (IdentityRole ir in AllUserRoles())
@@ -129,35 +132,56 @@ namespace StructchaWebApp.Pages.Shared
 
         public void addCompany(string company, string adminUser)
         {
-            Console.WriteLine("Adding company");
-            List<string> companies = AllCompanies();
-            string lwrComp = company.ToLower();
-            string query = "";
-            SqlConnection conn = _Common.connDB();
-            SqlCommand comm = new SqlCommand();
-            foreach (string s in companies)
+            if(company == "" || adminUser == "")
             {
-                if (s.ToLower() == lwrComp)
+                Console.WriteLine("Please enter valid company name and email");
+            } else
+            {
+                Console.WriteLine("Adding company");
+                List<string> companies = AllCompanies();
+                string lwrComp = company.ToLower();
+                string query = "";
+                SqlConnection conn = _Common.connDB();
+                SqlCommand comm = new SqlCommand();
+                bool compExists = false;
+
+                foreach (string s in companies)
                 {
-                    conn = _Common.connDB();
-                    query = "UPDATE [dbo].[CompanyRegister] SET [Activated] = 1 WHERE [Company] = @comp";
-                    comm.Connection = conn;
-                    comm.CommandText = query;
-                    comm.Parameters.AddWithValue("@comp", s);
-                    comm.ExecuteNonQuery();
-                    conn.Close();
-                    Console.WriteLine(company + " reactivated");
+                    if (s.ToLower() == lwrComp)
+                    {
+                        compExists = true;
+                        conn = _Common.connDB();
+                        query = "UPDATE [dbo].[CompanyRegister] SET [Activated] = 1 WHERE [Company] = @comp";
+                        comm.Connection = conn;
+                        comm.CommandText = query;
+                        comm.Parameters.AddWithValue("@comp", s);
+                        comm.ExecuteNonQuery();
+                        conn.Close();
+                        Console.WriteLine(company + " reactivated");
+                    }
+                }
+                if (!compExists)
+                {
+                    //insert into the companies register 
+                    string? userID = _Common.findUserID(adminUser);
+                    if (userID != null)
+                    {
+                        query = "INSERT INTO [dbo].[CompanyRegister] ([Company], [Activated], [AdminUserID], [AdminEmail]) VALUES (@comp,1,@uID,@adm)";
+                        comm = new SqlCommand(query, conn);
+                        comm.Parameters.AddWithValue("@comp", company);
+                        comm.Parameters.AddWithValue("@uID", userID);
+                        comm.Parameters.AddWithValue("@adm", adminUser);
+                        comm.ExecuteNonQuery();
+
+                        Console.WriteLine(company + " added to companies");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Email " + adminUser + " not found");
+                    }
+
                 }
             }
-
-            //insert into the companies register 
-            query = "INSERT INTO [dbo].[CompanyRegister] ([Company], [Activated], [AdminEmail]) VALUES (@comp,1,@adm)";
-            comm = new SqlCommand(query, conn);
-            comm.Parameters.AddWithValue("@comp", company);
-            comm.Parameters.AddWithValue("@adm", adminUser);
-            comm.ExecuteNonQuery();
-
-            Console.WriteLine(company + " added to companies");
         }
 
         public void deleteCompany(string company) //doesn't delete, just deactivates it
@@ -165,23 +189,13 @@ namespace StructchaWebApp.Pages.Shared
             string _remove = "_remove";
             int len = company.Length - _remove.Length;
             company = company.Substring(0, len);
-
+            company = company.Replace("_", " ");
             SqlConnection conn = _Common.connDB();
             string query = "UPDATE [dbo].[CompanyRegister] SET [Activated] = 0 WHERE [Company] = @comp";
             SqlCommand comm = new SqlCommand(query, conn);
             comm.Parameters.AddWithValue("@comp",company);
             comm.ExecuteNonQuery();
             conn.Close();
-        }
-
-        public void assignRole()
-        {
-
-        }
-
-        public void unassignRole()
-        {
-
         }
     }
 }
