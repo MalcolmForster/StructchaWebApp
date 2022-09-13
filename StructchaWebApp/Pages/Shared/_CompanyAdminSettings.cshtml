@@ -6,13 +6,34 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
+    IList<string>? checkedUserRoles = Model.companyDash.usersRoles;
+    List<ApplicationUser> unassignedUsers = Model.companyDash.UnassignedCompanyUsers();
     <div class="dash-div" name="companyAdminTools">
         <h3>Owner Tools</h3>
+        @{
+            if (unassignedUsers.Count > 0)
+            {
+                <div name="activateCompanyUsers">
+                    <h4>Activate/Remove Company Users</h4>
+                    <form asp-page-handler="UnassignedCompanyUsers" method="post" style="text-align:center">
+                        @{
+                            foreach (ApplicationUser user in unassignedUsers)
+                            {
+                                <label>@user.FirstName @user.LastName - @user.Email</label>
+                                <button type="submit" name="acceptUser" value="@user.Id">Accept</button>
+                                <button type="submit" name="deleteUser" value="@user.Id">Delete</button>
+                            }
+                        }                    
+                    </form>
+                </div>
+            }
+        }
+
         <div name="editCompanyRoles">
             <h4>Assign roles to users</h4>
-            <form id="assignRoles" method="post" asp-page-handler="AssignRole">
-                <label>Select user:</label>
-                <select id="userSelect">
+            <form id="assignRoles" method="post" asp-page-handler="FindUser" style="text-align:center">
+                <select name="userSelect">
+                    <option value="" disabled selected>Select user to edit</option>
                     @{
                         foreach (ApplicationUser compUser in Model.companyDash.CompanyUsers())
                         {
@@ -22,19 +43,58 @@
                         }
                     }
                 </select><br />
-                <label>Select role:</label>
-                <select id="userSelect">
-                    @{
-                        var roles = Model.adminDash.AllUserRoles();
-                        foreach (IdentityRole role in roles)
-                        {
-                            <option value="@role.Id">@role.Name</option>
-                        }
-                    }
-                </select><br />
+                <button type="submit">Find users roles</button>
             </form>
-        </div>
 
+            @{
+                if (Model.checkingUser != "")
+                {
+                    <div name="roleEditingDiv">
+                        <h3>Edit roles for @Model.companyDash.checkingUserName</h3>
+                        @{
+                            if (checkedUserRoles == null || checkedUserRoles.Count == 0)
+                            {
+                                <p style="text-align:center">No roles for user selected</p>
+                            }
+                            else
+                            {
+                                <form asp-page-handler="UserRoleRemove" method="post" style="text-align:center">
+                                    <input name="userBeingAltered" type="hidden" value="@Model.checkingUser" />
+                                    @{
+                                        //var usersRoles = Model.companyDash.selectedUserRoles();
+                                        foreach (string s in checkedUserRoles)
+                                        {
+                                            <l>@s </l>
+                                            <button type="submit" name="deleteUserRole" value=@String.Concat(s.Replace(" ","_"),"_Remove")>Remove</button>
+                                            <br />
+                                        }
+                                    }
+                                </form>
+                            }
+                        }
+
+                        <form asp-page-handler="UserRoleAdd" method="post" style="text-align:center">
+                            <input name="userBeingAltered" type="hidden" value="@Model.checkingUser" />
+                            @{
+                                <select name="userNewRole">
+
+                                    <option value="" disabled selected>Select New Role to add</option>
+                                    @{
+                                        var roles = Model.adminDash.AllUserRoles();
+                                        foreach (IdentityRole role in roles)
+                                        {
+                                            <option value="@role.Id">@role.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <button type="submit">Add this role to user</button>
+                            }
+                        </form>
+                        <br />
+                    </div>
+                }
+            }
+        </div>
     </div>
 
 }

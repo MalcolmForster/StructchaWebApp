@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using StructchaWebApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -10,11 +11,20 @@ namespace StructchaWebApp.Pages.Shared
         private UserManager<ApplicationUser> userManager { get; set; }
         private ApplicationUser user { get; set; }
 
+        public string checkingUserName { get; set; }
+
+        public IList<string>? usersRoles { get; set; }
+
+        public List<ApplicationUser> unRegUsers { get; set; }
+
         public CompanyDash(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, ApplicationUser applicationUser)
         {
             roleManager = rm;
             userManager = um;
+            unRegUsers = um.Users.Where(u=>u.Company == "").ToListAsync().Result;
             user = applicationUser;
+            usersRoles = new List<string>();
+            checkingUserName = "";
         }
 
         public List<IdentityRole> AllUserRoles()
@@ -32,16 +42,46 @@ namespace StructchaWebApp.Pages.Shared
             return roles;
         }
 
+        public void acceptUserToCompany(string uId)
+        {
+            ApplicationUser userToAccept = userManager.FindByIdAsync(uId).Result;
+            userToAccept.Company = user.Company;
+            IdentityResult deleteTask = userManager.UpdateAsync(userToAccept).Result;
+        }
+
+        public void deleteUserFromCompany(string uId)
+        {
+            ApplicationUser userToDelete = userManager.FindByIdAsync(uId).Result;
+            IdentityResult deleteTask = userManager.DeleteAsync(userToDelete).Result;
+        }
+
+        public void selectedUserRoles(string user)
+        {
+            var appUser = userManager.FindByIdAsync(user).Result;
+            var roles = userManager.GetRolesAsync(appUser).Result;
+
+            checkingUserName = appUser.UserName;
+            //foreach (string role in roles)
+            //{
+            //    if (role == "admin")
+            //    {
+            //        roles.Remove(role);
+            //        break;
+            //    }
+            //}
+            usersRoles = roles;
+        }
+
         public List<ApplicationUser> UnassignedCompanyUsers()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
             string compWeb = user.Email.Split('@')[1];
-
-            foreach (var aUser in userManager.Users)
+            
+            foreach (ApplicationUser aUser in unRegUsers)
             {
                 string aUserEmail = aUser.Email.Split('@')[1];
                 
-                if ((aUser.Company == "" || aUser.Company == null) && (aUserEmail == compWeb || user.Company == "Structcha"))
+                if (aUserEmail == compWeb)
                 {
                     users.Add(aUser);
                 }
@@ -64,14 +104,17 @@ namespace StructchaWebApp.Pages.Shared
             return users;
         }
 
-        public void assignRole()
+        public void assignRole(string userID, string roleID)
         {
-
+            var user = userManager.FindByIdAsync(userID).Result;
+            var role = roleManager.FindByIdAsync(roleID).Result;
+            userManager.AddToRoleAsync(user, role.Name).Wait();
         }
 
-        public void unassignRole()
+        public void unAssignRole(string userID, string roleName)
         {
-
+            var user = userManager.FindByIdAsync(userID).Result;
+            userManager.RemoveFromRoleAsync(user, roleName).Wait();
         }
     }
 }
