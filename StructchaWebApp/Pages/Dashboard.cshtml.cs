@@ -22,6 +22,9 @@ namespace StructchaWebApp.Pages
         public ProjectAdmin projectAdmin { get; set; }
         public string checkingUser { get; set; }
 
+        public List<Project>? currentProjects { get; set; }
+        public List<Project>? finishedProjects { get; set; }
+
         public DashboardModel(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
         {
             projectAdmin = new ProjectAdmin((um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result).Company);
@@ -105,6 +108,12 @@ namespace StructchaWebApp.Pages
         public void OnPostCreateNewProject()
         {
             projectAdmin.createProject(Request.Form["newProjectName"], Request.Form["newProjectLocation"], DateOnly.Parse(Request.Form["newProjectStartDate"]));
+        }
+
+        public void setProjects()
+        {
+            currentProjects = projectAdmin.getProjects(0);
+            finishedProjects = projectAdmin.getProjects(1);
         }
 
         public void OnPostEditCurrentProject()

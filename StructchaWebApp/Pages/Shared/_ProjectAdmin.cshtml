@@ -1,11 +1,11 @@
 ﻿@{
-     /*
-     * Create new projects for the company
-     * -Make a project code
-     * View all projects in the company
-     * Close projects when completed
-     * Adjust who is on the project with role, team, and individual management
-    * Adjust contractors/outside companies
+            /*
+            * Create new projects for the company
+            * -Make a project code
+            * View all projects in the company
+            * Close projects when completed
+            * Adjust who is on the project with role, team, and individual management
+           * Adjust contractors/outside companies
     */
 }
 
@@ -13,6 +13,10 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Data.Sql
 @model DashboardModel
+
+@{
+    Model.setProjects();
+}
 
 <div class="dash-div" name="projectAdminTools">
     <h3>Project Admin Tools</h3>
@@ -28,6 +32,7 @@
         <input type="submit" />
 
     </form>
+    <br />
 
     <h4>Current Projects</h4>
 
@@ -35,9 +40,25 @@
 
         @{
             //Get and print out the projects of the company
+            if (Model.currentProjects == null || Model.currentProjects.Count == 0)
+            {
+                <p>No current projects found</p>
+            }
+            else
+            {
+                <form>
+                    @{
+                        foreach (Project project in Model.currentProjects)
+                        {
+                            <label>@project.ProjectCode</label><Button>Test button</Button>
+                        }
+                    }
+                </form>
+            }
         }
 
     </form>
+    <br />
 
     <h4>View Completed Projects</h4>
 
@@ -45,9 +66,29 @@
 
         @{
             //Get and print out the current projects of the company
+
+                    
+            //Get and print out the projects of the company
+            if (Model.finishedProjects == null || Model.finishedProjects.Count == 0)
+            {
+                <p>No finished projects found</p>
+            }
+            else
+            {
+                <form>
+                    @{
+                        foreach (Project project in Model.finishedProjects)
+                        {
+                            <label>@project.ProjectCode</label><Button>Test button</Button>
+                        }
+                    }
+                </form>
+            }
+        
         }
 
     </form>
+    <br />
 
     <h4>Add/remove contractors</h4>
 

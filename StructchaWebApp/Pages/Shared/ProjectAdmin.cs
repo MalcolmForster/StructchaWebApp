@@ -96,9 +96,28 @@ namespace StructchaWebApp.Pages.Shared
         }
 
         //Returns a list of the projects for the company
-        public void getProjects(int i) //int i designates if the project is completed or not, lets say 0 is not completed, 1 is completed
+        public List<Project> getProjects(int i) //int i designates if the project is completed or not, lets say 0 is not completed, 1 is completed
         {
+            List<Project> projectList = new List<Project>();
+            string not = "";
+            if(i == 1)
+            {
+                not = " NOT";
+            }
+            //technique of using LIKE as seen below is apparently slow, so will need to look at making faster in the future
+            string query = String.Format("SELECT [ProjectCode] FROM [dbo].[Projects] WHERE [ProjectCode] LIKE @companyCode AND [TimeFinished] IS{0} NULL", not);
+            SqlConnection conn = _Common.connDB();
+            SqlCommand selectCommand = new SqlCommand(query, conn);
+            selectCommand.Parameters.AddWithValue("@companyCode", companyCode+'%');
+            using SqlDataReader rdr = selectCommand.ExecuteReader();
 
+            while (rdr.Read())
+            {
+                projectList.Add(new Project(rdr.GetString(0)));
+            }
+
+            conn.Close();
+            return projectList;
         }
 
         //editProject can perform serveral things, edit the roles/groups/individuals on the project, sign it off as completed etc
