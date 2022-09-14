@@ -1,0 +1,68 @@
+﻿@{
+     /*
+     * Create new projects for the company
+     * -Make a project code
+     * View all projects in the company
+     * Close projects when completed
+     * Adjust who is on the project with role, team, and individual management
+    * Adjust contractors/outside companies
+    */
+}
+
+@*Projectadmin is a partial with tools to create and edit the companies projects, it used the ProjectAdmin class to display what is requested*@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Data.Sql
+@model DashboardModel
+
+<div class="dash-div" name="projectAdminTools">
+    <h3>Project Admin Tools</h3>
+
+    <h4>Create a New Project</h4>
+    <p>Use this section to create a new project to be managed using the Structure framework</p>
+
+    <form asp-page-handler="CreateNewProject">
+
+        <label>Street address: </label><input name="newProjectLocation" type="text" />
+        <label>Input a project Name: (not required)</label><input name="newProjectName" type="text" />
+        <label>Start date: </label><input name="newProjectStartDate" type="date" />
+        <input type="submit" />
+
+    </form>
+
+    <h4>Current Projects</h4>
+
+    <form asp-page-handler="EditCurrentProject">
+
+        @{
+            //Get and print out the projects of the company
+        }
+
+    </form>
+
+    <h4>View Completed Projects</h4>
+
+    <form asp-page-handler="EditCompletedProject">
+
+        @{
+            //Get and print out the current projects of the company
+        }
+
+    </form>
+
+    <h4>Add/remove contractors</h4>
+
+    <form asp-page-handler="EditContractors">
+
+        @{
+            //Get and print out the contractors for this company
+        }
+
+    </form>
+
+</div>
+
+
+
+@{
+    
+}

@@ -19,10 +19,12 @@ namespace StructchaWebApp.Pages
     {
         public AdminDash adminDash { get; set; }
         public CompanyDash companyDash { get; set; }
+        public ProjectAdmin projectAdmin { get; set; }
         public string checkingUser { get; set; }
 
         public DashboardModel(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
         {
+            projectAdmin = new ProjectAdmin((um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result).Company);
             adminDash = new AdminDash(rm);
             companyDash = new CompanyDash(rm, um, um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result);
             checkingUser = "";
@@ -32,7 +34,6 @@ namespace StructchaWebApp.Pages
         {
             
         }
-
         public async Task OnPostNewRoleSubmit()
         {
             string s = Request.Form["roleName"];
@@ -99,6 +100,26 @@ namespace StructchaWebApp.Pages
             {
                 companyDash.deleteUserFromCompany(deleted);
             }
+        }
+
+        public void OnPostCreateNewProject()
+        {
+            projectAdmin.createProject(Request.Form["newProjectName"], Request.Form["newProjectLocation"], DateOnly.Parse(Request.Form["newProjectStartDate"]));
+        }
+
+        public void OnPostEditCurrentProject()
+        {
+
+        }
+
+        public void OnPostEditCompletedProject()
+        {
+
+        }
+
+        public void OnPostEditContractors()
+        {
+
         }
 
         private static bool adminCheck(string query, string userID)

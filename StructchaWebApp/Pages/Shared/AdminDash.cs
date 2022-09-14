@@ -29,7 +29,7 @@ namespace StructchaWebApp.Pages.Shared
             return roles;
         }
 
-
+        //All companies ----------- looking to consolidate all company finding lists to one method
         public List<string> AllCompanies()
         {
             List<string> companyList = new List<string>();
@@ -49,6 +49,7 @@ namespace StructchaWebApp.Pages.Shared
             return companyList;
         }
 
+        //Companies that are activated, [Activated] = 0
         public List<string> ActivatedCompanies()
         {
             List<string> companyList = new List<string>();
@@ -68,12 +69,14 @@ namespace StructchaWebApp.Pages.Shared
             return companyList;
         }
 
+
+        //Companies that are deactived, [Activated] = 0, for example they have stopped paying to access Structcha
         public List<string> DeactivatedCompanies()
         {
             List<string> companyList = new List<string>();
 
             SqlConnection conn = _Common.connDB();
-            string query = "SELECT [Company] FROM [dbo].[CompanyRegister] WHERE [Activated] = 1 AND NOT [Company] = 'Structcha'";
+            string query = "SELECT [Company] FROM [dbo].[CompanyRegister] WHERE [Activated] = 0 AND NOT [Company] = 'Structcha'";
             SqlCommand comm = new SqlCommand(query, conn);
 
             using (SqlDataReader reader = comm.ExecuteReader())
@@ -87,6 +90,7 @@ namespace StructchaWebApp.Pages.Shared
             return companyList;
         }
 
+        //Creates a new role which can be assigned to users --------- need to add edit ability to change role accesses/permissions
         public async Task addRole(string role)
         {
             List<string> allRoles = new List<string>();                
@@ -107,10 +111,10 @@ namespace StructchaWebApp.Pages.Shared
 
                 Console.WriteLine(role + " created");
             }
-
             //method to report if the role was added or not (as it was a duplicate)
         }
 
+        //Delete a role from the database
         public async Task deleteRole(string role)
         {
             string _remove = "_remove";
@@ -130,6 +134,7 @@ namespace StructchaWebApp.Pages.Shared
             }            
         }
 
+        //Creates a new company and assigns a registered user as it's admin
         public void addCompany(string company, string adminUser)
         {
             if(company == "" || adminUser == "")
@@ -184,6 +189,7 @@ namespace StructchaWebApp.Pages.Shared
             }
         }
 
+        //deactivates a company, ie they stopped paying changes [Activated] to a 0, not deleted from database
         public void deleteCompany(string company) //doesn't delete, just deactivates it
         {
             string _remove = "_remove";

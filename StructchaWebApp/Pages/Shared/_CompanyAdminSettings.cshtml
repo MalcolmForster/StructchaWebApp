@@ -6,6 +6,9 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
+
+    //Ideas: Allow for the input of what the company actually does, engineering, architecture, construction etc. This can then be used to modify the look and feel of the webapp
+
     IList<string>? checkedUserRoles = Model.companyDash.usersRoles;
     List<ApplicationUser> unassignedUsers = Model.companyDash.UnassignedCompanyUsers();
     <div class="dash-div" name="companyAdminTools">
@@ -80,7 +83,7 @@
 
                                     <option value="" disabled selected>Select New Role to add</option>
                                     @{
-                                        var roles = Model.adminDash.AllUserRoles();
+                                        var roles = Model.companyDash.AllUserRoles();
                                         foreach (IdentityRole role in roles)
                                         {
                                             <option value="@role.Id">@role.Name</option>

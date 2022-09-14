@@ -15,13 +15,18 @@
     <label>@user.Company</label>
 
     if (DashboardModel.superAdmin(User.Claims.First().Value))
-    {       
+    {
         <partial name="~/Pages/Shared/_AdminSettings.cshtml" />
     }
 
     if (DashboardModel.companyOwner(User.Claims.First().Value))
     {
         <partial name="~/Pages/Shared/_CompanyAdminSettings.cshtml" />
+    }
+
+    if (DashboardModel.companyOwner(User.Claims.First().Value))
+    {
+        <partial name="~/Pages/Shared/_ProjectAdmin.cshtml" />
     }
 }
 

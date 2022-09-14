@@ -1,5 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.Data.Sql
+
+@*Perhaps need to add the model in here too? Will give it a go*@
+@model DashboardModel
+
 @*@inject RoleManager<IdentityRole> RoleManager*@
 
 @{
@@ -9,7 +13,7 @@
         <div name="roleAdminTools">
             <h4>Add/delete current roles</h4>
             @{
-                var roles = Model.adminDash.AllUserRoles();
+                var roles = Model.companyDash.AllUserRoles();
                 if (roles.Count == 0)
                 {
                     <p>No Roles Found</p>

@@ -27,10 +27,10 @@ namespace StructchaWebApp.Pages.Shared
             checkingUserName = "";
         }
 
+        //Gets all roles that can be assigned by the company director/manager etc.
         public List<IdentityRole> AllUserRoles()
         {
-            //Perhaps add ability to order alphabetically 
-            var roles = roleManager.Roles.ToList();
+            var roles = roleManager.Roles.OrderBy(x => x.Name).ToList();
             foreach (IdentityRole role in roles)
             {
                 if (role.Name == "admin")
@@ -42,6 +42,7 @@ namespace StructchaWebApp.Pages.Shared
             return roles;
         }
 
+        //Changes the accepted user's company value from "" to the company name, allowing them access to that companies items within their assigned roles.
         public void acceptUserToCompany(string uId)
         {
             ApplicationUser userToAccept = userManager.FindByIdAsync(uId).Result;
@@ -49,12 +50,14 @@ namespace StructchaWebApp.Pages.Shared
             IdentityResult deleteTask = userManager.UpdateAsync(userToAccept).Result;
         }
 
+        //Deletes entire user from database
         public void deleteUserFromCompany(string uId)
         {
             ApplicationUser userToDelete = userManager.FindByIdAsync(uId).Result;
             IdentityResult deleteTask = userManager.DeleteAsync(userToDelete).Result;
         }
 
+        //Returns all the roles of the specific user
         public void selectedUserRoles(string user)
         {
             var appUser = userManager.FindByIdAsync(user).Result;
@@ -72,6 +75,7 @@ namespace StructchaWebApp.Pages.Shared
             usersRoles = roles;
         }
 
+        //Finds and returns all users which have the same email domain as the admin which have a value of "" for company
         public List<ApplicationUser> UnassignedCompanyUsers()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
@@ -79,8 +83,7 @@ namespace StructchaWebApp.Pages.Shared
             
             foreach (ApplicationUser aUser in unRegUsers)
             {
-                string aUserEmail = aUser.Email.Split('@')[1];
-                
+                string aUserEmail = aUser.Email.Split('@')[1];                
                 if (aUserEmail == compWeb)
                 {
                     users.Add(aUser);
@@ -89,6 +92,7 @@ namespace StructchaWebApp.Pages.Shared
             return users;
         }
 
+        //Gets all users from database with matching company
         public List<ApplicationUser> CompanyUsers()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
@@ -101,16 +105,18 @@ namespace StructchaWebApp.Pages.Shared
                 }
             }
 
-            return users;
+            return users.OrderBy(x => x.Email).ToList();
         }
 
+
+        //assigns selected role to the selected user
         public void assignRole(string userID, string roleID)
         {
             var user = userManager.FindByIdAsync(userID).Result;
             var role = roleManager.FindByIdAsync(roleID).Result;
             userManager.AddToRoleAsync(user, role.Name).Wait();
         }
-
+        //deletes the selected role from the selected user
         public void unAssignRole(string userID, string roleName)
         {
             var user = userManager.FindByIdAsync(userID).Result;
