@@ -110,10 +110,18 @@ namespace StructchaWebApp.Pages.Shared
             SqlCommand selectCommand = new SqlCommand(query, conn);
             selectCommand.Parameters.AddWithValue("@companyCode", companyCode+'%');
             using SqlDataReader rdr = selectCommand.ExecuteReader();
+            List<string> projectCodes = new List<string>();
 
             while (rdr.Read())
             {
-                projectList.Add(new Project(rdr.GetString(0)));
+                projectCodes.Add(rdr.GetString(0));
+            }
+
+            rdr.Close();
+
+            foreach(string code in projectCodes)
+            {
+                projectList.Add(new Project(code, conn));
             }
 
             conn.Close();

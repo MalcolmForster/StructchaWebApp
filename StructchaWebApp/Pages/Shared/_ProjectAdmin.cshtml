@@ -50,7 +50,16 @@
                     @{
                         foreach (Project project in Model.currentProjects)
                         {
-                            <label>@project.ProjectCode</label><Button>Test button</Button>
+                            <label>@project.ProjectCode</label>
+
+                            if (@project.Title != null) {
+                                                    <label>@project.Title</label>
+                            }                            
+                            <label>@project.Location</label>
+                            <label>@project.Companies</label>
+                            <label>@project.StartDate</label>
+
+                            <Button>Test button</Button>
                         }
                     }
                 </form>
