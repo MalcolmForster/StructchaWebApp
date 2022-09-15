@@ -9,12 +9,13 @@ namespace StructchaWebApp.Pages.Shared
         public string ProjectCode { get; set; }
         public string? Title { get; set; }
         public string Location { get; set; }
-        public string Companies { get; set; }
+        private string Companies { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public DateTime TimeCreated { get; set; }
         public DateTime? TimeFinished { get; set; }
         private SqlConnection? _connection { get; set; }
+        public Company LeadCompany { get; set; }
 
         public Project(string projectCode, SqlConnection? conn)
         {
@@ -24,6 +25,7 @@ namespace StructchaWebApp.Pages.Shared
             EndDate = null;
             TimeFinished = null;
             getProjectInfo();
+            FindLeadCompany();
         }
 
         private SqlConnection connectToDB()
@@ -54,9 +56,7 @@ namespace StructchaWebApp.Pages.Shared
             using var rdr = cmd.ExecuteReader();
 
             rdr.Read();
-            if (!rdr.IsDBNull(0)) { 
-                Title = rdr.GetString(0);
-            };
+            if (!rdr.IsDBNull(0)) { Title = rdr.GetString(0);};
             Location = rdr.GetString(1);
             Companies = rdr.GetString(2);
             StartDate = DateOnly.FromDateTime(rdr.GetDateTime(3));
@@ -64,8 +64,12 @@ namespace StructchaWebApp.Pages.Shared
             TimeCreated = rdr.GetDateTime(5);
             if (!rdr.IsDBNull(6)) { TimeFinished = rdr.GetDateTime(6); };
             rdr.Close();
-
         }
 
+        private void FindLeadCompany()
+        {
+            //This will change to use the data pulled from the database column [Companies], but for now will use the change code to project code
+            LeadCompany = new Company(ProjectCode.Substring(0,6));
+        }
     }
 }

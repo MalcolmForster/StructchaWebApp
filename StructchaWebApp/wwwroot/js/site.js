@@ -42,3 +42,24 @@ $(window).on("load", function () {
 
 
 
+function toggleProjectEditDiv(div) {
+    if (div.includes('show_')) {
+        div = div.replace('show_', '');
+        var x = document.getElementById('edit_' + div);
+        var editButton = document.getElementById('editButton_' + div);
+        var hideButton = document.getElementById('hideButton_' + div);
+        x.style.display = "block";
+        editButton.style.display = "none";
+        hideButton.style.display = "inline-block";
+    } else if (div.includes('hide_')) {
+        div = div.replace('hide_', '');
+        var x = document.getElementById('edit_' + div);
+        var editButton = document.getElementById('editButton_' + div);
+        var hideButton = document.getElementById('hideButton_' + div);
+        x.style.display = "none";
+        editButton.style.display = "inline-block";
+        hideButton.style.display = "none";
+    }
+}
+
+

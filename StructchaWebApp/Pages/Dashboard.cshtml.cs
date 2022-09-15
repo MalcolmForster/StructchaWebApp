@@ -118,7 +118,9 @@ namespace StructchaWebApp.Pages
 
         public void OnPostEditCurrentProject()
         {
-
+            //Edit roles and individuals and companies which have access to the data here
+            //Edit start date of the project
+            //Sign the project off as completed
         }
 
         public void OnPostEditCompletedProject()

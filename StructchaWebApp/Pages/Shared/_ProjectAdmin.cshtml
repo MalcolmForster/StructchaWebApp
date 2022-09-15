@@ -36,30 +36,41 @@
 
     <h4>Current Projects</h4>
 
-    <form asp-page-handler="EditCurrentProject">
+    <form  style="text-align:center">
 
         @{
             //Get and print out the projects of the company
             if (Model.currentProjects == null || Model.currentProjects.Count == 0)
             {
-                <p>No current projects found</p>
+                    <p>No current projects found</p>
             }
             else
             {
-                <form>
+                    <form asp-page-handler="EditCurrentProject" method="post">
                     @{
                         foreach (Project project in Model.currentProjects)
                         {
-                            <label>@project.ProjectCode</label>
-
-                            if (@project.Title != null) {
-                                                    <label>@project.Title</label>
-                            }                            
+                            if (@project.Title != null)
+                            {
+                                <label>"@project.Title"</label>
+                            }
                             <label>@project.Location</label>
-                            <label>@project.Companies</label>
+                            <label>@project.LeadCompany.CompanyName</label>
                             <label>@project.StartDate</label>
+                            <button type="button" value="@project.ProjectCode" id="editButton_@project.ProjectCode" onclick="toggleProjectEditDiv('show_@project.ProjectCode')">Edit Project</button>
+                            <button style="display:none"  type="button" value="@project.ProjectCode" id="hideButton_@project.ProjectCode" onclick="toggleProjectEditDiv('hide_@project.ProjectCode')">Hide below Project</button>
 
-                            <Button>Test button</Button>
+                            <br />
+
+                            <div style="display:none" class="editProject" id="edit_@project.ProjectCode">
+                                <label>Add another company: </label><input name="testthingy" type="text" /><button type="submit" value="finish_@project.ProjectCode">Add</button><br />
+                                <label>Remove company: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Remove</button><br />
+                                <label>Add roles: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode" >Add</button><br />
+                                <label>Remove roles: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Remove</button><br />
+                                <label>Add individual user: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Add</button><br />
+                                <label>Remove indiviual user: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Remove</button><br />
+                                <label>Sign project as completed: </label><input type="date" name="finishDate" /><button type="submit" value="finish_@project.ProjectCode">Submit</button><br />
+                            </div>
                         }
                     }
                 </form>
@@ -80,18 +91,18 @@
             //Get and print out the projects of the company
             if (Model.finishedProjects == null || Model.finishedProjects.Count == 0)
             {
-                <p>No finished projects found</p>
+                    <p>No finished projects found</p>
             }
             else
             {
-                <form>
-                    @{
+                    <form>
+                        @{
                         foreach (Project project in Model.finishedProjects)
                         {
-                            <label>@project.ProjectCode</label><Button>Test button</Button>
+                                    <label>@project.ProjectCode</label><Button>Test button</Button>
                         }
-                    }
-                </form>
+                        }
+                    </form>
             }
         
         }

@@ -22,7 +22,6 @@ namespace StructchaWebApp.Pages.Shared
             SqlConnection conn =  _Common.connDB();
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@comp", company);
-
             string? code = cmd.ExecuteScalar()?.ToString();
             conn.Close();
             return code;
