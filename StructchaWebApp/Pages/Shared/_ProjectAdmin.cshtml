@@ -20,7 +20,6 @@
 
 <div class="dash-div" name="projectAdminTools">
     <h3>Project Admin Tools</h3>
-
     <h4>Create a New Project</h4>
     <p>Use this section to create a new project to be managed using the Structure framework</p>
 
@@ -34,20 +33,19 @@
     </form>
     <br />
 
-    <h4>Current Projects</h4>
-
-    <form  style="text-align:center">
-
+    <h4>Your Company's Current Projects</h4>
+    
+    <div  style="text-align:center">
         @{
-            //Get and print out the projects of the company
+            //Get and print out the projects of the company, and allow them to be edited
             if (Model.currentProjects == null || Model.currentProjects.Count == 0)
             {
-                    <p>No current projects found</p>
+                        <p>No current projects found</p>
             }
             else
             {
-                    <form asp-page-handler="EditCurrentProject" method="post">
-                    @{
+                        <form asp-page-handler="EditCurrentProject" method="post" name="thisProject">
+                        @{
                         foreach (Project project in Model.currentProjects)
                         {
                             if (@project.Title != null)
@@ -58,18 +56,51 @@
                             <label>@project.LeadCompany.CompanyName</label>
                             <label>@project.StartDate</label>
                             <button type="button" value="@project.ProjectCode" id="editButton_@project.ProjectCode" onclick="toggleProjectEditDiv('show_@project.ProjectCode')">Edit Project</button>
-                            <button style="display:none"  type="button" value="@project.ProjectCode" id="hideButton_@project.ProjectCode" onclick="toggleProjectEditDiv('hide_@project.ProjectCode')">Hide below Project</button>
+                            <button style="display:none" type="button" value="@project.ProjectCode" id="hideButton_@project.ProjectCode" onclick="toggleProjectEditDiv('hide_@project.ProjectCode')">Hide below Project</button>
 
                             <br />
 
                             <div style="display:none" class="editProject" id="edit_@project.ProjectCode">
-                                <label>Add another company: </label><input name="testthingy" type="text" /><button type="submit" value="finish_@project.ProjectCode">Add</button><br />
-                                <label>Remove company: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Remove</button><br />
-                                <label>Add roles: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode" >Add</button><br />
-                                <label>Remove roles: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Remove</button><br />
-                                <label>Add individual user: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Add</button><br />
-                                <label>Remove indiviual user: </label><select><option>Test Option lol</option></select><button type="submit" value="finish_@project.ProjectCode">Remove</button><br />
-                                <label>Sign project as completed: </label><input type="date" name="finishDate" /><button type="submit" value="finish_@project.ProjectCode">Submit</button><br />
+
+                                <label>Add another company: </label>
+                                <input name="addCompany" type="text" />
+                                <button type="submit" name="projectEditButton" value="addCompany_@project.ProjectCode">Add</button><br />
+
+                                <label>Remove company: </label>
+                                <select name="removeCompany" asp-items="@project.SelectListCompanies"><option disabled hidden selected>Select company to be removed</option></select>
+                                <button type="submit" name="projectEditButton" value="removeCompany_@project.ProjectCode">Remove</button><br />
+
+                                <label>Add roles: </label>
+                                <select name="addRoles" asp-items="@Model.projectAdmin.userRoles"><option disabled hidden selected>Select a new role to add to project</option></select>
+                                <button type="submit" name="projectEditButton" value="addRoles_@project.ProjectCode">Add</button><br />
+
+                                <label>Remove roles: </label>
+                                <select name="removeRoles" asp-items="@project.SelectListRoles[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select a role to remove from project</option></select>
+                                <button type="submit" name="projectEditButton" value="removeRoles_@project.ProjectCode">Remove</button><br />
+
+                                <label>Add individual user: </label>
+                                <select name="addIndividual" asp-items="@Model.projectAdmin.companyUsers"><option disabled hidden selected>Select an individual user to add to project</option></select>
+                                <button type="submit" name="projectEditButton" value="addIndividual_@project.ProjectCode">Add</button><br />
+
+                                <label>Remove individual user: </label>
+                                <select name="removeIndividual" asp-items="@project.SelectListIndividuals[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select an individual user to remove from project</option></select>
+                                <button type="submit" name="projectEditButton" value="removeIndividual_@project.ProjectCode">Remove</button><br />
+
+                                <label>Block individual user: </label>
+                                <select name="blockIndividual" asp-items="@Model.projectAdmin.companyUsers"><option disabled hidden selected>Select an individual user to block from project</option></select>
+                                <button type="submit" name="projectEditButton" value="blockIndividual_@project.ProjectCode">Add</button><br />
+
+                                <label>Remove blocked individual user: </label>
+                                <select name="unblockIndividual" asp-items="@project.SelectListBlocks[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select an individual user to unblock from project</option></select>
+                                <button type="submit" name="projectEditButton" value="unblockIndividual_@project.ProjectCode">Remove</button><br />
+
+                                <label>Adjust start date: </label>
+                                <input type="date" name="startEdit" />
+                                <button type="submit" name="projectEditButton" value="startEdit_@project.ProjectCode">Submit</button><br />
+
+                                <label>Sign project as completed: </label>
+                                <input type="date" name="finishEdit" />
+                                <button type="submit" name="projectEditButton" value="finishEdit_@project.ProjectCode">Submit</button><br />
                             </div>
                         }
                     }
@@ -77,32 +108,60 @@
             }
         }
 
-    </form>
+    </div>
     <br />
 
-    <h4>View Completed Projects</h4>
+
+    <h4>Projects assigned to your company</h4>
+
+    <div style="text-align:center">
+        @{
+            //Get and print out the projects of the company, and allow them to be edited
+            if (Model.currentProjects == null || Model.currentProjects.Count == 0)
+            {
+                    <p>No current projects found</p>
+            }
+            else
+            {
+                    <form asp-page-handler="EditCurrentProject" method="post" name="thisProject">
+                        @{
+
+                        
+                        }
+                    </form>
+            }
+        }
+
+    </div>
+    <br />
+
+
+
+
+
+
+    <h4>View Your Company's Completed Projects</h4>
 
     <form asp-page-handler="EditCompletedProject">
 
         @{
             //Get and print out the current projects of the company
-
                     
             //Get and print out the projects of the company
             if (Model.finishedProjects == null || Model.finishedProjects.Count == 0)
             {
-                    <p>No finished projects found</p>
+                        <p>No finished projects found</p>
             }
             else
             {
-                    <form>
-                        @{
+                        <form>
+                            @{
                         foreach (Project project in Model.finishedProjects)
                         {
-                                    <label>@project.ProjectCode</label><Button>Test button</Button>
+                                            <label>@project.ProjectCode</label><Button>Test button</Button>
                         }
-                        }
-                    </form>
+                            }
+                        </form>
             }
         
         }

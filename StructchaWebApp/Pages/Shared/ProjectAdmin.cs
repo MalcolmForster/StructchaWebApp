@@ -1,6 +1,9 @@
-﻿using Microsoft.Data.Sql;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.Sql;
 using Microsoft.Data.SqlClient;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using StructchaWebApp.Data;
+using System.Security.Claims;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -8,11 +11,19 @@ namespace StructchaWebApp.Pages.Shared
     {
         private string? companyCode { get; set; }
         private string? companyName { get; set; }
+        private RoleManager<IdentityRole> roleManager { get; set; }
+        private UserManager<ApplicationUser> userManager { get; set; }
+        public IEnumerable<SelectListItem> userRoles { get; set; }
+        public IEnumerable<SelectListItem> companyUsers { get; set; }
 
-        public ProjectAdmin(string company)
+        public ProjectAdmin(string company, RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um)
         {
+            roleManager = rm;
+            userManager = um;
             companyName = company;
             companyCode = getCompCode(company);
+            userRoles = AllUserRoles();
+            companyUsers = getCompanyUsers();
         }
 
         private string? getCompCode(string company)
@@ -25,14 +36,6 @@ namespace StructchaWebApp.Pages.Shared
             string? code = cmd.ExecuteScalar()?.ToString();
             conn.Close();
             return code;
-        }
-
-        private string addToJson(string roleType, string company)
-        {
-
-            string newJson = "";
-
-            return newJson;
         }
 
         //Method to create a project, name can be null is wanted but requires a location and start date
@@ -55,6 +58,7 @@ namespace StructchaWebApp.Pages.Shared
                 }
             }
             string projectCode = companyCode + locationTrimmed + date.ToString("MMyy");
+            string intCompJson = "{\"Lead\":{\"Code\":\"" + companyCode + "\",\"RoleAccess\":[],\"UserAccess\":[],\"UserBlocks\":[]}}";
 
             bool codeOpen = false;
             string query = "SELECT [ProjectCode] FROM [dbo].[Projects] WHERE [ProjectCode] = @projectCode";
@@ -81,7 +85,7 @@ namespace StructchaWebApp.Pages.Shared
                         insertCommand.Parameters.AddWithValue("@title", DBNull.Value);
                     }                    
                     insertCommand.Parameters.AddWithValue("@location", location);
-                    insertCommand.Parameters.AddWithValue("@companies", addToJson("lead",companyName));
+                    insertCommand.Parameters.AddWithValue("@companies", intCompJson);
                     insertCommand.Parameters.AddWithValue("@startdate", date.ToDateTime(TimeOnly.MinValue));
                     insertCommand.Parameters.AddWithValue("@timeCreated", DateTime.Now);
                     insertCommand.ExecuteNonQuery();
@@ -91,7 +95,6 @@ namespace StructchaWebApp.Pages.Shared
                 }
             }
             conn.Close();
-
         }
 
         //Returns a list of the projects for the company
@@ -127,10 +130,147 @@ namespace StructchaWebApp.Pages.Shared
             return projectList;
         }
 
-        //editProject can perform serveral things, edit the roles/groups/individuals on the project, sign it off as completed etc
-        public void editProject()
+        //returns the users in the company
+        private IEnumerable<SelectListItem> getCompanyUsers()
         {
+            List<ApplicationUser> companyUsers = userManager.Users.ToList();
+            List<SelectListItem> list = new List<SelectListItem>();
+            foreach(ApplicationUser user in companyUsers)
+            {
+                if(user.Company == companyName)
+                {
+                    list.Add(new SelectListItem { Text = user.UserName, Value = user.UserName });
+                }                
+            }
+            return list;
+        }
 
+        //Returns users roles which can be added to a project
+        private IEnumerable<SelectListItem> AllUserRoles()
+        {
+            var roles = roleManager.Roles.OrderBy(x => x.Name).ToList();
+            List<SelectListItem>  selectList = new List<SelectListItem>();
+            foreach (IdentityRole role in roles)
+            {
+                if (role.Name != "admin")
+                {
+                    SelectListItem item = new SelectListItem
+                    {
+                        Value = role.Name,
+                        Text = role.Name
+                    };
+                    selectList.Add(item);
+                }
+            }
+            return selectList;
+        }
+
+        //editProject can perform serveral things, edit the roles/groups/individuals on the project, sign it off as completed etc
+        public void editProject(string projectCode, string company, string editOperation, string parameters)
+        {
+            var conn = _Common.connDB();
+            var editedProject = new Project(projectCode,conn);
+            int num = -1;
+            string accessType = "";
+
+            switch (editOperation)
+            {
+                case "addRoles":
+                    num = 0;
+                    accessType = "RoleAccess";
+
+                    break;
+                case "removeRoles":
+                    num = 1;
+                    accessType = "RoleAccess";
+
+                    break;
+                case "addIndividual":
+                    num = 0;
+                    accessType = "UserAccess";
+
+                    break;
+                case "removeIndividual":
+                    num = 1;
+                    accessType = "UserAccess";
+
+                    break;
+                case "blockIndividual":
+                    num = 0;
+                    accessType = "UserBlocks";
+
+                    break;
+                case "unblockIndividual":
+                    num = 1;
+                    accessType = "UserBlocks";
+
+                    break;
+                case "addCompany":
+                    editedProject.addCompany(company, parameters);
+
+                    break;
+                case "removeCompany":
+                    editedProject.removeCompany(company, parameters);
+
+                    break;
+                case "editStart":
+                    editedProject.editStart(company, parameters);
+
+                    break;
+                case "editFinish":
+                    editedProject.editFinish(company, parameters);
+
+                    break;
+            }
+
+            if(num != -1)
+            {
+                editedProject.editProjectAccess(num, company, accessType, parameters);
+            }
+
+
+
+
+
+
+
+
+            //switch (editOperation)
+            //{
+            //    case "addRoles":
+            //        editedProject.addRoles(company, parameters);
+
+            //        break;
+            //    case "removeRoles":
+            //        editedProject.removeRoles(company, parameters);
+
+            //        break;
+            //    case "addCompany":
+            //        editedProject.addCompany(company, parameters);
+
+            //        break;
+            //    case "removeCompany":
+            //        editedProject.removeCompany(company, parameters);
+
+            //        break;
+            //    case "addIndividual":
+            //        editedProject.addIndividual(company, parameters);
+
+            //        break;
+            //    case "removeIndividual":
+            //        editedProject.removeIndividual(company, parameters);
+
+            //        break;
+            //    case "editStart":
+            //        editedProject.editStart(company, parameters);
+
+            //        break;
+            //    case "editFinish":
+            //        editedProject.editFinish(company, parameters);
+
+            //        break;
+            //}
+            conn.Close();
         }
     }
 }

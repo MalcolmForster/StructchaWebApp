@@ -93,6 +93,26 @@ p {
     /*height:100%;*/
 }
 
+.editProject {
+    background-color: var(--highlight-1);
+    max-width: 600px;
+    margin:10px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    text-align:right;
+    border-radius:5px
+}
+
+    .editProject label{
+        text-align:left;
+        float:left;
+    }
+
+    .editProject button {
+        margin:2px
+    }
+
 .defaultPage {
     max-width:1400px;
     padding:20px;

@@ -21,15 +21,17 @@ namespace StructchaWebApp.Pages
         public CompanyDash companyDash { get; set; }
         public ProjectAdmin projectAdmin { get; set; }
         public string checkingUser { get; set; }
+        public ApplicationUser user { get; set; }
 
         public List<Project>? currentProjects { get; set; }
         public List<Project>? finishedProjects { get; set; }
 
         public DashboardModel(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
         {
-            projectAdmin = new ProjectAdmin((um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result).Company);
+            user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
+            projectAdmin = new ProjectAdmin(user.Company, rm,um);
             adminDash = new AdminDash(rm);
-            companyDash = new CompanyDash(rm, um, um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result);
+            companyDash = new CompanyDash(rm, um, user);
             checkingUser = "";
         }
 
@@ -121,11 +123,20 @@ namespace StructchaWebApp.Pages
             //Edit roles and individuals and companies which have access to the data here
             //Edit start date of the project
             //Sign the project off as completed
+
+            //Working on how to keep the div open
+
+            var request = Request.Form["projectEditButton"].ToString().Split('_');
+            string operation = request[0];
+            string projectCode = request[1];
+            var parameters = Request.Form[operation].ToString();
+
+            projectAdmin.editProject(projectCode, user.Company, operation, parameters);       
+            
         }
 
         public void OnPostEditCompletedProject()
         {
-
         }
 
         public void OnPostEditContractors()
@@ -162,5 +173,6 @@ namespace StructchaWebApp.Pages
             string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID";
             return adminCheck(query, userID);
         }
+
     }
 }
