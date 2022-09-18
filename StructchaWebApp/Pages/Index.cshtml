@@ -52,14 +52,14 @@
                             string anotherKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
                             if (anotherKey != "")
                             {
-                                            <a href="Structcha:@anotherKey">Open Current JointDraw Session</a>
-                                            <input type="submit" name="jointDrawClose" value="Stop session" />
+                                <a href="Structcha:@anotherKey">Open Current JointDraw Session</a>
+                                <input type="submit" name="jointDrawClose" value="Stop session" />
                             }
                             else
                             {
-                                            <h3>JointDraw</h3>
-                                            <label>@_Common.numberOfSeat("JointDraw") seats free</label>
-                                            <input type="submit" name="jointDrawSubmit" value="Start session" />
+                                <h3>JointDraw</h3>
+                                <label>@_Common.numberOfSeat("JointDraw") seats free</label>
+                                <input type="submit" name="jointDrawSubmit" value="Start session" />
                             }
                         }
                     </form>
@@ -69,7 +69,8 @@
 
             <div name="taskBar" class="task-bar">
                 <div class="taskBarSection">
-                    <h3>Project Updates/Messages</h3>              
+                    <h3>Project Updates/Messages</h3>
+                    <button asp-page-handler="NewProjectPost">Post a project update</button>
                         @{
                             string[] updates = { "Here is an update", "And another update", "How about another update", "Oh look, another update!", "And another update", "How about another update", "Oh look, another update!"};
                         }
@@ -77,11 +78,13 @@
                 </div>
                 <div class="taskBarSection">
                     <h3>Assigned Tasks</h3>
+                    <button name="" asp-page-handler="NewTask">Create new task</button>
                     @{string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };}
                     <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="assignments"/>
                 </div>
-                <div class="taskBarSection">
-                    <h3>Selfset Tasks</h3>
+                <div class="taskBarSubSection">
+                    <h4>Selfset Tasks</h4>
+                    
                         @{
                             //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
                             string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
@@ -133,9 +136,5 @@
 
         </div>
     }
-
-
-
-
 
 </div>

@@ -120,7 +120,8 @@ namespace StructchaWebApp.Pages.Shared
             {
                 if (kvp.Key != "Lead")
                 {
-                    Companies.Add((string)(kvp.Value["Code"]));
+                    Company company = new Company((string)(kvp.Value["Code"]));
+                    Companies.Add(company.CompanyName);
                 }
             }     
         }
@@ -199,6 +200,7 @@ namespace StructchaWebApp.Pages.Shared
             cmd.Parameters.AddWithValue("@json", jsonString);
             cmd.Parameters.AddWithValue("@projectCode", ProjectCode);
             cmd.ExecuteNonQuery();
+            //AccessJson = JsonObject.Parse(jsonString).AsObject();
         }
 
         public void editProjectAccess(int num,string company, string accessType, string parameters)
@@ -263,108 +265,67 @@ namespace StructchaWebApp.Pages.Shared
             }
         }
 
-        //public void addRoles(string company, string parameters)
-        //{
-        //    JsonObject newJson = AccessJson;
-        //    if(company == LeadCompany.CompanyName)
-        //    {
-        //        company = "Lead";
-        //    }
-
-        //    JsonArray jsonArray = newJson[company]["RoleAccess"].AsArray();
-        //    bool add = true;
-        //    foreach(JsonNode node in jsonArray)
-        //    {
-        //        if(node.AsValue().ToString() == parameters)
-        //        {
-        //            add = false;
-        //        } 
-        //    }
-
-        //    if (add == true)
-        //    {
-        //        newJson[company]["RoleAccess"].AsArray().Add(parameters);
-        //        alterAccessJson(newJson.ToString());
-        //    } else
-        //    {
-        //        Console.WriteLine("Role " + parameters + " already allowed access on this project");
-        //    }
-        //}
-        //public void removeRoles(string company, string parameters)
-        //{
-        //    JsonObject newJson = AccessJson;
-        //    if (company == LeadCompany.CompanyName)
-        //    {
-        //        company = "Lead";
-        //    }
-
-        //    JsonArray jsonArray = newJson[company]["RoleAccess"].AsArray();
-        //    foreach (JsonNode node in jsonArray)
-        //    {
-        //        if (node.AsValue().ToString() == parameters)
-        //        {
-        //            newJson[company]["RoleAccess"].AsArray().Remove(node);
-        //            alterAccessJson(newJson.ToString());
-        //            break;
-        //        }
-        //    }            
-        //}
-
-        public void addCompany(string company, string parameters)
+        public void addCompany(string companyCode)
         {
+            JsonObject newJson = AccessJson;
+            bool getNum = false;
+            bool add = true;
+            int count = 0;
+            string compNum = "";
 
+
+            while (getNum == false)
+            {
+                compNum = "Company" + count;
+                if (!newJson.ContainsKey(compNum))
+                {
+                    break;
+                } else
+                {
+                    count++;
+                }                
+            }
+
+            foreach (KeyValuePair<string, JsonNode?> kvp in AccessJson)
+            {
+                if (kvp.Key != "Lead")
+                {
+                    if (kvp.Value["Code"].ToString() == companyCode)
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+            }
+
+            //Check if company exists
+            if (add == true)
+            {
+                string intCompJson = ",\""+ compNum+ "\":{\"Code\":\"" + companyCode + "\",\"RoleAccess\":[],\"UserAccess\":[],\"UserBlocks\":[]}}";
+                string oldJsonString = newJson.ToString();
+                int length = oldJsonString.Length;
+                string newJsonString = String.Concat(oldJsonString.Substring(0,length - 1), intCompJson);
+                alterAccessJson(newJsonString);
+            }
         }
-        public void removeCompany(string company, string parameters)
+
+        public void removeCompany(string companyCode)
         {
+            JsonObject newJson = AccessJson;
 
+            foreach (KeyValuePair<string, JsonNode?> kvp in newJson)
+            {
+                if (kvp.Key != "Lead")
+                {
+                    if (kvp.Value["Code"].ToString() == companyCode)
+                    {
+                        newJson.Remove(kvp.Key);
+                        alterAccessJson(newJson.ToString());
+                    }
+                }
+            }            
         }
-        //public void addIndividual(string company, string parameters)
-        //{
-        //    JsonObject newJson = AccessJson;
-        //    if (company == LeadCompany.CompanyName)
-        //    {
-        //        company = "Lead";
-        //    }
 
-        //    JsonArray jsonArray = newJson[company]["UserAccess"].AsArray();
-        //    bool add = true;
-        //    foreach (JsonNode node in jsonArray)
-        //    {
-        //        if (node.AsValue().ToString() == parameters)
-        //        {
-        //            add = false;
-        //        }
-        //    }
-
-        //    if (add == true)
-        //    {
-        //        newJson[company]["UserAccess"].AsArray().Add(parameters);
-        //        alterAccessJson(newJson.ToString());
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("User " + parameters + " already allowed access on this project");
-        //    }
-        //}
-        //public void removeIndividual(string company, string parameters)
-        //{
-        //    JsonObject newJson = AccessJson;
-        //    if (company == LeadCompany.CompanyName)
-        //    {
-        //        company = "Lead";
-        //    }
-
-        //    JsonArray jsonArray = newJson[company]["UserAccess"].AsArray();
-        //    foreach (JsonNode node in jsonArray)
-        //    {
-        //        if (node.AsValue().ToString() == parameters)
-        //        {
-        //            newJson[company]["UserAccess"].AsArray().Remove(node);
-        //            alterAccessJson(newJson.ToString());
-        //            break;
-        //        }
-        //    }
-        //}
         public void editStart(string company, string parameters)
         {
 

@@ -22,7 +22,6 @@ namespace StructchaWebApp.Pages
         public ProjectAdmin projectAdmin { get; set; }
         public string checkingUser { get; set; }
         public ApplicationUser user { get; set; }
-
         public List<Project>? currentProjects { get; set; }
         public List<Project>? finishedProjects { get; set; }
 
@@ -39,7 +38,7 @@ namespace StructchaWebApp.Pages
         {
             
         }
-        public async Task OnPostNewRoleSubmit()
+        public async Task OnPostNewRoleSubmit()     //This is the oringal method before bugging out? Same with RoleRemove()
         {
             string s = Request.Form["roleName"];
             //adminDash.addRole(s);
@@ -137,6 +136,7 @@ namespace StructchaWebApp.Pages
 
         public void OnPostEditCompletedProject()
         {
+
         }
 
         public void OnPostEditContractors()

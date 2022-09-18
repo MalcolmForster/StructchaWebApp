@@ -172,6 +172,7 @@ namespace StructchaWebApp.Pages.Shared
             var editedProject = new Project(projectCode,conn);
             int num = -1;
             string accessType = "";
+            string? companyToEdit = null;
 
             switch (editOperation)
             {
@@ -206,70 +207,38 @@ namespace StructchaWebApp.Pages.Shared
 
                     break;
                 case "addCompany":
-                    editedProject.addCompany(company, parameters);
+                    companyToEdit = getCompCode(parameters);
+                    if (companyToEdit != null)
+                    {
+                        editedProject.addCompany(companyToEdit);
+                    } else
+                    {
+                        Console.WriteLine("Company does not exist");
+                    }            
 
                     break;
                 case "removeCompany":
-                    editedProject.removeCompany(company, parameters);
+                    companyToEdit = getCompCode(parameters);
+                    if (companyToEdit != null)
+                    {
+                        editedProject.removeCompany(companyToEdit);
+                    }
 
                     break;
-                case "editStart":
-                    editedProject.editStart(company, parameters);
+                //case "editStart":
+                //    editedProject.editStart(company, parameters);
 
-                    break;
-                case "editFinish":
-                    editedProject.editFinish(company, parameters);
+                //    break;
+                //case "editFinish":
+                //    editedProject.editFinish(company, parameters);
 
-                    break;
+                //    break;
             }
 
             if(num != -1)
             {
                 editedProject.editProjectAccess(num, company, accessType, parameters);
             }
-
-
-
-
-
-
-
-
-            //switch (editOperation)
-            //{
-            //    case "addRoles":
-            //        editedProject.addRoles(company, parameters);
-
-            //        break;
-            //    case "removeRoles":
-            //        editedProject.removeRoles(company, parameters);
-
-            //        break;
-            //    case "addCompany":
-            //        editedProject.addCompany(company, parameters);
-
-            //        break;
-            //    case "removeCompany":
-            //        editedProject.removeCompany(company, parameters);
-
-            //        break;
-            //    case "addIndividual":
-            //        editedProject.addIndividual(company, parameters);
-
-            //        break;
-            //    case "removeIndividual":
-            //        editedProject.removeIndividual(company, parameters);
-
-            //        break;
-            //    case "editStart":
-            //        editedProject.editStart(company, parameters);
-
-            //        break;
-            //    case "editFinish":
-            //        editedProject.editFinish(company, parameters);
-
-            //        break;
-            //}
             conn.Close();
         }
     }
