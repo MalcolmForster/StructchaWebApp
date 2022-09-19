@@ -15,9 +15,9 @@ namespace StructchaWebApp.Pages.Shared
         public string? Title { get; set; }
         public string Location { get; set; }
         public List<string> Companies { get; set; }
-        private Dictionary<string, string[]> AccessRoles { get; set; }
-        private Dictionary<string, string[]> AccessIndividual { get; set; }
-        private Dictionary<string, string[]> BlockIndividual { get; set; }
+        public Dictionary<string, string[]> AccessRoles { get; set; }
+        public Dictionary<string, string[]> AccessIndividual { get; set; }
+        public Dictionary<string, string[]> BlockIndividual { get; set; }
 
         public IEnumerable<SelectListItem> SelectListCompanies { get; set; }
         public Dictionary<string, IEnumerable<SelectListItem>> SelectListRoles { get; set; }

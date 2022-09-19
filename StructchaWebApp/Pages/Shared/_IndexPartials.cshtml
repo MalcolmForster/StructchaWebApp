@@ -9,7 +9,7 @@
     @{
         foreach (string s in Model)
         {
-            <li><a href=".">@s   -   </a><button name="taskComplete_@s" asp-page-handler="">Done</button></li>
+            <li><a href=".">@s   -   </a><button name="openTask_@s" asp-page-handler="">Open</button></li>
         }
     }
 </ul>

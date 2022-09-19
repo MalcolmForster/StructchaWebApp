@@ -180,9 +180,9 @@ p {
 
 .main-display {
     width: var(--main-view-width)-40px;
-    margin:20px;
-    background-color:aliceblue;
-    min-height: 50vh;
+    margin: 20px;
+    background-color: aliceblue;
+    /*min-height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight) - 40px);*/
 }
 
 .dash-div {

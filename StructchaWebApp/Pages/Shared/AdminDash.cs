@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel;
-using System.Data;
 
 namespace StructchaWebApp.Pages.Shared
 {
     public class AdminDash
     {
         private RoleManager<IdentityRole> roleManager { get; set; }
-
+        
         public AdminDash(RoleManager<IdentityRole> rm)
         {
             roleManager = rm;

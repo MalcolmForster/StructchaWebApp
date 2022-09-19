@@ -6,11 +6,12 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    Model.user = UserManager.GetUserAsync(User).Result;
 }
 
 <div class="text-center bodyContainer">
 
-    @if (SignInManager.IsSignedIn(User)) {
+    @if (SignInManager.IsSignedIn(User)) {        
 
         //AppManager app = new AppManager(UserManager.GetUserId(User),"JointDraw");
         //Unsure if need a connect to GUI function
@@ -83,7 +84,7 @@
                     <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="assignments"/>
                 </div>
                 <div class="taskBarSubSection">
-                    <h4>Selfset Tasks</h4>
+                    <h4>Tasks started by you</h4>
                     
                         @{
                             //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
@@ -95,9 +96,8 @@
 
 
             <div name="mainView" class="main-view">
-                <h2>@User.Identity?.Name's dashboard</h2>
-                <div name="mainDisplay" class="main-display">
-
+                <div name="mainDisplay" class="main-display"> <!--This can be used to display the currently required partial perhaps?-->
+                    <h2>Nothing to display here</h2>
                 </div>
             </div>
         </div>

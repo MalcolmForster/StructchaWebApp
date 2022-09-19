@@ -27,6 +27,7 @@ namespace StructchaWebApp.Pages
 
         public DashboardModel(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
         {
+            //Need to add methods to only set the dashBoard sections which are accessable by the users roles
             user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
             projectAdmin = new ProjectAdmin(user.Company, rm,um);
             adminDash = new AdminDash(rm);
