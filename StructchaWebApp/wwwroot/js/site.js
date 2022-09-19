@@ -60,6 +60,29 @@ function toggleProjectEditDiv(div) {
         editButton.style.display = "inline-block";
         hideButton.style.display = "none";
     }
+    return false;
+}
+
+function changeMainDisplay(i) {  
+
+    var handler = "";
+
+    if (i == 0) {
+        handler = '/?handler=NewProjectPost';
+    } else if (i == 1) {
+        handler = '/?handler=NewProjectTask';
+    }
+
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        contentType: 'application/html; charset=utf-8',
+        url: handler,      
+        success: function (result) {
+            $("#mainView").html(result);
+        }
+    });
+    return false;
 }
 
 
