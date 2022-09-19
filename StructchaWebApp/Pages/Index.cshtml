@@ -71,7 +71,7 @@
             <div name="taskBar" class="task-bar">
                 <div class="taskBarSection">
                     <h3>Project Updates/Messages</h3>
-                    <button asp-page-handler="NewProjectPost">Post a project update</button>
+                    <button name="changeToNewPost" onclick="changeMainDisplay(0)">Post a project update</button>
                         @{
                             string[] updates = { "Here is an update", "And another update", "How about another update", "Oh look, another update!", "And another update", "How about another update", "Oh look, another update!"};
                         }
@@ -79,7 +79,7 @@
                 </div>
                 <div class="taskBarSection">
                     <h3>Assigned Tasks</h3>
-                    <button name="" asp-page-handler="NewTask">Create new task</button>
+                    <button name="changeToNewTask" onclick="changeMainDisplay(1)">Create new task</button>
                     @{string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };}
                     <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="assignments"/>
                 </div>
@@ -96,7 +96,8 @@
 
 
             <div name="mainView" class="main-view">
-                <div name="mainDisplay" class="main-display"> <!--This can be used to display the currently required partial perhaps?-->
+                <div name="mainDisplay" id="mainDisplay" class="main-display">
+                    <!--This can be used to display the currently required partial perhaps?-->
                     <h2>Nothing to display here</h2>
                 </div>
             </div>

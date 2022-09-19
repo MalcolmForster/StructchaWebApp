@@ -47,5 +47,28 @@ namespace StructchaWebApp.Pages
         {
 
         }
+
+        public void OnPostChangePartial()
+        {
+
+        }
+
+        public ActionResult OnGetNewProjectPost()
+        {
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_NewProjectPost",
+            };        
+            return result;
+        }
+
+        public ActionResult OnGetNewProjectTask()
+        {
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_NewProjectTask",
+            };
+            return result;
+        }
     }
 }
