@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using StructchaWebApp.Data;
 using StructchaWebApp.Pages.Shared;
 
@@ -11,7 +12,7 @@ namespace StructchaWebApp.Pages
         private AppManager app { get; set; }
 
         public ApplicationUser user { get; set; }
-        private UserHomePage userHomePage { get; set; }
+        public UserHomePage userHomePage { get; set; }
 
 
         public IndexModel(UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
@@ -40,6 +41,11 @@ namespace StructchaWebApp.Pages
 
         public void OnPostNewProjectPost()
         {
+            string projectCode = Request.Form["PostProjectCode"];
+            string postTitle = Request.Form["PostTitle"];
+            string postBody = Request.Form["PostBody"];
+
+            userHomePage.createPost(projectCode,postTitle,postBody);
 
         }
 
@@ -58,7 +64,9 @@ namespace StructchaWebApp.Pages
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_NewProjectPost",
-            };        
+                ViewData = new ViewDataDictionary<UserHomePage>(ViewData, userHomePage)
+            };
+            
             return result;
         }
 

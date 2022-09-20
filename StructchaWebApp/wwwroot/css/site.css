@@ -184,6 +184,9 @@ p {
     background-color: aliceblue;
     /*min-height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight) - 40px);*/
 }
+    .main-display input{
+        margin:5px;
+    }
 
 .dash-div {
     background: var(--dark-bg);

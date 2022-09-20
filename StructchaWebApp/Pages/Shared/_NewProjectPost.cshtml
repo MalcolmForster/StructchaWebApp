@@ -1,6 +1,17 @@
-﻿@model IndexModel;
+﻿@model UserHomePage;
 @{
     <div name="mainDisplay" class="main-display">
         <h3>You are creating a new project post</h3>
+        <form name="createProjectPost" asp-page-handler="NewProjectPost">
+        <label>For project: </label>
+            <select name="PostProjectCode" asp-items="@Model.projectSelectList">
+                <option name="noProject">No Project</option>
+            </select>
+            <label>(Not required)</label><br/>
+            <label>Post Title: </label><input type="text" name="PostTitle" width="200"/>
+            <h4>Post Body</h4>
+            <textarea name="PostBody" type="text" rows="10"cols="50"></textarea><br/>
+            <input type="submit"/>
+        </form>
     </div>
 }

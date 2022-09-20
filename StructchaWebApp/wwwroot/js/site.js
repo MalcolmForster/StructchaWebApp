@@ -66,7 +66,6 @@ function toggleProjectEditDiv(div) {
 function changeMainDisplay(i) {  
 
     var handler = "";
-
     if (i == 0) {
         handler = '/?handler=NewProjectPost';
     } else if (i == 1) {
@@ -82,7 +81,6 @@ function changeMainDisplay(i) {
             $("#mainView").html(result);
         }
     });
-    return false;
 }
 
 
