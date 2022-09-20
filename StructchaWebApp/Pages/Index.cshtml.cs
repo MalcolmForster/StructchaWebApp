@@ -49,6 +49,18 @@ namespace StructchaWebApp.Pages
 
         }
 
+        public void OnPostNewProjectTask()
+        {
+            string projectCode = Request.Form["TaskProjectCode"];
+            string[] taskRoles = Request.Form["TaskAssignRole"];
+            string[] taskUsers = Request.Form["TaskAssignUser"];
+            string taskTitle = Request.Form["TaskTitle"];
+            string taskBody = Request.Form["TaskBody"];
+
+            userHomePage.createTask(projectCode,  taskTitle, taskBody,taskRoles, taskUsers);
+
+        }
+
         public void OnPostNewTask()
         {
 

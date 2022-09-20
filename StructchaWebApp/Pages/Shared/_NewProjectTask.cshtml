@@ -2,5 +2,22 @@
 @{
     <div name="mainDisplay" class="main-display">
         <h3>You are creating a new project Task</h3>
+        <form name="createProjectTask" asp-page-handler="NewProjectTask">
+            <label>For project: </label>
+            <select name="TaskProjectCode" asp-items="@Model.projectSelectList">
+                <option name="noProject">No Project</option>
+            </select>
+            <select name="TaskAssignUser" asp-items="@Model.userSelectList"> <!-- This select list is filled with users which are able to access the task from the same company as the current user -->
+                <option name="noUser">No User</option>                      <!-- be multiselectable -->
+            </select>
+            <select name="TaskAssignRole" asp-items="@Model.roleSelectList"> <!-- This select list is filled with roles which can be assigned from the project -->
+                <option name="noRole">No Role</option>                      <!-- be multiselectable -->
+            </select>
+
+            <label>Task Title: </label><input type="text" name="TaskTitle" width="200" />
+            <h4>Post Body</h4>
+            <textarea name="TaskBody" type="text" rows="10" cols="50"></textarea><br />
+            <input type="submit" />
+        </form>
     </div>
 }

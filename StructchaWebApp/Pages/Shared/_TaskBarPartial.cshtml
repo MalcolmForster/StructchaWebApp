@@ -1,0 +1,17 @@
+﻿@model List<ProjectPost>
+
+<div class="taskBar">
+    @{
+        List<ProjectPost> projectPosts = Model;
+        foreach (ProjectPost pp in projectPosts)
+        {
+            if (pp.Title != null)
+            {
+                <a name="openTask_@pp.Title" asp-page-handler="">@pp.Title</a>
+                <br />
+                <br />
+            }
+        }
+    }
+</div>
+

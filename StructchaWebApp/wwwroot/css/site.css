@@ -158,15 +158,20 @@ p {
     height: 30vh;
 }
 
-.taskBarList {
+.taskBar {
     overflow-y: scroll;
     overflow-x: hidden;
-    height:25vh;
-    
+    height: 25vh;
+    padding: 20px;
 }
 
-    .taskBarList li {
-        text-align: left;
+    .taskBar a {
+        text-decoration: none;
+        font-size: 20px;
+        color: black;
+        background-color: gray;
+        padding: 5px;
+        border-radius: 5px;
     }
 
 .main-view {

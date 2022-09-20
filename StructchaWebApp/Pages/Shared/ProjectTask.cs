@@ -1,6 +1,6 @@
 ﻿namespace StructchaWebApp.Pages.Shared
 {
-    public class ProjectTasks
+    public class ProjectTask
     {
     }
 }

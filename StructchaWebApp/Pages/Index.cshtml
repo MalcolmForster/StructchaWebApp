@@ -71,10 +71,10 @@
                 <div class="taskBarSection">
                     <h3>Project Updates/Messages</h3>
                     <button name="changeToNewPost" onclick="changeMainDisplay(0)">Post a project update</button>
-                        @{
-                            string[] updates = { "Here is an update", "And another update", "How about another update", "Oh look, another update!", "And another update", "How about another update", "Oh look, another update!"};
-                        }
-                        <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="updates"/>
+                    @{
+                        List<ProjectPost> projectPosts = Model.userHomePage.projectPostList;
+                    }
+                    <partial name="~/Pages/Shared/_TaskBarPartial.cshtml" model="projectPosts" />
                 </div>
                 <div class="taskBarSection">
                     <h3>Assigned Tasks</h3>

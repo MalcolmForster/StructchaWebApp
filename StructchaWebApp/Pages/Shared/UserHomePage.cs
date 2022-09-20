@@ -9,20 +9,26 @@ namespace StructchaWebApp.Pages.Shared
 {
     public class UserHomePage
     {
+        private UserManager<ApplicationUser> um { get; set; }
         private ApplicationUser user { get; set; }
         private IList<string> usersRoles { get; set; }
         private SqlConnection conn { get; set; }
         public List<Project> projectList { get; set; }
         public IEnumerable<SelectListItem> projectSelectList { get; set; }
+        public IEnumerable<SelectListItem> userSelectList { get; set; }
+        public IEnumerable<SelectListItem> roleSelectList { get; set; }
         public List<Project> finishedProjectList { get; set; }
-        public List<ProjectPosts> projectPostList { get; set; }
-        public List<ProjectTasks> taskList { get; set; }
-        public List<ProjectTasks> ownTaskList { get; set; }
+        public List<ProjectPost> projectPostList { get; set; }
+        public List<ProjectTask> taskList { get; set; }
+        public List<ProjectTask> ownTaskList { get; set; }
         public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager)
         {
+            um = userManager;
             this.user = user;
             usersRoles = userManager.GetRolesAsync(user).Result;
             conn = _Common.connDB();
+            userSelectList = new List<SelectListItem>();
+            roleSelectList = new List<SelectListItem>();
             setProjectList();
             setProjectPostList();
             setTaskList();
@@ -116,7 +122,6 @@ namespace StructchaWebApp.Pages.Shared
             int projectCount = projectList.Count;
             SqlParameter[] sqlParameters = new SqlParameter[projectCount];
             string queryBuilder = "SELECT [Id] FROM [dbo].[Posts] WHERE [PostTitle] IS NOT NULL AND [IdProject] IN ({0}) ORDER BY TimeOfPost ASC";
-
             string formattedIn = "";
 
             for (int i = 0; i < projectCount; i++)
@@ -126,22 +131,22 @@ namespace StructchaWebApp.Pages.Shared
                 formattedIn = String.Concat(formattedIn, parameterCode);
                 sqlParameters[i] = new SqlParameter(parameterCode.Remove(parameterCode.Length - 1), projectCode);
             }
-            char something = formattedIn[formattedIn.Length - 1];
+            
             string query = string.Format(queryBuilder, formattedIn.Remove(formattedIn.Length-1));
             var projectPostIds = idListRetrieve(query, sqlParameters);
 
-            List<ProjectPosts> projectPosts = new List<ProjectPosts>();
+            List<ProjectPost> projectPosts = new List<ProjectPost>();
             foreach (string s in projectPostIds)
             {
-                projectPosts.Add(new ProjectPosts(s));
+                projectPosts.Add(new ProjectPost(s,um,conn));
             }
             projectPostList = projectPosts;
         }
 
         private void setTaskList()
         {
-            List<ProjectTasks> allTaskList = new List<ProjectTasks>();
-            List<ProjectTasks> selfTaskList = new List<ProjectTasks>();
+            List<ProjectTask> allTaskList = new List<ProjectTask>();
+            List<ProjectTask> selfTaskList = new List<ProjectTask>();
 
 
 
@@ -150,11 +155,6 @@ namespace StructchaWebApp.Pages.Shared
             taskList = allTaskList;
             ownTaskList = selfTaskList;
         }
-
-
-
-
-
 
         public void createPost(string projectCode, string postTitle, string postBody)
         {
@@ -165,6 +165,20 @@ namespace StructchaWebApp.Pages.Shared
             cmd.Parameters.AddWithValue("@project", projectCode);
             cmd.Parameters.AddWithValue("@title", postTitle);
             cmd.Parameters.AddWithValue("@body", postBody);
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void createTask(string projectCode, string taskTitle, string taskBody, string[] taskRoles, string[] taskUsers)
+        {
+            conn.Open();
+            string query = "INSERT INTO [dbo].[Tasks] (IDUserOP,IdProject,PostTitle,PostBody,TimeOfPost) VALUES (@user, @project, @title, @body, GETDATE())";
+            var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@user", user.Id);
+            cmd.Parameters.AddWithValue("@project", projectCode);
+            cmd.Parameters.AddWithValue("@title", taskTitle);
+            cmd.Parameters.AddWithValue("@body", taskBody);
 
             cmd.ExecuteNonQuery();
             conn.Close();
