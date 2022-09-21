@@ -152,12 +152,26 @@ namespace StructchaWebApp.Pages.Shared
 
         private List<ProjectTask> findTasks(int t) //coming back to this, going to make methods that can create task first
         {
+            string option = "";
+            
+            if(t == 0)
+            {
+                option = "IdUsers";
+            }
+            else if (t == 1)
+            {
+                option = "IdAssigner";
+            }
+
+            string query = String.Format("SELECT [Id] FROM [dbo].[Tasks] WHERE [PostTitle] IS NOT NULL AND [{0}] = @uId ORDER BY [Priority] DESC, TimeOfPost ASC",option);
+            SqlParameter[] sqlParameters = { new SqlParameter("uId",user.Id) };
+            List<string> taskIds =  idListRetrieve(query, sqlParameters);
             var taskList = new List<ProjectTask>();
 
-
-
-
-
+            foreach(string s in taskIds)
+            {
+                taskList.Add(new ProjectTask(s,um, conn));
+            }
 
             return taskList;
         }
@@ -214,7 +228,7 @@ namespace StructchaWebApp.Pages.Shared
 
         private string[]? getIdentityID(string[] input, int t) //gets the id of roles and users, 0 for user, 1 for roles
         {
-            if(input.Length != 0)
+            if(input[0] != "")
             {
                 string[]? id = new string[input.Length];
 
