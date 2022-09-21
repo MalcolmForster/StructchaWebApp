@@ -71,7 +71,7 @@ function changeMainDisplay(i) {
     } else if (i == 1) {
         handler = '/?handler=NewProjectTask';
     }
-
+    
     $.ajax({
         type: 'get',
         dataType: 'html',
@@ -82,5 +82,25 @@ function changeMainDisplay(i) {
         }
     });
 }
+
+
+function updateNewTaskAccessSelectors() {
+    //$("#TaskAssignUser").empty();
+    //$("#TaskAssignRole").empty();
+
+    var selectedProject = $("#TaskProjectCode :selected").val();
+    var turl = '/Index?handler=SendSelected&code=' + selectedProject;
+
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        contentType: 'application/html; charset=utf-8',
+        url: turl,
+        success: function (result) {
+            $("#dynamicTaskSelectors").html(result);
+        }
+    });
+};
+
 
 

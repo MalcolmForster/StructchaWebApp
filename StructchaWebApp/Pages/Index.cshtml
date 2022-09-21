@@ -79,12 +79,13 @@
                 <div class="taskBarSection">
                     <h3>Assigned Tasks</h3>
                     <button name="changeToNewTask" onclick="changeMainDisplay(1)">Create new task</button>
-                    @{string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };}
+                    @{
+                        string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
+                    }
                     <partial name="~/Pages/Shared/_IndexPartials.cshtml" model="assignments"/>
                 </div>
                 <div class="taskBarSubSection">
-                    <h4>Tasks started by you</h4>
-                    
+                    <h4>Tasks started by you</h4>                  
                         @{
                             //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
                             string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };

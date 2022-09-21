@@ -1,0 +1,11 @@
+﻿@model IndexModel
+
+@{
+    <label>Assigned too: </label>
+    <select name="TaskAssignUser" id="TaskAssignUser" asp-items="@Model.userHomePage.userSelectList">
+        <option name="noUser" value="">No User</option>                      <!-- be multiselectable in future-->
+    </select>
+    <select name="TaskAssignRole" id="TaskAssignRole" asp-items="@Model.userHomePage.roleSelectList">
+        <option name="noRole" value="">No Role</option>                    <!-- be multiselectable in future -->
+    </select>
+}

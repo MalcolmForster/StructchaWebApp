@@ -15,10 +15,10 @@ namespace StructchaWebApp.Pages
         public UserHomePage userHomePage { get; set; }
 
 
-        public IndexModel(UserManager<ApplicationUser> um, IHttpContextAccessor httpContextAccessor)
+        public IndexModel(UserManager<ApplicationUser> um, RoleManager<IdentityRole> rm, IHttpContextAccessor httpContextAccessor)
         {
             user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
-            userHomePage = new UserHomePage(user, um);
+            userHomePage = new UserHomePage(user, um,rm);
         }
 
         public void OnGet()
@@ -52,12 +52,13 @@ namespace StructchaWebApp.Pages
         public void OnPostNewProjectTask()
         {
             string projectCode = Request.Form["TaskProjectCode"];
-            string[] taskRoles = Request.Form["TaskAssignRole"];
-            string[] taskUsers = Request.Form["TaskAssignUser"];
+            string taskPriority = Request.Form["SetTaskPriority"];
+            string[] taskRoles = { Request.Form["TaskAssignRole"] };
+            string[] taskUsers = { Request.Form["TaskAssignUser"] };
             string taskTitle = Request.Form["TaskTitle"];
             string taskBody = Request.Form["TaskBody"];
 
-            userHomePage.createTask(projectCode,  taskTitle, taskBody,taskRoles, taskUsers);
+            userHomePage.createTask(projectCode,taskPriority, taskTitle, taskBody,taskRoles, taskUsers);
 
         }
 
@@ -69,6 +70,19 @@ namespace StructchaWebApp.Pages
         public void OnPostChangePartial()
         {
 
+        }
+
+        public ActionResult OnGetSendSelected(string code)
+        {
+            userHomePage.setTaskAccessSelectLists(code);
+            var test = userHomePage.userSelectList;
+
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_DynamicTaskSelector",
+                ViewData = new ViewDataDictionary<IndexModel>(ViewData, this)
+            };
+            return result;
         }
 
         public ActionResult OnGetNewProjectPost()
@@ -87,6 +101,7 @@ namespace StructchaWebApp.Pages
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_NewProjectTask",
+                ViewData = new ViewDataDictionary<IndexModel>(ViewData, this)
             };
             return result;
         }

@@ -3,7 +3,7 @@
     <div name="mainDisplay" class="main-display">
         <h3>You are creating a new project post</h3>
         <form name="createProjectPost" asp-page-handler="NewProjectPost">
-        <label>For project: </label>
+            <label>For project: </label>
             <select name="PostProjectCode" asp-items="@Model.projectSelectList">
                 <option name="noProject">No Project</option>
             </select>

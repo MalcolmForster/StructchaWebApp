@@ -7,8 +7,7 @@ namespace StructchaWebApp.Pages.Shared
 {
     public class ProjectPost
     {
-        private string Id { get; set; }
-        
+        private string Id { get; set; }        
         public string UserName { get; set; }
         private string UserId { get; set; }
         public string? ProjectId { get; set; }

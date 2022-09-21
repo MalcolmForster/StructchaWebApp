@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using StructchaWebApp.Data;
@@ -10,6 +12,7 @@ namespace StructchaWebApp.Pages.Shared
     public class UserHomePage
     {
         private UserManager<ApplicationUser> um { get; set; }
+        private RoleManager<IdentityRole> rm { get; set; }
         private ApplicationUser user { get; set; }
         private IList<string> usersRoles { get; set; }
         private SqlConnection conn { get; set; }
@@ -21,18 +24,22 @@ namespace StructchaWebApp.Pages.Shared
         public List<ProjectPost> projectPostList { get; set; }
         public List<ProjectTask> taskList { get; set; }
         public List<ProjectTask> ownTaskList { get; set; }
-        public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager)
+        public string selectedProject { get; set; }
+
+        public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             um = userManager;
+            rm = roleManager;
             this.user = user;
             usersRoles = userManager.GetRolesAsync(user).Result;
             conn = _Common.connDB();
-            userSelectList = new List<SelectListItem>();
-            roleSelectList = new List<SelectListItem>();
+            //userSelectList = new List<SelectListItem>();
+            //roleSelectList = new List<SelectListItem>();
             setProjectList();
             setProjectPostList();
             setTaskList();
             conn.Close();
+            selectedProject = "";
         }
 
         private List<string> idListRetrieve(string query, SqlParameter[]? sqlParameters)
@@ -143,17 +150,52 @@ namespace StructchaWebApp.Pages.Shared
             projectPostList = projectPosts;
         }
 
+        private List<ProjectTask> findTasks(int t) //coming back to this, going to make methods that can create task first
+        {
+            var taskList = new List<ProjectTask>();
+
+
+
+
+
+
+            return taskList;
+        }
+
         private void setTaskList()
         {
-            List<ProjectTask> allTaskList = new List<ProjectTask>();
-            List<ProjectTask> selfTaskList = new List<ProjectTask>();
+            taskList = findTasks(0);
+            ownTaskList = findTasks(1);
+        }
 
+        private IEnumerable<SelectListItem> stringArrayToSelectList(string[] strings)
+        {
+            var list = new List<SelectListItem>();
 
+            foreach (string s in strings)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = s,
+                    Value = s
+                }
+                    );
+            }
 
+            return list;
+        }
 
+        public void setTaskAccessSelectLists(string selection)
+        {
+            conn.Open();
+            Project project = new Project(selection,conn);
+            conn.Close();
 
-            taskList = allTaskList;
-            ownTaskList = selfTaskList;
+            string[] indiv = project.AccessIndividual[user.Company];
+            string[] roles = project.AccessRoles[user.Company];
+
+            userSelectList = stringArrayToSelectList(indiv);
+            roleSelectList = stringArrayToSelectList(roles);
         }
 
         public void createPost(string projectCode, string postTitle, string postBody)
@@ -170,12 +212,59 @@ namespace StructchaWebApp.Pages.Shared
             conn.Close();
         }
 
-        public void createTask(string projectCode, string taskTitle, string taskBody, string[] taskRoles, string[] taskUsers)
+        private string[]? getIdentityID(string[] input, int t) //gets the id of roles and users, 0 for user, 1 for roles
+        {
+            if(input.Length != 0)
+            {
+                string[]? id = new string[input.Length];
+
+                for (int i = 0; i < id.Length; i++)
+                {
+                    if (t == 0)
+                    {
+                        id[i] = (um.FindByNameAsync(input[i]).Result).Id;
+                    }
+                    else if (t == 1)
+                    {
+                        id[i] = (rm.FindByNameAsync(input[i]).Result).Id;
+                    }
+                }
+                return id;
+            } else
+            {
+                return null;
+            }
+
+        }
+
+        public void createTask(string projectCode, string taskPriority, string taskTitle, string taskBody, string[] taskRoles, string[] taskUsers)
         {
             conn.Open();
-            string query = "INSERT INTO [dbo].[Tasks] (IDUserOP,IdProject,PostTitle,PostBody,TimeOfPost) VALUES (@user, @project, @title, @body, GETDATE())";
+            string query = "INSERT INTO [dbo].[Tasks] (IdAssigner,IdUsers,IdProject,IdCompany,IdRoles,Priority,PostTitle,PostBody,TimeOfPost) VALUES (@user, @assignUsers, @project, @company, @assignRoles,@priority,@title, @body, GETDATE())";
             var cmd = new SqlCommand(query, conn);
+            string[]? userIds = getIdentityID(taskUsers, 0);
+            string[]? roleIds = getIdentityID(taskRoles, 1);
+
+            if (userIds != null)
+            {
+                cmd.Parameters.AddWithValue("@assignUsers", String.Join(',', userIds));
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@assignUsers", DBNull.Value);
+            }
+
+            if (roleIds != null)
+            {
+                cmd.Parameters.AddWithValue("@assignRoles", String.Join(',', roleIds));
+            } else
+            {
+                cmd.Parameters.AddWithValue("@assignRoles", DBNull.Value);
+            }
+
             cmd.Parameters.AddWithValue("@user", user.Id);
+            cmd.Parameters.AddWithValue("@company", user.Company);
+            cmd.Parameters.AddWithValue("@priority", taskPriority);
             cmd.Parameters.AddWithValue("@project", projectCode);
             cmd.Parameters.AddWithValue("@title", taskTitle);
             cmd.Parameters.AddWithValue("@body", taskBody);
@@ -183,6 +272,5 @@ namespace StructchaWebApp.Pages.Shared
             cmd.ExecuteNonQuery();
             conn.Close();
         }
-
     }
 }

@@ -163,6 +163,7 @@ p {
     overflow-x: hidden;
     height: 25vh;
     padding: 20px;
+    width: var(--task-bar-width);
 }
 
     .taskBar a {
@@ -189,7 +190,7 @@ p {
     background-color: aliceblue;
     /*min-height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight) - 40px);*/
 }
-    .main-display input{
+    .main-display input, select{
         margin:5px;
     }
 
