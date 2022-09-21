@@ -1,17 +1,18 @@
 ﻿@model List<ProjectPost>
 
 <div class="taskBar">
-    @{
-        List<ProjectPost> projectPosts = Model;
-        foreach (ProjectPost pp in projectPosts)
-        {
-            if (pp.Title != null)
+    <ul>
+        @{
+            List<ProjectPost> projectPosts = Model;
+            foreach (ProjectPost pp in projectPosts)
             {
-                <a name="openPost_@pp.Title" asp-page-handler="">@pp.Title</a>
-                <br />
-                <br />
+                if (pp.Title != null)
+                {
+                    <li><label>@pp.ProjectName</label><br /> @* Look into grouping tasks into each project perhaps*@
+                    <a name="openPost_@pp.Title" asp-page-handler="">@pp.Title</a></li>
+                }
             }
         }
-    }
+    </ul>
 </div>
 

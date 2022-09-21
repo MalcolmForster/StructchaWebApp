@@ -9,6 +9,7 @@ namespace StructchaWebApp.Pages.Shared
     {
         private string Id { get; set; }        
         public string UserName { get; set; }
+        public string ProjectName { get; set; }
         private string UserId { get; set; }
         public string? ProjectId { get; set; }
         public string? Title { get; set; }
@@ -38,7 +39,14 @@ namespace StructchaWebApp.Pages.Shared
                 while (reader.Read())
                 {
                     UserId = reader.GetString(1);
-                    ProjectId = reader.GetString(2);
+                    if(reader.GetValue(2) != DBNull.Value)
+                    {
+                        ProjectId = reader.GetString(2);
+                    } else
+                    {
+                        ProjectId = null;
+                    }
+                    
                     Body = reader.GetString(6);
                     TimeOfPost = reader.GetDateTime(7);
 
@@ -57,9 +65,25 @@ namespace StructchaWebApp.Pages.Shared
                     }                    
                 }
             }
-            
-            UserName = userManager.FindByIdAsync(UserId).Result.UserName;
 
+            if (ProjectId != null)
+            {
+                Project pro = new Project(ProjectId, conn);
+
+                if (pro.Title != null)
+                {
+                    ProjectName = pro.Title;
+                }
+                else
+                {
+                    ProjectName = pro.Location;
+                }
+            } else
+            {
+                ProjectName = "No Project";
+            }
+
+            UserName = userManager.FindByIdAsync(UserId).Result.UserName;
         }
     }
 }

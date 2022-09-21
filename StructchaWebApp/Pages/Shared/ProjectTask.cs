@@ -10,11 +10,13 @@ namespace StructchaWebApp.Pages.Shared
         private string Id { get; set; }
         public string UserName { get; set; }
         private string assignerId { get; set; }
-        public string? ProjectId { get; set; }
+        private string ProjectCode { get; set; }
+        public string ProjectName { get; set; }
         public string? Title { get; set; }
         public string? Body { get; set; }
         public DateTime TimeOfPost { get; set; }
         public DateTime? TimeOfEdit { get; set; }
+        public int Priority { get; set; }
         private SqlConnection _connection { get; set; }
         public ProjectTask(string id, UserManager<ApplicationUser> userManager, SqlConnection conn)
         {
@@ -38,10 +40,10 @@ namespace StructchaWebApp.Pages.Shared
                 while (reader.Read())
                 {
                     assignerId = reader.GetString(1);
-                    ProjectId = reader.GetString(3);
+                    ProjectCode = reader.GetString(3);
                     Body = reader.GetString(8);
                     TimeOfPost = reader.GetDateTime(9);
-
+                    Priority = reader.GetInt32(6);
                     //values which can be null;
 
                     // IdCompany = reader.GetString(3);
@@ -59,6 +61,16 @@ namespace StructchaWebApp.Pages.Shared
                 }
             }
 
+            Project pro = new Project(ProjectCode, conn);
+
+            if(pro.Title != null)
+            {
+                ProjectName = pro.Title;
+            } else
+            {
+                ProjectName = pro.Location;
+            }
+            
             UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
         }
     }

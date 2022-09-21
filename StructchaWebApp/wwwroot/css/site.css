@@ -166,11 +166,21 @@ p {
     width: var(--task-bar-width);
 }
 
-    .taskBar a {
+    .taskBar ul{
+        padding:0px;
+    }
+
+    .taskBar li {
+        text-align:left;
         text-decoration: none;
+        list-style: none;
+        width: 100%;
+    }
+
+    .taskBar a {
         font-size: 20px;
+        text-decoration: none;
         color: black;
-        background-color: gray;
         padding: 5px;
         border-radius: 5px;
     }
