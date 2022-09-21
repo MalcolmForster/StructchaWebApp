@@ -171,10 +171,18 @@ p {
     }
 
     .taskBar li {
-        text-align:left;
+        text-align: left;
         text-decoration: none;
         list-style: none;
         width: 100%;
+        background-color: grey;
+        margin: 2px;
+        padding: 5px;
+        color: black;
+        border-radius: 5px
+    }
+    .taskBar li:hover{
+        background-color:gainsboro;
     }
 
     .taskBar a {
@@ -184,6 +192,17 @@ p {
         padding: 5px;
         border-radius: 5px;
     }
+
+.replies {
+    padding:0px;
+}
+.replies li {
+    padding:20px;
+    list-style:none;
+    width:100%;
+    background-color:gainsboro;
+    text-align:left;
+}
 
 .main-view {
     height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight));
@@ -198,10 +217,17 @@ p {
     width: var(--main-view-width)-40px;
     margin: 20px;
     background-color: aliceblue;
+    padding:20px
     /*min-height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight) - 40px);*/
 }
-    .main-display input, select{
+    .main-display input, select, button{
         margin:5px;
+    }
+
+    .main-display p {
+        background-color:white;
+        margin-top:20px;
+        padding:10px;
     }
 
 .dash-div {

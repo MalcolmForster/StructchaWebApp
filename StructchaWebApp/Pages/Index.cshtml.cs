@@ -10,15 +10,15 @@ namespace StructchaWebApp.Pages
     public class IndexModel : PageModel
     {
         private AppManager app { get; set; }
-
         public ApplicationUser user { get; set; }
         public UserHomePage userHomePage { get; set; }
-
+        private UserManager<ApplicationUser> userManager { get; set; }
 
         public IndexModel(UserManager<ApplicationUser> um, RoleManager<IdentityRole> rm, IHttpContextAccessor httpContextAccessor)
         {
             user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
             userHomePage = new UserHomePage(user, um,rm);
+            userManager = um;
         }
 
         public void OnGet()
@@ -75,7 +75,6 @@ namespace StructchaWebApp.Pages
         public ActionResult OnGetSendSelected(string code)
         {
             userHomePage.setTaskAccessSelectLists(code);
-            var test = userHomePage.userSelectList;
 
             PartialViewResult result = new PartialViewResult()
             {
@@ -102,6 +101,20 @@ namespace StructchaWebApp.Pages
             {
                 ViewName = "_NewProjectTask",
                 ViewData = new ViewDataDictionary<IndexModel>(ViewData, this)
+            };
+            return result;
+        }
+
+        public ActionResult OnGetTaskPartial(string taskId)
+        {
+            var conn = _Common.connDB();
+            ProjectTask projectTask = new ProjectTask(taskId, userManager, conn);
+            conn.Close();
+
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_TaskPartial",
+                ViewData = new ViewDataDictionary<ProjectTask>(ViewData, projectTask)
             };
             return result;
         }

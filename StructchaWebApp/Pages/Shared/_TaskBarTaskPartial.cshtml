@@ -8,9 +8,10 @@
             {
                 if (pt.Title != null)
                 {
-                    <li>
+                    <li onclick="ShowIndexPartial(@pt.Id, 1)">
                         <label>@pt.ProjectName: Priority @pt.Priority.ToString()</label><br /> @* Look into grouping tasks into each project perhaps*@
-                    <a name="openPost_@pt.Title" asp-page-handler="">@pt.Title</a></li>
+                        <p name="openPost_@pt.Title">@pt.Title</p>
+                    </li>
                 }
             }
         }

@@ -7,13 +7,14 @@ namespace StructchaWebApp.Pages.Shared
 {
     public class ProjectTask
     {
-        private string Id { get; set; }
+        public string Id { get; set; }
         public string UserName { get; set; }
         private string assignerId { get; set; }
         private string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         public string? Title { get; set; }
         public string? Body { get; set; }
+        public Reply[] replies { get; set; }
         public DateTime TimeOfPost { get; set; }
         public DateTime? TimeOfEdit { get; set; }
         public int Priority { get; set; }
@@ -63,10 +64,13 @@ namespace StructchaWebApp.Pages.Shared
 
             Project pro = new Project(ProjectCode, conn);
 
-            if(pro.Title != null)
+            replies = new Reply[0];
+
+            if (pro.Title != null)
             {
                 ProjectName = pro.Title;
-            } else
+            }
+            else
             {
                 ProjectName = pro.Location;
             }

@@ -1,9 +1,0 @@
-﻿@model string[]
-<ul class="taskBar">
-    @{
-        foreach (string s in Model)
-        {
-            <li>@s   -   <button name="openTask_@s" asp-page-handler="">Open</button></li>
-        }
-    }
-</ul>

@@ -8,8 +8,9 @@
             {
                 if (pp.Title != null)
                 {
-                    <li><label>@pp.ProjectName</label><br /> @* Look into grouping tasks into each project perhaps*@
-                    <a name="openPost_@pp.Title" asp-page-handler="">@pp.Title</a></li>
+                    <li onclick="ShowIndexPartial(@pp.Id, 0)">
+                    <label>@pp.ProjectName</label><br /> @* Look into grouping tasks into each project perhaps*@
+                    <p name="openPost_@pp.Title">@pp.Title</p></li>
                 }
             }
         }

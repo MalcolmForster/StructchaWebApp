@@ -1,0 +1,33 @@
+﻿@model ProjectTask
+@{
+    <div class="main-display">
+        <h3>Task - @Model.Title</h3>
+        <label>@Model.ProjectName - assigned by @Model.UserName</label><br />
+        <p>@Model.Body</p>
+
+        <label>Replies:</label><br />
+        <ul class="replies">
+                @if (Model.replies.Length == 0)
+                {
+                    <li style="text-align:center">No replies found</li>
+                }
+                else
+                {
+                    foreach(Reply r in Model.replies) {
+
+                    }
+                }
+
+        </ul>
+
+        <form>
+            <label>Post reply:</label><br />
+            <textarea rows="5" cols="50"></textarea><br />
+            <button type="submit">Reply</button><br />
+            <button name="newReply" type="button">Mark as completed</button>
+        </form>
+
+    </div>
+
+
+}

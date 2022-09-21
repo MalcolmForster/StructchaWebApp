@@ -39,6 +39,7 @@ namespace StructchaWebApp.Pages.Shared
             setProjectPostList();
             setTaskList();
             conn.Close();
+            conn.Dispose();
             selectedProject = "";
         }
 

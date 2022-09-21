@@ -103,4 +103,20 @@ function updateNewTaskAccessSelectors() {
 };
 
 
+function ShowIndexPartial(Id, t) {
+    if (t == 0) {
+        handler = '/Index?handler=PostPartial&postId=';
+    } else if (t == 1) {
+        handler = '/Index?handler=TaskPartial&taskId=';
+    }
 
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        contentType: 'application/html; charset=utf-8',
+        url: (handler + Id),
+        success: function (result) {
+            $("#mainView").html(result);
+        }
+    });
+}
