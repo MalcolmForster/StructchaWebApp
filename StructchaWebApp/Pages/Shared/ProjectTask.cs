@@ -7,6 +7,7 @@ namespace StructchaWebApp.Pages.Shared
 {
     public class ProjectTask
     {
+        public string type = "reply";
         public string Id { get; set; }
         public string UserName { get; set; }
         private string assignerId { get; set; }
@@ -31,6 +32,11 @@ namespace StructchaWebApp.Pages.Shared
             else
             {
                 _connection = conn;
+            }
+
+            if (_connection.State == System.Data.ConnectionState.Closed)
+            {
+                _connection.Open();
             }
 
             var cmd = new SqlCommand(query, _connection);
@@ -60,11 +66,13 @@ namespace StructchaWebApp.Pages.Shared
                         TimeOfEdit = null;
                     }
                 }
+                reader.Close();
+                reader.Dispose();
             }
 
             Project pro = new Project(ProjectCode, conn);
 
-            replies = new Reply[0];
+            findReplies(userManager);
 
             if (pro.Title != null)
             {
@@ -77,5 +85,46 @@ namespace StructchaWebApp.Pages.Shared
             
             UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
         }
+
+        private void findReplies(UserManager<ApplicationUser> um)
+        {
+            string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] DESC";
+            SqlCommand cmd = new SqlCommand(query, _connection);
+            cmd.Parameters.AddWithValue("@id", Id);
+
+
+            if (_connection.State == System.Data.ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
+
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    List<string> repliesList = new List<string>();
+                    while (reader.Read())
+                    {
+                        repliesList.Add(reader.GetInt32(0).ToString());
+                    }
+
+                    reader.Close();
+
+                    replies = new Reply[repliesList.Count];
+
+                    for (int i = 0; i < repliesList.Count; i++)
+                    {
+                        replies[i] = new Reply(repliesList[i], "Tasks", _connection);
+                        replies[i].postedBy = um.FindByIdAsync(replies[i].postedBy).Result.UserName;
+                    }
+                }
+                else
+                {
+                    replies = new Reply[0];
+                }
+            }
+        }
     }
+
 }

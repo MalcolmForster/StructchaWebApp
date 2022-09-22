@@ -31,9 +31,14 @@ namespace StructchaWebApp.Pages.Shared
         public Company LeadCompany { get; set; }
         private JsonObject AccessJson { get; set; }
 
-        public Project(string projectCode, SqlConnection? conn)
+        public Project(string projectCode, SqlConnection conn)
         {
+
             _connection = conn;
+            if (_connection.State == System.Data.ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
             ProjectCode = projectCode;
             Title = null;
             EndDate = null;
@@ -92,7 +97,7 @@ namespace StructchaWebApp.Pages.Shared
         private void FindLeadCompany()
         {
             //This will change to use the data pulled from the database column [Companies], but for now will use the change code to project code
-            LeadCompany = new Company(ProjectCode.Substring(0,6));
+            LeadCompany = new Company(ProjectCode.Substring(0,6),_connection);
         }
 
         private void AlterProjectJson()
@@ -120,7 +125,7 @@ namespace StructchaWebApp.Pages.Shared
             {
                 if (kvp.Key != "Lead")
                 {
-                    Company company = new Company((string)(kvp.Value["Code"]));
+                    Company company = new Company((string)(kvp.Value["Code"]), _connection);
                     Companies.Add(company.CompanyName);
                 }
             }     

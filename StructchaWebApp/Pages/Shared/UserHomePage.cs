@@ -26,25 +26,33 @@ namespace StructchaWebApp.Pages.Shared
         public List<ProjectTask> ownTaskList { get; set; }
         public string selectedProject { get; set; }
 
-        public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SqlConnection sqlConnection)
         {
             um = userManager;
             rm = roleManager;
             this.user = user;
             usersRoles = userManager.GetRolesAsync(user).Result;
-            conn = _Common.connDB();
+            conn = sqlConnection;
+            if(conn.State == System.Data.ConnectionState.Closed)
+            {
+                conn.Open();
+            }            
             //userSelectList = new List<SelectListItem>();
             //roleSelectList = new List<SelectListItem>();
             setProjectList();
             setProjectPostList();
             setTaskList();
             conn.Close();
-            conn.Dispose();
             selectedProject = "";
         }
 
         private List<string> idListRetrieve(string query, SqlParameter[]? sqlParameters)
         {
+
+            if(conn.State == System.Data.ConnectionState.Closed)
+            {
+                conn.Open();
+            }
             SqlCommand cmd = new SqlCommand(query, conn);
             if(sqlParameters != null)
             {
@@ -186,7 +194,7 @@ namespace StructchaWebApp.Pages.Shared
         private IEnumerable<SelectListItem> stringArrayToSelectList(string[] strings)
         {
             var list = new List<SelectListItem>();
-
+            
             foreach (string s in strings)
             {
                 list.Add(new SelectListItem
@@ -249,7 +257,29 @@ namespace StructchaWebApp.Pages.Shared
             {
                 return null;
             }
+        }
 
+        public void createReply(string type, string replyTo, string body)
+        {
+            string table = "";
+            string userCol="";
+            if(type == "task")
+            {
+                table = "[Tasks]";
+                userCol = "[IdAssigner]";
+            } else if (type == "post")
+            {
+                table = "[Posts]";
+                userCol = "[IdUserOp]";
+            }
+            string query = String.Format("INSERT INTO [dbo].{0} ({1},[PostBody],[TimeOfPost],[ReplyTo]) VALUES (@user,@body,GETDATE(),@replyTo)", table, userCol);
+            var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@user",user.Id);
+            cmd.Parameters.AddWithValue("@body",body);
+            cmd.Parameters.AddWithValue("@replyTo",replyTo);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();            
         }
 
         public void createTask(string projectCode, string taskPriority, string taskTitle, string taskBody, string[] taskRoles, string[] taskUsers)

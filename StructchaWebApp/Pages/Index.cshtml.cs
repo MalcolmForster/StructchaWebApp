@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Data.SqlClient;
 using StructchaWebApp.Data;
 using StructchaWebApp.Pages.Shared;
+using System.Data;
 
 namespace StructchaWebApp.Pages
 {
@@ -12,12 +14,14 @@ namespace StructchaWebApp.Pages
         private AppManager app { get; set; }
         public ApplicationUser user { get; set; }
         public UserHomePage userHomePage { get; set; }
+        private SqlConnection _connection { get; set; }
         private UserManager<ApplicationUser> userManager { get; set; }
 
         public IndexModel(UserManager<ApplicationUser> um, RoleManager<IdentityRole> rm, IHttpContextAccessor httpContextAccessor)
         {
+            _connection = _Common.connDB();
             user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
-            userHomePage = new UserHomePage(user, um,rm);
+            userHomePage = new UserHomePage(user, um,rm,_connection);
             userManager = um;
         }
 
@@ -60,6 +64,35 @@ namespace StructchaWebApp.Pages
 
             userHomePage.createTask(projectCode,taskPriority, taskTitle, taskBody,taskRoles, taskUsers);
 
+        }
+
+        public ActionResult OnPostNewReply(string type, string id)
+        {
+            string body = Request.Form["ReplyBody"];
+
+            if(type == "task" || type == "post")
+            {
+                userHomePage.createReply(type, id, body);
+                if (type == "task")
+                {
+                    return OnGetTaskPartial(id);
+                }
+                else if (type == "post")
+                {
+                    return OnGetPostPartial(id);
+                }
+            }
+            return (new PartialViewResult() { ViewName="_Error"});            
+        }
+        public void NewReply(string type)
+        {
+            string body = Request.Form["ReplyBody"];
+            string id = Request.Form["ReplyTo"];
+
+            if (type == "task" || type == "post")
+            {
+                userHomePage.createReply(type, id, body);
+            }
         }
 
         public void OnPostNewTask()
@@ -107,16 +140,37 @@ namespace StructchaWebApp.Pages
 
         public ActionResult OnGetTaskPartial(string taskId)
         {
-            var conn = _Common.connDB();
-            ProjectTask projectTask = new ProjectTask(taskId, userManager, conn);
-            conn.Close();
-
+            if(_connection.State == ConnectionState.Closed)
+            {
+                _connection.Open();
+            }            
+            ProjectTask projectTask = new ProjectTask(taskId, userManager, _connection);
+            _connection.Close();
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_TaskPartial",
                 ViewData = new ViewDataDictionary<ProjectTask>(ViewData, projectTask)
             };
             return result;
+        }
+
+        public ActionResult OnGetPostPartial(string taskId)
+        {
+            //var conn = _Common.connDB();
+            //ProjectTask projectTask = new ProjectTask(taskId, userManager, conn);
+            //conn.Close();
+            //conn.Dispose();
+
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_Error"
+                //ViewData = new ViewDataDictionary<ProjectTask>(ViewData, projectTask)
+            };
+            return result;
+        }
+        public void OnPostTaskReply()
+        {
+            NewReply("task"); 
         }
     }
 }

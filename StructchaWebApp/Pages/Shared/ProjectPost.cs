@@ -29,6 +29,10 @@ namespace StructchaWebApp.Pages.Shared
             } else
             {
                 _connection = conn;
+            } 
+            if(conn.State == System.Data.ConnectionState.Closed)
+            {
+                conn.Open();
             }
 
             var cmd = new SqlCommand(query, _connection);
