@@ -2,37 +2,55 @@
 @{
     <div class="main-display">
         <h3>Task - @Model.Title</h3>
+        @if (Model.Completed)
+        {
+            <h3 style="color:red">Marked as Complete</h3>
+        }
         <label>@Model.ProjectName - assigned by @Model.UserName</label><br />
         <p>@Model.Body</p>
 
         <label>Replies:</label><br />
 
         <ul class="replies">
-                @if (Model.replies.Length == 0)
+            @if (Model.replies.Length == 0)
+            {
+                <li style="text-align:center">No replies found</li>
+            }
+            else
+            {
+                foreach (Reply r in Model.replies)
                 {
-                    <li style="text-align:center">No replies found</li>
-                }
-                else
-                {
-                    foreach(Reply r in Model.replies) {
-                        <li>
+                    <li>
                         <h4>@r.postedBy replied on @r.timePosted.ToString()</h4>
                         <p>@r.body</p>
-                        </li>
-                        
-                    }
+                    </li>
                 }
+            }
         </ul>
 
-        <form id="ReplyForm" method="post" asp-page-handler="TaskReply">
-            <label>Reply:</label><br />
-            <textarea name="ReplyBody" rows="5" cols="50"></textarea><br />
-            <input name="ReplyTo" type="hidden" value="@Model.Id"/>
-            <input type="submit" /><br />
-            <button name="TaskComplete" type="button" >Mark as completed</button>
-        </form>
+
+        @if (Model.Completed == false)
+        {
+            <form id="ReplyForm" method="post" asp-page-handler="TaskReply">
+                <label>Reply:</label><br />
+                <textarea name="ReplyBody" rows="5" cols="50"></textarea><br />
+                <input name="ReplyTo" type="hidden" value="@Model.Id" />
+                <input type="submit" /><br />
+            </form>
+
+            <form name="TaskCompeted" asp-page-handler="TaskComplete">
+                <button type="submit" name="CompletionButton" value="@Model.Id">Mark as completed</button>
+                <input name="setto" type="hidden" value="1" />
+            </form>
+        }
+        else
+        {
+            <form name="TaskCompeted" asp-page-handler="TaskComplete">
+                <button type="submit" name="CompletionButton" value="@Model.Id">Unmark as complete</button>
+                <input name="SetTo" type="hidden" value="0" />
+            </form>
+        }
 
     </div>
-
 
 }

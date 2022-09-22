@@ -181,6 +181,7 @@ p {
         color: black;
         border-radius: 5px
     }
+
     .taskBar li:hover{
         background-color:gainsboro;
     }
@@ -196,6 +197,7 @@ p {
 .replies {
     padding:0px;
 }
+
 .replies li {
     padding:20px;
     list-style:none;

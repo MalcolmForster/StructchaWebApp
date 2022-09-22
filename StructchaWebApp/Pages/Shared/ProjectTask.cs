@@ -13,6 +13,7 @@ namespace StructchaWebApp.Pages.Shared
         private string assignerId { get; set; }
         private string ProjectCode { get; set; }
         public string ProjectName { get; set; }
+        public bool Completed { get; set; }
         public string? Title { get; set; }
         public string? Body { get; set; }
         public Reply[] replies { get; set; }
@@ -52,7 +53,7 @@ namespace StructchaWebApp.Pages.Shared
                     TimeOfPost = reader.GetDateTime(9);
                     Priority = reader.GetInt32(6);
                     //values which can be null;
-
+                    Completed = reader.GetBoolean(13);
                     // IdCompany = reader.GetString(3);
                     // IdRoles = reader.GetString(4);
                     Title = reader.GetString(7);
@@ -86,7 +87,7 @@ namespace StructchaWebApp.Pages.Shared
             UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
         }
 
-        private void findReplies(UserManager<ApplicationUser> um)
+        private void findReplies(UserManager<ApplicationUser> um) //turn into a new method/class that can be accessed by both tasks and posts
         {
             string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
             SqlCommand cmd = new SqlCommand(query, _connection);
@@ -122,6 +123,23 @@ namespace StructchaWebApp.Pages.Shared
                     replies = new Reply[0];
                 }
             }
+        }
+
+        public void SetComplete(string i)
+        {
+            string query = "UPDATE [dbo].[Tasks] SET [Completed] = @int WHERE [Id] = @taskId";
+            var cmd = new SqlCommand(query, _connection);
+
+            cmd.Parameters.AddWithValue("@int",i);
+            cmd.Parameters.AddWithValue("@taskId",Id);
+
+            if (_connection.State == System.Data.ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
+
+            cmd.ExecuteNonQuery();
+            _connection.Close();
         }
     }
 

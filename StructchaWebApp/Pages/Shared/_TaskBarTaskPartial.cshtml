@@ -4,14 +4,41 @@
     <ul>
         @{
             List<ProjectTask> projectTasks = Model;
-            foreach (ProjectTask pt in projectTasks)
+
+            List<ProjectTask> toDoTasks = new List<ProjectTask>();
+            List<ProjectTask> finishedTasks = new List<ProjectTask>();
+
+            foreach (ProjectTask projectTask in projectTasks)
+            {
+                if (projectTask.Completed)
+                {
+                    finishedTasks.Add(projectTask);
+                }
+                else
+                {
+                    toDoTasks.Add(projectTask);
+                }
+            }
+
+            foreach (ProjectTask pt in toDoTasks)
             {
                 if (pt.Title != null)
                 {
-                    <li onclick="ShowIndexPartial(@pt.Id, 1)">
-                        <label>@pt.ProjectName: Priority @pt.Priority.ToString()</label><br /> @* Look into grouping tasks into each project perhaps*@
-                        <p name="openPost_@pt.Title">@pt.Title</p>
-                    </li>
+                            <li onclick="ShowIndexPartial(@pt.Id, 1)">
+                                <label>@pt.ProjectName: Priority @pt.Priority.ToString()</label><br /> @* Look into grouping tasks into each project perhaps*@
+                                <p name="openPost_@pt.Title">@pt.Title</p>
+                            </li>
+                }
+            }
+
+            foreach (ProjectTask pt in finishedTasks)
+            {
+                if (pt.Title != null)
+                {
+                            <li style="background-color:seagreen" onclick="ShowIndexPartial(@pt.Id, 1)">
+                                <label>@pt.ProjectName: Completed</label><br /> @* Look into grouping tasks into each project perhaps*@
+                                <p name="openPost_@pt.Title">@pt.Title</p>
+                            </li>
                 }
             }
         }

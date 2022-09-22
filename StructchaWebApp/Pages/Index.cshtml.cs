@@ -95,16 +95,6 @@ namespace StructchaWebApp.Pages
             }
         }
 
-        //public void OnPostNewTask()
-        //{
-
-        //}
-
-        //public void OnPostChangePartial()
-        //{
-
-        //}
-
         public ActionResult OnGetSendSelected(string code)
         {
             userHomePage.setTaskAccessSelectLists(code);
@@ -177,6 +167,15 @@ namespace StructchaWebApp.Pages
         public void OnPostPostReply()
         {
             NewReply("post");
+        }
+        
+        public void OnPostTaskComplete()
+        {
+            string taskId = Request.Form["CompletionButton"];
+            string i = Request.Form["SetTo"];
+
+            ProjectTask task = new ProjectTask(taskId,userManager,_connection);
+            task.SetComplete(i);
         }
     }
 }
