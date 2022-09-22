@@ -121,15 +121,15 @@ function ShowIndexPartial(Id, t) {
     });
 };
 
-$(document).ready(function () {
-    document.ReplyForm.submit('submit', function (e) {
-        console.log("Working");
-        //$.ajax({
-        //    type: 'post',
-        //    dataType: 'json',
-        //    data: $('#ReplyForm').serialize(),
-        //    url: '/Index?handler=NewReply',
-        //    contentType: "application/json; charset=utf-8",
-        //});
-    });
-});
+//$(document).ready(function () {
+//    document.ReplyForm.submit('submit', function (e) {
+//        console.log("Working");
+//        //$.ajax({
+//        //    type: 'post',
+//        //    dataType: 'json',
+//        //    data: $('#ReplyForm').serialize(),
+//        //    url: '/Index?handler=NewReply',
+//        //    contentType: "application/json; charset=utf-8",
+//        //});
+//    });
+//});

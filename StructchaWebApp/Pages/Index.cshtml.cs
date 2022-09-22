@@ -66,24 +66,24 @@ namespace StructchaWebApp.Pages
 
         }
 
-        public ActionResult OnPostNewReply(string type, string id)
-        {
-            string body = Request.Form["ReplyBody"];
+        //public ActionResult OnPostNewReply(string type, string id)
+        //{
+        //    string body = Request.Form["ReplyBody"];
 
-            if(type == "task" || type == "post")
-            {
-                userHomePage.createReply(type, id, body);
-                if (type == "task")
-                {
-                    return OnGetTaskPartial(id);
-                }
-                else if (type == "post")
-                {
-                    return OnGetPostPartial(id);
-                }
-            }
-            return (new PartialViewResult() { ViewName="_Error"});            
-        }
+        //    if(type == "task" || type == "post")
+        //    {
+        //        userHomePage.createReply(type, id, body);
+        //        if (type == "task")
+        //        {
+        //            return OnGetTaskPartial(id);
+        //        }
+        //        else if (type == "post")
+        //        {
+        //            return OnGetPostPartial(id);
+        //        }
+        //    }
+        //    return (new PartialViewResult() { ViewName="_Error"});            
+        //}
         public void NewReply(string type)
         {
             string body = Request.Form["ReplyBody"];
@@ -95,15 +95,15 @@ namespace StructchaWebApp.Pages
             }
         }
 
-        public void OnPostNewTask()
-        {
+        //public void OnPostNewTask()
+        //{
 
-        }
+        //}
 
-        public void OnPostChangePartial()
-        {
+        //public void OnPostChangePartial()
+        //{
 
-        }
+        //}
 
         public ActionResult OnGetSendSelected(string code)
         {
@@ -154,23 +154,29 @@ namespace StructchaWebApp.Pages
             return result;
         }
 
-        public ActionResult OnGetPostPartial(string taskId)
+        public ActionResult OnGetPostPartial(string postId)
         {
-            //var conn = _Common.connDB();
-            //ProjectTask projectTask = new ProjectTask(taskId, userManager, conn);
-            //conn.Close();
-            //conn.Dispose();
-
+            if (_connection.State == ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
+            ProjectPost projectPost = new ProjectPost(postId, userManager, _connection);
+            _connection.Close();
             PartialViewResult result = new PartialViewResult()
             {
-                ViewName = "_Error"
-                //ViewData = new ViewDataDictionary<ProjectTask>(ViewData, projectTask)
+                ViewName = "_PostPartial",
+                ViewData = new ViewDataDictionary<ProjectPost>(ViewData, projectPost)
             };
             return result;
         }
         public void OnPostTaskReply()
         {
             NewReply("task"); 
+        }
+
+        public void OnPostPostReply()
+        {
+            NewReply("post");
         }
     }
 }

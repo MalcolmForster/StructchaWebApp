@@ -10,7 +10,15 @@ namespace StructchaWebApp.Pages.Shared
 
         public Reply(string id, string table, SqlConnection conn)
         {
-            string query = String.Format("SELECT [IdAssigner],[PostBody],[TimeOfPost] FROM [dbo].[{0}] WHERE [Id] = @id ORDER BY [TimeOfPost] DESC", table);
+            string OP = "";
+            if(table == "Posts")
+            {
+                OP = "[IdUserOP]";
+            } else if(table == "Tasks")
+            {
+                OP = "[IdAssigner]";
+            }
+            string query = String.Format("SELECT {0},[PostBody],[TimeOfPost] FROM [dbo].[{1}] WHERE [Id] = @id",OP, table);
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@id", id);
 
@@ -24,8 +32,6 @@ namespace StructchaWebApp.Pages.Shared
                 }
                 reader.Close();
             }
-
-
         }
     }
 }

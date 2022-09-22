@@ -11,6 +11,7 @@ namespace StructchaWebApp.Pages.Shared
         public string UserName { get; set; }
         public string ProjectName { get; set; }
         private string UserId { get; set; }
+        public Reply[] replies { get; set; }
         public string? ProjectId { get; set; }
         public string? Title { get; set; }
         public string? Body { get; set; }
@@ -88,6 +89,46 @@ namespace StructchaWebApp.Pages.Shared
             }
 
             UserName = userManager.FindByIdAsync(UserId).Result.UserName;
+            findReplies(userManager);
         }
+
+        private void findReplies(UserManager<ApplicationUser> um)
+        {
+            string query = "SELECT Id FROM [dbo].[Posts] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
+            SqlCommand cmd = new SqlCommand(query, _connection);
+            cmd.Parameters.AddWithValue("@id", Id);
+
+            if (_connection.State == System.Data.ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    List<string> repliesList = new List<string>();
+                    while (reader.Read())
+                    {
+                        repliesList.Add(reader.GetInt32(0).ToString());
+                    }
+
+                    reader.Close();
+
+                    replies = new Reply[repliesList.Count];
+
+                    for (int i = 0; i < repliesList.Count; i++)
+                    {
+                        replies[i] = new Reply(repliesList[i], "Posts", _connection);
+                        replies[i].postedBy = um.FindByIdAsync(replies[i].postedBy).Result.UserName;
+                    }
+                }
+                else
+                {
+                    replies = new Reply[0];
+                }
+            }
+        }
+
     }
 }

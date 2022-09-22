@@ -88,16 +88,14 @@ namespace StructchaWebApp.Pages.Shared
 
         private void findReplies(UserManager<ApplicationUser> um)
         {
-            string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] DESC";
+            string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
             SqlCommand cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", Id);
-
 
             if (_connection.State == System.Data.ConnectionState.Closed)
             {
                 _connection.Open();
             }
-
 
             using (var reader = cmd.ExecuteReader())
             {
