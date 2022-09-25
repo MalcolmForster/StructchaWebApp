@@ -4,7 +4,6 @@
     <ul>
         @{
             List<ProjectTask> projectTasks = Model;
-
             List<ProjectTask> toDoTasks = new List<ProjectTask>();
             List<ProjectTask> finishedTasks = new List<ProjectTask>();
 
@@ -24,10 +23,10 @@
             {
                 if (pt.Title != null)
                 {
-                            <li onclick="ShowIndexPartial(@pt.Id, 1)">
-                                <label>@pt.ProjectName: Priority @pt.Priority.ToString()</label><br /> @* Look into grouping tasks into each project perhaps*@
-                                <p name="openPost_@pt.Title">@pt.Title</p>
-                            </li>
+                    <li onclick="ShowIndexPartial(@pt.Id, 1)">
+                        <label>@pt.ProjectName: Priority @pt.Priority.ToString()</label><br /> @* Look into grouping tasks into each project perhaps*@
+                        <p name="openPost_@pt.Title">@pt.Title</p>
+                    </li>
                 }
             }
 
@@ -35,10 +34,10 @@
             {
                 if (pt.Title != null)
                 {
-                            <li style="background-color:seagreen" onclick="ShowIndexPartial(@pt.Id, 1)">
-                                <label>@pt.ProjectName: Completed</label><br /> @* Look into grouping tasks into each project perhaps*@
-                                <p name="openPost_@pt.Title">@pt.Title</p>
-                            </li>
+                    <li style="background-color:seagreen" onclick="ShowIndexPartial(@pt.Id, 1)">
+                        <label>@pt.ProjectName: Completed</label><br /> @* Look into grouping tasks into each project perhaps*@
+                        <p name="openPost_@pt.Title">@pt.Title</p>
+                    </li>
                 }
             }
         }

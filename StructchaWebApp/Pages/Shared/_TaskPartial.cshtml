@@ -33,7 +33,7 @@
         {
             <form id="ReplyForm" method="post" asp-page-handler="TaskReply">
                 <label>Reply:</label><br />
-                <textarea name="ReplyBody" rows="5" cols="50"></textarea><br />
+                <textarea name="ReplyBody" rows="3" cols="80"></textarea><br />
                 <input name="ReplyTo" type="hidden" value="@Model.Id" />
                 <input type="submit" /><br />
             </form>
@@ -42,15 +42,14 @@
                 <button type="submit" name="CompletionButton" value="@Model.Id">Mark as completed</button>
                 <input name="setto" type="hidden" value="1" />
             </form>
+            //if the user is lower down ladder, they can only request the task is completed, needs to be signed off by a more senior position.
         }
         else
         {
             <form name="TaskCompeted" asp-page-handler="TaskComplete">
-                <button type="submit" name="CompletionButton" value="@Model.Id">Unmark as complete</button>
+                <button type="submit" name="CompletionButton" value="@Model.Id">Mark as incomplete</button>
                 <input name="SetTo" type="hidden" value="0" />
             </form>
         }
-
     </div>
-
 }

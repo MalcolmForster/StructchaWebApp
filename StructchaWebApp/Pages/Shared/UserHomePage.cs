@@ -25,6 +25,7 @@ namespace StructchaWebApp.Pages.Shared
         public List<ProjectTask> taskList { get; set; }
         public List<ProjectTask> ownTaskList { get; set; }
         public string selectedProject { get; set; }
+        public ImageManager imageManager { get; set; }
 
         public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SqlConnection sqlConnection)
         {
@@ -33,6 +34,7 @@ namespace StructchaWebApp.Pages.Shared
             this.user = user;
             usersRoles = userManager.GetRolesAsync(user).Result;
             conn = sqlConnection;
+            imageManager = new ImageManager();
             if(conn.State == System.Data.ConnectionState.Closed)
             {
                 conn.Open();

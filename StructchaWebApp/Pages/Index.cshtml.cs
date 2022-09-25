@@ -50,7 +50,6 @@ namespace StructchaWebApp.Pages
             string postBody = Request.Form["PostBody"];
 
             userHomePage.createPost(projectCode,postTitle,postBody);
-
         }
 
         public void OnPostNewProjectTask()
@@ -62,8 +61,10 @@ namespace StructchaWebApp.Pages
             string taskTitle = Request.Form["TaskTitle"];
             string taskBody = Request.Form["TaskBody"];
 
-            userHomePage.createTask(projectCode,taskPriority, taskTitle, taskBody,taskRoles, taskUsers);
-
+            if(projectCode != "" && taskTitle != "" && taskBody != "")
+            {
+                userHomePage.createTask(projectCode, taskPriority, taskTitle, taskBody, taskRoles, taskUsers);
+            }
         }
 
         //public ActionResult OnPostNewReply(string type, string id)

@@ -1,0 +1,34 @@
+﻿@*
+    This partial view is used to upload an image to a post etc. It is capable to uploading multiple images at once and naming them for easy reference in replies.
+    The images are compressed and uploaded to a folder on the server, and a link to the image is given in the post/task's row in the database.
+    Planning for the image to be referenced in the post/task, or the replies. Hovering over the reference brings the image up in quick view, and clicking opens it fully. More on this later...
+*@
+
+@model UserHomePage;
+    <br />
+    <div name="imageUpload">
+        @{
+
+        <h4>Image uploading</h4>
+        <label for="imageSelect">Select an image to attach to post: </label>
+        <input name="imageSelect" type="file" id="imageSelect" accept="image/png, image/jpeg" multiple />
+
+        if (Model.imageManager.UserImages.Count > 0)
+        {
+            foreach (UserImage ui in Model.imageManager.UserImages)
+            {
+
+            }
+        }
+        else
+        {
+            <p style="text-align:center">No images uploaded</p>
+        }
+
+
+        }
+
+
+
+    </div>
+    <br />
