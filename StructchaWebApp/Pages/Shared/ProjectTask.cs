@@ -35,10 +35,7 @@ namespace StructchaWebApp.Pages.Shared
                 _connection = conn;
             }
 
-            if (_connection.State == System.Data.ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
 
             var cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", Id);
@@ -93,10 +90,7 @@ namespace StructchaWebApp.Pages.Shared
             SqlCommand cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", Id);
 
-            if (_connection.State == System.Data.ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -133,10 +127,7 @@ namespace StructchaWebApp.Pages.Shared
             cmd.Parameters.AddWithValue("@int",i);
             cmd.Parameters.AddWithValue("@taskId",Id);
 
-            if (_connection.State == System.Data.ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
 
             cmd.ExecuteNonQuery();
             _connection.Close();

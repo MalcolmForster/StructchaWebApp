@@ -30,11 +30,8 @@ namespace StructchaWebApp.Pages.Shared
             } else
             {
                 _connection = conn;
-            } 
-            if(conn.State == System.Data.ConnectionState.Closed)
-            {
-                conn.Open();
             }
+            _Common.connDB(_connection);
 
             var cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", postID);
@@ -98,10 +95,7 @@ namespace StructchaWebApp.Pages.Shared
             SqlCommand cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", Id);
 
-            if (_connection.State == System.Data.ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
 
             using (var reader = cmd.ExecuteReader())
             {

@@ -34,11 +34,8 @@ namespace StructchaWebApp.Pages.Shared
             this.user = user;
             usersRoles = userManager.GetRolesAsync(user).Result;
             conn = sqlConnection;
-            imageManager = new ImageManager();
-            if(conn.State == System.Data.ConnectionState.Closed)
-            {
-                conn.Open();
-            }            
+            _Common.connDB(conn);
+            imageManager = new ImageManager();           
             //userSelectList = new List<SelectListItem>();
             //roleSelectList = new List<SelectListItem>();
             setProjectList();
@@ -50,11 +47,7 @@ namespace StructchaWebApp.Pages.Shared
 
         private List<string> idListRetrieve(string query, SqlParameter[]? sqlParameters)
         {
-
-            if(conn.State == System.Data.ConnectionState.Closed)
-            {
-                conn.Open();
-            }
+            _Common.connDB(conn);
             SqlCommand cmd = new SqlCommand(query, conn);
             if(sqlParameters != null)
             {
@@ -286,7 +279,7 @@ namespace StructchaWebApp.Pages.Shared
 
         public void createTask(string projectCode, string taskPriority, string taskTitle, string taskBody, string[] taskRoles, string[] taskUsers)
         {
-            conn.Open();
+            _Common.connDB(conn);
             string query = "INSERT INTO [dbo].[Tasks] (IdAssigner,IdUsers,IdProject,IdCompany,IdRoles,Priority,PostTitle,PostBody,TimeOfPost) VALUES (@user, @assignUsers, @project, @company, @assignRoles,@priority,@title, @body, GETDATE())";
             var cmd = new SqlCommand(query, conn);
             string[]? userIds = getIdentityID(taskUsers, 0);
