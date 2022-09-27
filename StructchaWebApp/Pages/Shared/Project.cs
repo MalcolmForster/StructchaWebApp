@@ -35,10 +35,7 @@ namespace StructchaWebApp.Pages.Shared
         {
 
             _connection = conn;
-            if (_connection.State == System.Data.ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
             ProjectCode = projectCode;
             Title = null;
             EndDate = null;
@@ -78,10 +75,7 @@ namespace StructchaWebApp.Pages.Shared
                 _connection = connectToDB();
             }
 
-            if(_connection.State != System.Data.ConnectionState.Open)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
             string query = "SELECT [Title], [Location], [Companies], [StartDate], [EndDate], [TimeCreated], [TimeFinished] FROM [dbo].[Projects] WHERE [ProjectCode] = @code";
             var cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@code", ProjectCode);
@@ -205,10 +199,7 @@ namespace StructchaWebApp.Pages.Shared
 
         private void alterAccessJson(string jsonString)
         {
-            if (_connection.State != System.Data.ConnectionState.Open)
-            {
-                _connection.Open();
-            }
+            _Common.connDB(_connection);
             string query = "UPDATE [dbo].[Projects] SET [Companies] = @json WHERE [ProjectCode] = @projectCode";
             var cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@json", jsonString);
