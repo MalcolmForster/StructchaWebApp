@@ -39,7 +39,7 @@
                             else
                             {
                                 <h3>JointDraw</h3>
-                                <label>@_Common.numberOfSeat("JointDraw") seats free</label>
+                                <label>@_Common.numberOfSeat(0,"JointDraw", Model.user.Company) seats free</label>
                                 <input type="submit" name="jointDrawSubmit" value="Start session" />
                             }
                         }
@@ -50,17 +50,17 @@
                     <form name="formJointDraw" method="post">
                         @{
                             //Turn this into a forloop for each software available to the user. A method ofreturning string[] (or perhaps move to objects) is needed to find the users softwares
-                            string anotherKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
+                            string anotherKey = _Common.userSoftwareActive(User.Claims.First().Value, "Structcha_FEA");
                             if (anotherKey != "")
                             {
                                 <a href="Structcha:@anotherKey">Open Current JointDraw Session</a>
-                                <input type="submit" name="jointDrawClose" value="Stop session" />
+                                <input type="submit" name="StructFEAClose" value="Stop session" />
                             }
                             else
                             {
-                                <h3>JointDraw</h3>
-                                <label>@_Common.numberOfSeat("JointDraw") seats free</label>
-                                <input type="submit" name="jointDrawSubmit" value="Start session" />
+                                <h3>Structure FEA</h3>
+                                <label>@_Common.numberOfSeat(0,"Structcha_FEA", Model.user.Company) seats free</label>
+                                <input type="submit" name="StructFEASubmit" value="Start session" />
                             }
                         }
                     </form>

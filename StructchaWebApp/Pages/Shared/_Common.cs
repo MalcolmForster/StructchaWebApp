@@ -60,13 +60,19 @@ namespace StructchaWebApp.Pages.Shared
 
         }
 
-        public static int numberOfSeat(string software)
+        public static int numberOfSeat(int all, string software, string userCompany) //if all is 0, return seat free, if 1 return all seats
         {
             SqlConnection conn = connDB();
+            string additional = " AND CurrentUserId IS NULL";
+            if (all == 1)
+            {
+                additional = "";
+            }
 
-            string query = "Select COUNT(*) FROM [dbo].[ActiveSoftware] WHERE Software = @software AND CurrentUserId IS NULL";
+            string query = String.Format("Select COUNT(*) FROM [dbo].[ActiveSoftware] WHERE Software = @software AND Company = @company{0}",additional);
             SqlCommand comm = new SqlCommand(query, conn);
-            comm.Parameters.AddWithValue("@software", software);           
+            comm.Parameters.AddWithValue("@software", software);
+            comm.Parameters.AddWithValue("@company", userCompany);
 
             int count = (int)comm.ExecuteScalar();
             conn.Close();

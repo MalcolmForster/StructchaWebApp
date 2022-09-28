@@ -26,7 +26,7 @@
                                 <button type="submit" name="acceptUser" value="@user.Id">Accept</button>
                                 <button type="submit" name="deleteUser" value="@user.Id">Delete</button>
                             }
-                        }                    
+                        }
                     </form>
                 </div>
             }
@@ -35,16 +35,8 @@
         <div name="editCompanyRoles">
             <h4>Assign roles to users</h4>
             <form id="assignRoles" method="post" asp-page-handler="FindUser" style="text-align:center">
-                <select name="userSelect">
+                <select name="userSelect" asp-items="Model.companyDash.CompanyUsersSL()">
                     <option value="" disabled selected>Select user to edit</option>
-                    @{
-                        foreach (ApplicationUser compUser in Model.companyDash.CompanyUsers())
-                        {
-                            <option value="@compUser.Id">
-                                @compUser.Email
-                            </option>
-                        }
-                    }
                 </select><br />
                 <button type="submit">Find users roles</button>
             </form>
@@ -79,16 +71,10 @@
                         <form asp-page-handler="UserRoleAdd" method="post" style="text-align:center">
                             <input name="userBeingAltered" type="hidden" value="@Model.checkingUser" />
                             @{
-                                <select name="userNewRole">
+                                <select name="userNewRole" asp-items=Model.companyDash.AllUserRolesSL()>
 
                                     <option value="" disabled selected>Select New Role to add</option>
-                                    @{
-                                        var roles = Model.companyDash.AllUserRoles();
-                                        foreach (IdentityRole role in roles)
-                                        {
-                                            <option value="@role.Id">@role.Name</option>
-                                        }
-                                    }
+
                                 </select>
                                 <button type="submit">Add this role to user</button>
                             }
@@ -100,14 +86,50 @@
         </div>
 
 
-        <div name="softwareManagement">        
+        <div name="softwareManagement">
+
             <h4>Software Management</h4>
-            <p style="text-align:center">Use this section to assign access to software access to your staff, be it their roles or individually.</p>
-        
+
+            <p style="text-align:center">
+            Use this section to assign access to software access to your staff, be it their roles or individually.<br/>
+            Structcha provides many niche softwares to aid in all parts of the process. Contact sales to learn more about pricing.<br/>
+            Below are your currently available software, and who/what roles they are able to be accessed by.
+            </p>
+
+            <table class="table">
+            
+            <tr>
+                <th>Software</th>
+                <th>Seats</th>
+                <th>Seats free</th>
+                <th>Roles with access:</th>
+                <th>Users with access:</th>
+                <th>Blocked users:</th>
+            </tr>
+            <tr>
+                <td>JointDraw</td>
+                    <td>@_Common.numberOfSeat(1,"JointDraw", Model.user.Company) total <button name="addJointDrawSeat">+</button><button name="removeJointDrawSeat">-</button></td>
+                <td>@_Common.numberOfSeat(0,"JointDraw", Model.user.Company) free</td>
+                <td><select name="JointDrawRoles" asp-items=Model.companyDash.AllUserRolesSL()><option hidden selected>Select roles to have access</option></select></td>
+                    <td><select name="JointDrawUsers" asp-items="Model.companyDash.CompanyUsersSL()"><option hidden selected>Select users to have access</option></select></td>
+                    <td><select name="JointDrawBlocks" asp-items="Model.companyDash.CompanyUsersSL()"><option hidden selected>Select users to not have access</option></select></td>
+            </tr>
+
+                <tr>
+                    <td>StructchaFEA</td>
+                    <td>@_Common.numberOfSeat(1,"Structcha_FEA", Model.user.Company) total <button name="addStructchaFEASeat">+</button><button name="removeStructchaFEASeat">-</button></td>
+                    <td>@_Common.numberOfSeat(0,"Structcha_FEA", Model.user.Company) free</td>
+                    <td><select name="StructchaFEARoles" asp-items=Model.companyDash.AllUserRolesSL()><option hidden selected>Select roles to have access</option></select></td>
+                    <td><select name="StructchaFEAUsers" asp-items="Model.companyDash.CompanyUsersSL()"><option hidden selected>Select users to have access</option></select></td>
+                    <td><select name="StructchaFEAwBlocks" asp-items="Model.companyDash.CompanyUsersSL()"><option hidden selected>Select users to not have access</option></select></td>
+                </tr>         
+            
+            </table>
+
+
+
+
         </div>
-
-
-
 
     </div>
 

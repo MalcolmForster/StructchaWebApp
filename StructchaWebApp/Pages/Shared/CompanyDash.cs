@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using StructchaWebApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Options;
+using Newtonsoft.Json.Linq;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -106,6 +109,38 @@ namespace StructchaWebApp.Pages.Shared
             }
 
             return users.OrderBy(x => x.Email).ToList();
+        }
+
+        public IEnumerable<SelectListItem> CompanyUsersSL()
+        {
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (ApplicationUser compUser in CompanyUsers())
+            {
+
+                users.Add(new SelectListItem
+                {
+                    Text = compUser.Email,
+                    Value = compUser.Id                    
+                });
+            }
+
+            return users;
+        }
+
+        public IEnumerable<SelectListItem> AllUserRolesSL()
+        {
+            List<SelectListItem> roles = new List<SelectListItem>();
+            foreach (IdentityRole role in AllUserRoles())
+            {
+
+                roles.Add(new SelectListItem
+                {
+                    Text = role.Name,
+                    Value = role.Name
+                });
+            }
+
+            return roles;
         }
 
 

@@ -40,7 +40,19 @@ namespace StructchaWebApp.Pages
             if (Request.Form.ContainsKey("jointDrawClose") == true)
             {
                 _Common.closeSoftware(user.Id, "JointDraw");
-            }          
+            }
+
+            if (Request.Form.ContainsKey("StructFEASubmit") == true)
+            {
+                //Console.WriteLine("Post success");
+                app = new AppManager(user.Id, "Structcha_FEA");
+            }
+            if (Request.Form.ContainsKey("StructFEAClose") == true)
+            {
+                _Common.closeSoftware(user.Id, "Structcha_FEA");
+            }
+
+
         }
 
         public void OnPostNewProjectPost()
