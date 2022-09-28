@@ -1,14 +1,42 @@
 :root {
-    --dark-bg: lightslategray;
-    --light-bg: lightsteelblue;
+    --dark-bg: rgb(198, 217, 221);
+    --mid-bg: rgb(219, 238, 242);
+    --light-bg: rgb(247, 254, 255);
+    --accent-light: rgb(133, 192, 205);
+    --accent-mid: rgb(60, 156, 177);
+    --accent-dark: rgb(55, 115, 129);
     --background-colour: rgb(18 18 18);
-    --highlight-1: rgb(255 171 111);
-    --highlight-2: rgb(187 78 0);
-    --highlight-3: rgb(255 106 0);
+    --dark-text: rgb(27, 27, 27);
+    --mid-text: rgb(125, 125, 125);
+    --light-text: rgb(207, 207, 207);
+    /*                       */
+    /*                       */
     --userInterfaceHeight: 90vh;
     --task-bar-width: 300px;
     --main-view-width: calc(100vw - var(--task-bar-width));
-    --softwareManagerHeight: 120px;
+    --softwareManagerHeight: 100px;
+    /*                       */
+    /*                       */
+    /*                       */
+    /*                       */
+    --highlight-1: rgb(255 171 111);
+    --highlight-2: rgb(187 78 0);
+    --highlight-3: rgb(255 106 0);
+}
+
+
+.nav-item {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.nav-link {
+
+}
+
+.navbar-dark {
+    background-color:var(--accent-dark)!important;
 }
 
 .bodyContainer {
@@ -36,9 +64,9 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-  color:gray;
-  background-color: var(--background-colour)
+    margin-bottom: 60px;
+    color: var(--dark-text);
+    background-color: var(--light-bg);
 }
 
 p {
@@ -51,22 +79,14 @@ p {
     width:100vw;
 }
 
-.appButtonLarge {
-    background-color:var(--light-bg);
-    width:400px;
-    height:200px;
-    text-align:center;
-    padding-top:35px;
-    border-radius:10px;
-    /*font-size:40px;*/
-}
-
 .appButtonSmall {
-    background-color: var(--light-bg);
+    background-color: var(--accent-light);
     width: 250px;
-    margin: 20px;
-    height: calc(100% - 40px);
+    margin: 10px;
+    margin-right:0px;
+    height: calc(100% - 20px);
     text-align: center;
+    border-radius:5px;
     padding: 10px;
 }
 
@@ -121,26 +141,16 @@ p {
     text-align:center;
 }
 
-.task-bar {
-    /*max-width:600px;*/
-    width:var(--task-bar-width);
-    /*min-width:200px;*/
-    height:var(--userInterfaceHeight);
-    background-color: white;
-    float:left;
-}
+
 
 .software-manager {
     width: var(--main-view-width);
     height: var(--softwareManagerHeight);
     float: right;
-    background-color: darkslateblue;
+    background-color: var(--dark-bg);
 }
 
-.task-bar h3 {
-    background-color: darkgrey;
-    padding:10px;
-}
+
 
 .user-interface {
     width: 100vw;
@@ -155,8 +165,29 @@ p {
 
 
 .taskBarSection {
-    height: 30vh;
+    height: calc(40% - 80px);
+    background-color: var(--mid-bg);
 }
+
+    .taskBarSection button {
+        height:30px;
+        margin:0px;
+    }
+
+
+.task-bar {
+    /*max-width:600px;*/
+    width: var(--task-bar-width);
+    /*min-width:200px;*/
+    height: var(--userInterfaceHeight);
+    background-color: white;
+    float: left;
+}
+
+    .task-bar h3 {
+        background-color: var(--accent-light);
+        padding: 10px;
+    }
 
 .taskBar {
     overflow-y: scroll;
@@ -164,6 +195,7 @@ p {
     height: 25vh;
     padding: 20px;
     width: var(--task-bar-width);
+    background-color: var(--mid-bg);
 }
 
     .taskBar ul{
@@ -175,7 +207,7 @@ p {
         text-decoration: none;
         list-style: none;
         width: 100%;
-        background-color: grey;
+        background-color: var(--accent-mid);
         margin: 2px;
         padding: 5px;
         color: black;
@@ -183,7 +215,7 @@ p {
     }
 
     .taskBar li:hover{
-        background-color:gainsboro;
+        background-color: var(--accent-light);
     }
 
     .taskBar a {
@@ -194,17 +226,36 @@ p {
         border-radius: 5px;
     }
 
+
 .replies {
-    padding:0px;
+    padding: 0px;
 }
 
-.replies li {
-    padding:20px;
-    list-style:none;
-    width:100%;
-    background-color:gainsboro;
-    text-align:left;
-}
+    .replies ul{
+        padding:20px;
+    }
+
+    .replies li {
+        padding: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        list-style: none;
+        width: 100%;
+        background-color: var(--mid-bg);
+        text-align: left;
+    }
+
+    .replies li p{
+        margin:0px;
+    }
+
+    .replies h4 {
+        font-size:15px;
+    }
+
+    .replies p {
+        background-color: var(--light-bg)!important;
+    }
 
 .main-view {
     height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight));
@@ -212,13 +263,13 @@ p {
     overflow-y: scroll;
     overflow-x: hidden;
     float: right;
-    background-color: wheat;
+    background-color: var(--light-bg);
 }
 
 .main-display {
     width: var(--main-view-width)-40px;
     margin: 20px;
-    background-color: aliceblue;
+    background-color: var(--dark-bg);
     padding:20px
     /*min-height: calc(var(--userInterfaceHeight) - var(--softwareManagerHeight) - 40px);*/
 }
@@ -227,7 +278,7 @@ p {
     }
 
     .main-display p {
-        background-color:white;
+        background-color:var(--mid-bg);
         margin-top:20px;
         padding:10px;
     }

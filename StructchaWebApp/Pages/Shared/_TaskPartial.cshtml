@@ -9,7 +9,7 @@
         <label>@Model.ProjectName - assigned by @Model.UserName</label><br />
         <p>@Model.Body</p>
 
-        <label>Replies:</label><br />
+        <h5>Replies:</h5><br />
 
         <ul class="replies">
             @if (Model.replies.Length == 0)
@@ -33,7 +33,7 @@
         {
             <form id="ReplyForm" method="post" asp-page-handler="TaskReply">
                 <label>Reply:</label><br />
-                <textarea name="ReplyBody" rows="3" cols="80"></textarea><br />
+                <textarea style="width:100%; max-width:800px" name="ReplyBody" rows="3"></textarea><br />
                 <input name="ReplyTo" type="hidden" value="@Model.Id" />
                 <input type="submit" /><br />
             </form>
