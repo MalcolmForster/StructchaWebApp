@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Options;
 using Newtonsoft.Json.Linq;
+using System.Security.Claims;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -143,7 +144,6 @@ namespace StructchaWebApp.Pages.Shared
             return roles;
         }
 
-
         //assigns selected role to the selected user
         public void assignRole(string userID, string roleID)
         {
@@ -156,6 +156,45 @@ namespace StructchaWebApp.Pages.Shared
         {
             var user = userManager.FindByIdAsync(userID).Result;
             userManager.RemoveFromRoleAsync(user, roleName).Wait();
+        }
+
+        public IEnumerable<SelectListItem> RoleAppAccessSL(string software)
+        {
+            List<SelectListItem> roles = new List<SelectListItem>();
+            foreach (IdentityRole role in AllUserRoles())
+            {
+                IList<Claim> claims = roleManager.GetClaimsAsync(role).Result;
+                Claim chk = new Claim(software, user.Company);
+                foreach(Claim claim in claims)
+                {
+                    if (claim.Type == software && claim.Value == user.Company)
+                    {
+                        roles.Add(new SelectListItem
+                        {
+                            Text = role.Name,
+                            Value = role.Name
+                        });
+                    }
+                }
+            }
+            return roles;
+        }
+
+        public void addAppRole(string app, string role)
+        {
+            if (role != "")
+            {
+                IdentityResult result = roleManager.AddClaimAsync(roleManager.FindByNameAsync(role).Result, new Claim(app, user.Company)).Result;
+            }
+        }
+
+        public void rmvAppRole(string app, string role)
+        {
+            if(role != "")
+            {
+                IdentityResult result = roleManager.RemoveClaimAsync(roleManager.FindByNameAsync(role).Result, new Claim(app, user.Company)).Result;
+            }           
+
         }
     }
 }

@@ -133,3 +133,44 @@ function ShowIndexPartial(Id, t) {
 //        //});
 //    });
 //});
+
+function ChangeAppRoles(handler, json, returnDiv)
+{
+    $.ajax({
+        type: 'post',
+        data: json,
+        dataType: 'json',
+        url: (handler),
+        success: function (result) {
+            $(returnDiv).html(result);
+        }
+    });
+}
+
+//function AddSoftwareToRole() {
+//    handler = "/Index?handler=AddAppRole";
+//    div = "#companyAdminTool";
+//    software = $(this).val();
+//    selectID = software + "_AddRole";
+//    roleSelected = $('select[id = ' + selectID + '] option').filter(':selected').val();
+//    json = {
+//        "app": software,
+//        "role": roleSelected
+//    }
+//    ChangeAppRoles(handler, div);
+//}
+
+//function RemoveSoftwareFromRole() {
+//    handler = "/Index?handler=RemoveAppRole";
+//    div = "#companyAdminTool";
+//    software = $(this).val();
+//    selectID = software + "_RmvRole";
+//    roleSelected = $('select[id = ' + selectID + '] option').filter(':selected').val();
+//    json = {
+//        "app": software,
+//        "role": roleSelected
+//    }
+//    ChangeAppRoles(handler, json, div);
+//}
+
+

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.Sql;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
@@ -107,6 +108,25 @@ namespace StructchaWebApp.Pages
             }
         }
 
+        public void OnPostAlterAppAccess()
+        {
+            string command = Request.Form["submit"];
+            int l = command.Length - 8;
+            string app = command.Substring(0,l);
+            string role = Request.Form[command];            
+
+            if (command.Contains("_AddRole"))
+            {
+                companyDash.addAppRole(app, role);
+            }
+            else if (command.Contains("_RmvRole"))
+            {
+
+                companyDash.rmvAppRole(app, role);
+            }
+        }
+
+
         public void OnPostCreateNewProject()
         {
             projectAdmin.createProject(Request.Form["newProjectName"], Request.Form["newProjectLocation"], DateOnly.Parse(Request.Form["newProjectStartDate"]));
@@ -175,5 +195,44 @@ namespace StructchaWebApp.Pages
             return adminCheck(query, userID);
         }
 
+        //public void OnPostAddAppRole()
+        //{
+
+        //}
+
+        //public void OnPostRemoveAppRole()
+        //{
+
+        //}
+
+        public void OnPostRemoveAppRole(string app, string role)
+        {
+            if(role!= "")
+            {
+                companyDash.addAppRole(app, role);
+            }
+            
+            
+            //PartialViewResult result = new PartialViewResult()
+            //{
+            //    ViewName = "_CompanyAdminSettings",
+            //    ViewData = new ViewDataDictionary<DashboardModel>(ViewData, this)
+            //};
+            //return result;
+        }
+
+        public void OnPostAddAppRole(string app, string role)
+        {
+            if (role != "")
+            {
+                companyDash.rmvAppRole(app, role);
+            }
+            //PartialViewResult result = new PartialViewResult()
+            //{
+            //    ViewName = "_CompanyAdminSettings",
+            //    ViewData = new ViewDataDictionary<DashboardModel>(ViewData, this)
+            //};
+            //return result;
+        }
     }
 }
