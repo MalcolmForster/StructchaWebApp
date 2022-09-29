@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using StructchaWebApp.Data;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -27,6 +28,9 @@ namespace StructchaWebApp.Pages.Shared
         public string selectedProject { get; set; }
         public ImageManager imageManager { get; set; }
 
+        public bool JointDrawAccess { get; set; }
+        public bool StructchaFEAAccess { get; set; }
+
         public UserHomePage(ApplicationUser user, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SqlConnection sqlConnection)
         {
             um = userManager;
@@ -42,6 +46,7 @@ namespace StructchaWebApp.Pages.Shared
             setProjectPostList();
             setTaskList();
             conn.Close();
+            userAppAccess();
             selectedProject = "";
         }
 
@@ -318,6 +323,42 @@ namespace StructchaWebApp.Pages.Shared
 
             cmd.ExecuteNonQuery();
             conn.Close();
+        }
+
+        public void userAppAccess()
+        {
+            IList<string> usersRoles =  um.GetRolesAsync(user).Result;
+            
+            bool JD = false;
+            bool SF = false;
+
+            foreach (string role in usersRoles)
+            {
+                IdentityRole roleIdentity = rm.FindByNameAsync(role).Result;
+                IList<Claim> usersClaims = rm.GetClaimsAsync(roleIdentity).Result;
+
+                foreach (Claim claim in usersClaims)
+                {
+                    if (JD == false && claim.Type == "JointDraw" && claim.Value == user.Company)
+                    {
+                        JD = true;
+                        JointDrawAccess = true;
+                    }
+                    else if (SF == false && claim.Type == "Structcha_FEA" && claim.Value == user.Company)
+                    {
+                        SF = true;
+                        StructchaFEAAccess = true;
+                    }
+                    if(JD && SF)
+                    {
+                        break;
+                    }
+                }
+                if (JD && SF)
+                {
+                    break;
+                }
+            }
         }
     }
 }

@@ -6,13 +6,14 @@ using Microsoft.Data.SqlClient;
 using StructchaWebApp.Data;
 using StructchaWebApp.Pages.Shared;
 using System.Data;
+using System.Security.Claims;
 
 namespace StructchaWebApp.Pages
 {
     public class IndexModel : PageModel
     {
         private AppManager app { get; set; }
-        public ApplicationUser? user { get; set; }
+        public ApplicationUser user { get; set; }
         public UserHomePage userHomePage { get; set; }
         private SqlConnection _connection { get; set; }
         private UserManager<ApplicationUser> userManager { get; set; }
@@ -20,7 +21,7 @@ namespace StructchaWebApp.Pages
         public IndexModel(UserManager<ApplicationUser> um, RoleManager<IdentityRole> rm, IHttpContextAccessor httpContextAccessor)
         {
             _connection = _Common.connDB();
-            string userName = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            string? userName = httpContextAccessor.HttpContext?.User?.Identity?.Name;
             if(userName != null)
             {
                 user = um.FindByNameAsync(userName).Result;

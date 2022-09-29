@@ -145,11 +145,10 @@ namespace StructchaWebApp.Pages.Shared
         }
 
         //assigns selected role to the selected user
-        public void assignRole(string userID, string roleID)
+        public void assignRole(string userID, string role)
         {
             var user = userManager.FindByIdAsync(userID).Result;
-            var role = roleManager.FindByIdAsync(roleID).Result;
-            userManager.AddToRoleAsync(user, role.Name).Wait();
+            var assignRole = userManager.AddToRoleAsync(user, role).Result;
         }
         //deletes the selected role from the selected user
         public void unAssignRole(string userID, string roleName)
