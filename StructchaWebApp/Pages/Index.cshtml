@@ -33,14 +33,14 @@
                             string jointDrawKey = _Common.userSoftwareActive(User.Claims.First().Value, "JointDraw");
                             if (jointDrawKey != "")
                             {
-                                <a href="Structcha:@jointDrawKey">Open Current JointDraw Session</a>
-                                <input type="submit" name="jointDrawClose" value="Stop session" />
+                                    <a href="Structcha:@jointDrawKey">Open Current JointDraw Session</a>
+                                    <input type="submit" name="jointDrawClose" value="Stop session" />
                             }
                             else
                             {
-                                <h3>JointDraw</h3>
-                                <label>@_Common.numberOfSeat(0,"JointDraw", Model.user.Company) seats free</label>
-                                <input type="submit" name="jointDrawSubmit" value="Start session" />
+                                    <h3>JointDraw</h3>
+                                    <label>@_Common.numberOfSeat(0,"JointDraw", Model.user.Company) seats free</label>
+                                    <input type="submit" name="jointDrawSubmit" value="Start session" />
                             }
                         }
                     </form>
@@ -53,14 +53,14 @@
                             string anotherKey = _Common.userSoftwareActive(User.Claims.First().Value, "Structcha_FEA");
                             if (anotherKey != "")
                             {
-                                <a href="Structcha:@anotherKey">Open Current JointDraw Session</a>
-                                <input type="submit" name="StructFEAClose" value="Stop session" />
+                                    <a href="Structcha:@anotherKey">Open Current JointDraw Session</a>
+                                    <input type="submit" name="StructFEAClose" value="Stop session" />
                             }
                             else
                             {
-                                <h3>Structure FEA</h3>
-                                <label>@_Common.numberOfSeat(0,"Structcha_FEA", Model.user.Company) seats free</label>
-                                <input type="submit" name="StructFEASubmit" value="Start session" />
+                                    <h3>Structure FEA</h3>
+                                    <label>@_Common.numberOfSeat(0,"Structcha_FEA", Model.user.Company) seats free</label>
+                                    <input type="submit" name="StructFEASubmit" value="Start session" />
                             }
                         }
                     </form>
@@ -73,8 +73,18 @@
                     <button name="changeToNewPost" onclick="changeMainDisplay(0)">Post a project update</button>
                     @{
                         List<ProjectPost> projectPosts = Model.userHomePage.projectPostList;
+
+                        if (projectPosts != null && projectPosts.Count > 0)
+                        {
+                            <partial name="~/Pages/Shared/_TaskBarPostPartial.cshtml" model="projectPosts" />
+                        }
+                        else
+                        {
+                            <p>No posts found</p>
+                        }
+
                     }
-                    <partial name="~/Pages/Shared/_TaskBarPostPartial.cshtml" model="projectPosts" />
+
                 </div>
                 <div class="taskBarSection">
                     <h3>Assigned Tasks</h3>
@@ -82,17 +92,35 @@
                     @{
                         //string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
                         List<ProjectTask> assignments = Model.userHomePage.taskList;
+
+                        if (assignments != null && assignments.Count > 0)
+                        {
+                            <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments" />
+                        }
+                        else
+                        {
+                            <p>No tasks found</p>
+                        }
+
                     }
-                    <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments"/>
+
                 </div>
                 <div class="taskBarSection">
-                    <h3>Tasks started by you</h3>                  
-                        @{
-                            //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
-                            //string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
+                    <h3>Tasks started by you</h3>
+                    @{
+                        //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
+                        //string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
                         List<ProjectTask> selfAssigned = Model.userHomePage.ownTaskList;
+
+                        if (selfAssigned != null && selfAssigned.Count > 0)
+                        {
+                            <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="selfAssigned" />
                         }
-                    <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="selfAssigned" />
+                        else
+                        {
+                            <p>No tasks found</p>
+                        }
+                    }
                 </div>
             </div>
 

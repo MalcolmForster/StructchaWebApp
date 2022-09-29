@@ -12,7 +12,7 @@ namespace StructchaWebApp.Pages
     public class IndexModel : PageModel
     {
         private AppManager app { get; set; }
-        public ApplicationUser user { get; set; }
+        public ApplicationUser? user { get; set; }
         public UserHomePage userHomePage { get; set; }
         private SqlConnection _connection { get; set; }
         private UserManager<ApplicationUser> userManager { get; set; }
@@ -20,9 +20,13 @@ namespace StructchaWebApp.Pages
         public IndexModel(UserManager<ApplicationUser> um, RoleManager<IdentityRole> rm, IHttpContextAccessor httpContextAccessor)
         {
             _connection = _Common.connDB();
-            user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
-            userHomePage = new UserHomePage(user, um,rm,_connection);
-            userManager = um;
+            string userName = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            if(userName != null)
+            {
+                user = um.FindByNameAsync(userName).Result;
+                userHomePage = new UserHomePage(user, um, rm, _connection);
+                userManager = um;
+            }
         }
 
         public void OnGet()

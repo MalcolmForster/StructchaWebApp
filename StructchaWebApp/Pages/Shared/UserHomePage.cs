@@ -101,7 +101,7 @@ namespace StructchaWebApp.Pages.Shared
 
                 //Checking if the project is meant to be accessed by the user
                 //First check if the user is blocked
-                if (!project.BlockIndividual[userCompany].Contains(user.Id))
+                if (project.BlockIndividual.Keys.Contains(userCompany) && !project.BlockIndividual[userCompany].Contains(user.Id))
                 {
                     if (project.Companies.Contains(user.Company) || project.LeadCompany.CompanyName == user.Company)
                     {
@@ -134,24 +134,31 @@ namespace StructchaWebApp.Pages.Shared
             SqlParameter[] sqlParameters = new SqlParameter[projectCount];
             string queryBuilder = "SELECT [Id] FROM [dbo].[Posts] WHERE [PostTitle] IS NOT NULL AND [IdProject] IN ({0}) ORDER BY TimeOfPost ASC";
             string formattedIn = "";
-
-            for (int i = 0; i < projectCount; i++)
+            if(projectCount > 0)
             {
-                string projectCode = projectList[i].ProjectCode;
-                string parameterCode = "@project" + (i.ToString())+",";
-                formattedIn = String.Concat(formattedIn, parameterCode);
-                sqlParameters[i] = new SqlParameter(parameterCode.Remove(parameterCode.Length - 1), projectCode);
-            }
-            
-            string query = string.Format(queryBuilder, formattedIn.Remove(formattedIn.Length-1));
-            var projectPostIds = idListRetrieve(query, sqlParameters);
+                for (int i = 0; i < projectCount; i++)
+                {
+                    string projectCode = projectList[i].ProjectCode;
+                    string parameterCode = "@project" + (i.ToString()) + ",";
+                    formattedIn = String.Concat(formattedIn, parameterCode);
+                    sqlParameters[i] = new SqlParameter(parameterCode.Remove(parameterCode.Length - 1), projectCode);
+                }
 
-            List<ProjectPost> projectPosts = new List<ProjectPost>();
-            foreach (string s in projectPostIds)
-            {
-                projectPosts.Add(new ProjectPost(s,um,conn));
+                string query = string.Format(queryBuilder, formattedIn.Remove(formattedIn.Length - 1));
+                var projectPostIds = idListRetrieve(query, sqlParameters);
+
+                List<ProjectPost> projectPosts = new List<ProjectPost>();
+                foreach (string s in projectPostIds)
+                {
+                    projectPosts.Add(new ProjectPost(s, um, conn));
+                }
+
+                if (projectPosts.Count > 0)
+                {
+                    projectPostList = projectPosts;
+                }
             }
-            projectPostList = projectPosts;
+          
         }
 
         private List<ProjectTask> findTasks(int t) //coming back to this, going to make methods that can create task first
