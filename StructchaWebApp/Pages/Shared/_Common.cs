@@ -9,7 +9,7 @@ namespace StructchaWebApp.Pages.Shared
 
         public static SqlConnection connDB()
         {
-            string connectString = "Server=192.168.86.24,1433;Database=Structcha;user=StructchaGUI;password=StructchaGUI12#;";
+            string connectString = Connections.connectionString();
             SqlConnection conn = new SqlConnection(connectString);
             conn.Open();
 

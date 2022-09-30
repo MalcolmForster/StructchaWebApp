@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 StructchaWebApp/appsettings.json
 StructchaWebApp/appsettings.Development.json
+/StructchaWebApp/Pages/Shared/Connections.cs

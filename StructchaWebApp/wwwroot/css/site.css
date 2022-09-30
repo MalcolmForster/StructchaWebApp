@@ -11,7 +11,8 @@
     --light-text: rgb(207, 207, 207);
     /*                       */
     /*                       */
-    --userInterfaceHeight: 90vh;
+    /*--userInterfaceHeight: 90vh;*/
+    --userInterfaceHeight: calc(100vh - 60px - 69px);
     --task-bar-width: 300px;
     --main-view-width: calc(100vw - var(--task-bar-width));
     --softwareManagerHeight: 100px;
@@ -101,9 +102,9 @@ p {
 .fullView {
     /*margin-top: 50px;*/
     padding: 50px;
-    background-color: var(--background-colour);
+    background-color: var(--light-bg);
     height: 60vh;
-    color: white;
+    color: black;
     position:sticky;
     top:0;
 }
@@ -165,13 +166,18 @@ p {
 
 
 .taskBarSection {
-    height: calc(40% - 80px);
+    height: calc(var(--userInterfaceHeight)/3);
     background-color: var(--mid-bg);
 }
 
     .taskBarSection button {
         height:30px;
         margin:0px;
+    }
+
+    .taskBarSection h3 {
+        max-width:var(--task-bar-width);
+        font-size:20px;
     }
 
 
@@ -192,8 +198,9 @@ p {
 .taskBar {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 23vh;
-    padding: 20px;
+    height: calc(var(--userInterfaceHeight)/3 - 82px);
+    padding-left: 10px; /*
+    padding-right: 10px;*/
     width: var(--task-bar-width);
     background-color: var(--mid-bg);
 }
@@ -206,9 +213,9 @@ p {
         text-align: left;
         text-decoration: none;
         list-style: none;
-        width: 100%;
+        width: auto;
         background-color: var(--accent-mid);
-        margin: 2px;
+        margin: 5px;
         padding: 5px;
         color: black;
         border-radius: 5px
