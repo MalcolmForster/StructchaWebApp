@@ -1,7 +1,7 @@
 ﻿@model ProjectPost
 @{
     <div class="main-display">
-        <h3>Task - @Model.Title</h3>
+        <h3>Project Update - @Model.Title</h3>
         <label>@Model.ProjectName - assigned by @Model.UserName</label><br />
         <p>@Model.Body</p>
 
@@ -18,8 +18,7 @@
                         <li>
                         <h4>@r.postedBy replied on @r.timePosted.ToString()</h4>
                         <p>@r.body</p>
-                        </li>
-                        
+                        </li>                        
                     }
                 }
         </ul>
@@ -28,7 +27,7 @@
             <label>Reply:</label><br />
             <textarea name="ReplyBody" rows="3" cols="80"></textarea><br />
             <input name="ReplyTo" type="hidden" value="@Model.Id"/>
-            <input type="submit" /><br />
+            <input type="submit"/><br />
         </form>
 
     </div>
