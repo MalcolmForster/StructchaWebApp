@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using StructchaWebApp.Data;
+using System.Data;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -169,18 +170,34 @@ namespace StructchaWebApp.Pages.Shared
         private List<ProjectTask> findTasks(int t) //coming back to this, going to make methods that can create task first
         {
             string option = "";
-            
-            if(t == 0)
+
+            SqlParameter[] sqlParameters = { new SqlParameter("@uId", user.Id) };
+
+
+
+            if (t == 0)
             {
-                option = "IdUsers";
+                sqlParameters = new SqlParameter[1 + usersRoles.Count];
+                sqlParameters[0] = new SqlParameter("@uId", user.Id);
+                string rolesIds = "";
+
+                for(int i=0; i < usersRoles.Count;i++)
+                {
+                    string role = usersRoles[i];
+                    string roleId = rm.FindByNameAsync(role).Result.Id;
+                    rolesIds = String.Concat(rolesIds," OR [IdRoles] = @role"+i.ToString());
+                    sqlParameters[i+1] = new SqlParameter("@role"+i.ToString(), roleId);
+                }
+
+                option = String.Format("([IdUsers] = @uId{0})",rolesIds);
+                //option = "IdUsers";
             }
             else if (t == 1)
             {
-                option = "IdAssigner";
+                option = "[IdAssigner] = @uId";
             }
 
-            string query = String.Format("SELECT [Id] FROM [dbo].[Tasks] WHERE [PostTitle] IS NOT NULL AND [{0}] = @uId ORDER BY [Priority] DESC, TimeOfPost ASC",option);
-            SqlParameter[] sqlParameters = { new SqlParameter("uId",user.Id) };
+            string query = String.Format("SELECT [Id] FROM [dbo].[Tasks] WHERE [PostTitle] IS NOT NULL AND {0} ORDER BY [Priority] DESC, TimeOfPost ASC",option);
             List<string> taskIds =  idListRetrieve(query, sqlParameters);
             var taskList = new List<ProjectTask>();
 

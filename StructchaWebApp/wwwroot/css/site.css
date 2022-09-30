@@ -134,6 +134,11 @@ p {
         margin:2px
     }
 
+    .editProject h4 {
+        text-align:left;
+        font-size:20px;
+    }
+
 .defaultPage {
     max-width:1400px;
     padding:20px;
@@ -306,5 +311,19 @@ p {
     .dash-div h3 {
         text-align:center;
         color:var(--light-bg)
+    }
+
+.hint {
+    font-size: 13px;
+    margin:auto;
+    border: 0px;
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+}
+
+    .hint:hover {
+        background-color:gray;
     }
 

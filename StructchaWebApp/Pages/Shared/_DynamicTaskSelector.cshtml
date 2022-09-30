@@ -5,7 +5,24 @@
     <select name="TaskAssignUser" id="TaskAssignUser" asp-items="@Model.userHomePage.userSelectList">
         <option name="noUser" value="">No User</option>                      <!-- be multiselectable in future-->
     </select>
+    <button>Add User</button>
     <select name="TaskAssignRole" id="TaskAssignRole" asp-items="@Model.userHomePage.roleSelectList">
         <option name="noRole" value="">No Role</option>                    <!-- be multiselectable in future -->
     </select>
+    <button>Add role</button><br />
+    <button type="button" id="openAdvAssign" name="openAdvAssign" onclick='ToggleAdvancedTaskAssignment()'>Show advanced assignments</button>
+    <button type="button" class="hint" onclick='ShowHint(this)' value="openAdvAssignHint">?</button>
+    <label style="display:none" id="openAdvAssignHint" for="openAdvAssign">Show all assigned users, and allows blocking individuals</label>
+    <div id="AdvancedTaskAssign" style="display:none" class="editProject">
+    
+    
+        <h4>Assigned Individual users:</h4>
+            
+        <br />
+    
+    
+        <h4>Role assigned users:</h4>
+            
+    
+    </div>
 }

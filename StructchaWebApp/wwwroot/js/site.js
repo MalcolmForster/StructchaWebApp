@@ -173,4 +173,24 @@ function ChangeAppRoles(handler, json, returnDiv)
 //    ChangeAppRoles(handler, json, div);
 //}
 
+function toggleDisplay(item) {
+    var displayed = $(item).css('display');
+    if (displayed == 'none') {
+        $(item).show('fast');
+    } else {
+        $(item).hide('fast');
+    }
+}
+
+function ShowHint(obj) {
+    var label = '#'+$(obj).val();
+    var item = $(label);
+    toggleDisplay(item);
+}
+
+function ToggleAdvancedTaskAssignment() {
+    var item = $('#AdvancedTaskAssign');
+    toggleDisplay(item);
+}
+
 
