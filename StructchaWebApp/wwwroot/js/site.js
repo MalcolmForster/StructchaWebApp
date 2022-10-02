@@ -134,18 +134,18 @@ function ShowIndexPartial(Id, t) {
 //    });
 //});
 
-function ChangeAppRoles(handler, json, returnDiv)
-{
-    $.ajax({
-        type: 'post',
-        data: json,
-        dataType: 'json',
-        url: (handler),
-        success: function (result) {
-            $(returnDiv).html(result);
-        }
-    });
-}
+//function ChangeAppRoles(handler, json, returnDiv)
+//{
+//    $.ajax({
+//        type: 'post',
+//        data: json,
+//        dataType: 'json',
+//        url: (handler),
+//        success: function (result) {
+//            $(returnDiv).html(result);
+//        }
+//    });
+//}
 
 //function AddSoftwareToRole() {
 //    handler = "/Index?handler=AddAppRole";
@@ -191,6 +191,92 @@ function ShowHint(obj) {
 function ToggleAdvancedTaskAssignment() {
     var item = $('#AdvancedTaskAssign');
     toggleDisplay(item);
+}
+
+function updateNewTaskInfo() {
+    //$("#AdvancedTaskAssign").load("/Pages/Shared/_NewProjectTask.cshtml #AdvancedTaskAssign");
+
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        contentType: 'application/html; charset=utf-8',
+        url: "/Index?handler=NewProjectTask",
+        success: function (result) {
+            var newDiv = $(result).find("#AdvancedTaskAssign").html(); 
+            //var newDiv = result.getElementById("#AdvancedTaskAssign");
+            $("#AdvancedTaskAssign").html(newDiv);
+        }
+    });
+}
+
+var t = $("input[name='__RequestVerificationToken']").val(); //there is a better method where the data is passed from the page view I believe, check bookmarked stoackoverflow page
+
+function deleteTaskUser(num, name) {
+    var list = "";
+    if (num == 0) { //remove user from the AssignedUsersList
+        list = "_AssignUsers";
+    } else if (num == 1) {
+        list = "_AssignRoles";
+    }
+
+
+    document.getElementById(name+list).remove();
+
+    //listElement.parentNode.removeChild(name);
+
+    //$(list).remove('#'+name);
+}
+
+function addTaskAddUser() {
+    //$.ajax({
+    //    type: 'post',
+    //    headers:
+    //    {
+    //        "RequestVerificationToken": t
+    //    },
+    //    dataType: 'json',
+    //    data: { test: "Another test user yo" },
+    //    url: "/Index?handler=NewTaskAddUser",
+    //    success: updateNewTaskInfo(),
+    //    error: function (responseText, textStatus, XMLHttpRequest) {
+    //        return;
+    //    }
+    //});
+
+    //updateNewTaskInfo();
+
+
+    //turned into a method of staying client side
+
+    var userToAdd = $("#TaskAssignUser").val();
+
+    if (userToAdd != "") {
+        $('#AssignedUsersList').append('<li id="' + userToAdd + '_AssignUsers">' + userToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(0,\'' + userToAdd + '\')">Remove</button><input name="userAssigned" type="hidden" value="' + userToAdd +'"/></li>');
+    }
+}
+
+
+
+
+function addTaskAddRole() {
+
+    var roleToAdd = $("#TaskAssignRole").val();
+
+    if (roleToAdd != "") {
+        $('#AssignedRolesList').append('<li id="' + roleToAdd + '_AssignRoles">' + roleToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(1,\'' + roleToAdd + '\')">Remove</button><input name="roleAssigned" type="hidden" value="'+roleToAdd+'"/></li>');
+    }
+}
+
+function blockTaskRoleUser() {
+
+
+    updateNewTaskInfo();
+}
+
+function unblockTaskRoleUser() {
+
+
+    updateNewTaskInfo();
 }
 
 

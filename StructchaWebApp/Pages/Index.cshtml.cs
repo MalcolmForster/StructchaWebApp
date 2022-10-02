@@ -69,12 +69,18 @@ namespace StructchaWebApp.Pages
             userHomePage.createPost(projectCode,postTitle,postBody);
         }
 
+
+        private void htmlListToAssignments()
+        {
+
+        }
+
         public void OnPostNewProjectTask()
         {
             string projectCode = Request.Form["TaskProjectCode"];
             string taskPriority = Request.Form["SetTaskPriority"];
-            string[] taskRoles = { Request.Form["TaskAssignRole"] };
-            string[] taskUsers = { Request.Form["TaskAssignUser"] };
+            string[] taskRoles = Request.Form["roleAssigned"];
+            string[] taskUsers = Request.Form["userAssigned"];
             string taskTitle = Request.Form["TaskTitle"];
             string taskBody = Request.Form["TaskBody"];
 
@@ -120,7 +126,7 @@ namespace StructchaWebApp.Pages
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_DynamicTaskSelector",
-                ViewData = new ViewDataDictionary<IndexModel>(ViewData, this)
+                ViewData = new ViewDataDictionary<UserHomePage>(ViewData, userHomePage)
             };
             return result;
         }
@@ -134,6 +140,11 @@ namespace StructchaWebApp.Pages
             };
             
             return result;
+        }
+
+        public void OnPostNewTaskAddUser(string test)
+        {
+            userHomePage.usersSelected.Add(test);
         }
 
         public ActionResult OnGetNewProjectTask()
@@ -195,5 +206,7 @@ namespace StructchaWebApp.Pages
             ProjectTask task = new ProjectTask(taskId,userManager,_connection);
             task.SetComplete(i);
         }
+
+
     }
 }

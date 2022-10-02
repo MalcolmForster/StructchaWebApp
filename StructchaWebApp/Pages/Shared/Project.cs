@@ -33,7 +33,6 @@ namespace StructchaWebApp.Pages.Shared
 
         public Project(string projectCode, SqlConnection conn)
         {
-
             _connection = conn;
             _Common.connDB(_connection);
             ProjectCode = projectCode;

@@ -1,28 +1,91 @@
-﻿@model IndexModel
+﻿@model UserHomePage
+
+
+@*@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions {
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}*@
 
 @{
     <label>Assigned too: </label>
-    <select name="TaskAssignUser" id="TaskAssignUser" asp-items="@Model.userHomePage.userSelectList">
-        <option name="noUser" value="">No User</option>                      <!-- be multiselectable in future-->
-    </select>
-    <button>Add User</button>
-    <select name="TaskAssignRole" id="TaskAssignRole" asp-items="@Model.userHomePage.roleSelectList">
-        <option name="noRole" value="">No Role</option>                    <!-- be multiselectable in future -->
-    </select>
-    <button>Add role</button><br />
+    <select name="TaskAssignUser" id="TaskAssignUser" asp-items="@Model.userSelectList">
+                <option name="noUser" value="">No User</option>                      <!-- be multiselectable in future-->
+            </select>
+    <button type="button" onclick="addTaskAddUser()">Add User</button>
+    <select name="TaskAssignRole" id="TaskAssignRole" asp-items="@Model.roleSelectList">
+                <option name="noRole" value="">No Role</option>                    <!-- be multiselectable in future -->
+            </select>
+    <button type="button" onclick="addTaskAddRole()">Add role</button>
+    <br />
     <button type="button" id="openAdvAssign" name="openAdvAssign" onclick='ToggleAdvancedTaskAssignment()'>Show advanced assignments</button>
     <button type="button" class="hint" onclick='ShowHint(this)' value="openAdvAssignHint">?</button>
     <label style="display:none" id="openAdvAssignHint" for="openAdvAssign">Show all assigned users, and allows blocking individuals</label>
     <div id="AdvancedTaskAssign" style="display:none" class="editProject">
-    
-    
+
         <h4>Assigned Individual users:</h4>
-            
-        <br />
-    
-    
-        <h4>Role assigned users:</h4>
-            
-    
+
+        <ul id="AssignedUsersList" class="replies">
+            <li>Users will be added below:</li>
+        </ul>
+        @{
+
+
+            <br />
+
+            <h4>Role assigned users:</h4>
+            //if (Model.rolesSelected.Count == 0)
+            //{
+            //    <p>No roles assigned to the task</p>
+            //}
+            //else
+            //{
+
+            <ul id="AssignedRolesList" class="replies">
+                <li>Roles will be added below:</li>
+            </ul>
+                <button type="button" id="openUsersInSelectedRoles" onclick='ShowHint(this)' value="usersInSelectedRoles">Show/edit Users roles</button>
+                <button type="button" class="hint" onclick='ShowHint(this)' value="openUsersInSelectedRolesHint">?</button>
+                <label style="display:none" id="openUsersInSelectedRolesHint" for="openUsersInSelectedRoles">Block users in the roles above</label>
+                <div style="display:none" id="usersInSelectedRoles">
+                    @{
+                        <h4>Users in selected Roles</h4>
+                        if (Model.usersInSelectedRoles.Count > 0)
+                        {
+                            <ul name="AssignedUsersInRoleList" class="replies">
+                                <li>Users in selected roles will be added below: FEATURE COMING SOON</li>
+
+                             @*   @{
+                                    foreach (KeyValuePair<string, string> kvp in Model.usersInSelectedRoles)
+                                    {
+                                        <li>@kvp.Key, in role: @kvp.Value<button style="float:right" type="button" onclick="blockTaskRoleUser()" value="@kvp.Key">Block</button></li>
+                                    }
+                                } *@
+                            </ul>
+                        }
+                        else
+                        {
+                            <p>No users found</p>
+                        }
+
+                        if (Model.blockedSelected.Count > 0)
+                        {
+                            <h5>Blocked Users from the selected roles</h5>
+                            <ul class="replies">
+                                <li>Blocked users will be added below: FEATURE COMING SOON</li>
+                                @*@{
+                                    foreach (string kvp in Model.blockedSelected)
+                                    {
+                                        <li>@kvp<button style="float:right" type="button" onclick="unblockTaskRoleUser()" value="@kvp">Block</button></li>
+                                    }
+                                }*@
+                            </ul>
+                        }
+                    }
+                </div>
+            //}
+        }
     </div>
 }

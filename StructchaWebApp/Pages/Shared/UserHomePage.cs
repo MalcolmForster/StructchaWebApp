@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using StructchaWebApp.Data;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -19,6 +20,10 @@ namespace StructchaWebApp.Pages.Shared
         private IList<string> usersRoles { get; set; }
         private SqlConnection conn { get; set; }
         public List<Project> projectList { get; set; }
+        public List<string> usersSelected { get; set; }
+        public List<string> rolesSelected { get; set; }
+        public Dictionary<string,string> usersInSelectedRoles { get; set; }
+        public List<string> blockedSelected { get; set; }
         public IEnumerable<SelectListItem> projectSelectList { get; set; }
         public IEnumerable<SelectListItem> userSelectList { get; set; }
         public IEnumerable<SelectListItem> roleSelectList { get; set; }
@@ -28,7 +33,6 @@ namespace StructchaWebApp.Pages.Shared
         public List<ProjectTask> ownTaskList { get; set; }
         public string selectedProject { get; set; }
         public ImageManager imageManager { get; set; }
-
         public bool JointDrawAccess { get; set; }
         public bool StructchaFEAAccess { get; set; }
 
@@ -39,6 +43,10 @@ namespace StructchaWebApp.Pages.Shared
             this.user = user;
             usersRoles = userManager.GetRolesAsync(user).Result;
             conn = sqlConnection;
+            usersSelected = new List<string>();
+            rolesSelected = new List<string>();
+            blockedSelected = new List<string>();
+            usersInSelectedRoles = new Dictionary<string, string>();
             _Common.connDB(conn);
             imageManager = new ImageManager();           
             //userSelectList = new List<SelectListItem>();
@@ -185,7 +193,7 @@ namespace StructchaWebApp.Pages.Shared
                 {
                     string role = usersRoles[i];
                     string roleId = rm.FindByNameAsync(role).Result.Id;
-                    rolesIds = String.Concat(rolesIds," OR [IdRoles] = @role"+i.ToString());
+                    rolesIds = String.Concat(rolesIds," OR [IdRoles] LIKE @role"+i.ToString());
                     sqlParameters[i+1] = new SqlParameter("@role"+i.ToString(), roleId);
                 }
 
@@ -203,9 +211,16 @@ namespace StructchaWebApp.Pages.Shared
 
             foreach(string s in taskIds)
             {
-                taskList.Add(new ProjectTask(s,um, conn));
+                ProjectTask projectTask = new ProjectTask(s, um, conn);
+                foreach(Project p in projectList)
+                {
+                    if(p.Location == projectTask.ProjectLocation && (p.Title == null || p.Title == projectTask.ProjectName))
+                    {
+                        taskList.Add(new ProjectTask(s, um, conn));
+                        break;
+                    }
+                }       
             }
-
             return taskList;
         }
 

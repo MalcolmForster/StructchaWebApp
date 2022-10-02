@@ -36,6 +36,11 @@
 
 }
 
+button {
+    border-radius:3px;
+    border-width:1px;
+}
+
 .navbar-dark {
     background-color:var(--accent-dark)!important;
 }
@@ -326,4 +331,3 @@ p {
     .hint:hover {
         background-color:gray;
     }
-

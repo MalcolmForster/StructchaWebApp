@@ -13,6 +13,7 @@ namespace StructchaWebApp.Pages.Shared
         private string assignerId { get; set; }
         private string ProjectCode { get; set; }
         public string ProjectName { get; set; }
+        public string ProjectLocation { get; set; }
         public bool Completed { get; set; }
         public string? Title { get; set; }
         public string? Body { get; set; }
@@ -71,6 +72,8 @@ namespace StructchaWebApp.Pages.Shared
             Project pro = new Project(ProjectCode, conn);
 
             findReplies(userManager);
+
+            ProjectLocation = pro.Location;
 
             if (pro.Title != null)
             {
