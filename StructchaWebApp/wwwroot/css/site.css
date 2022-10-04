@@ -64,6 +64,10 @@ html {
   }
 }
 
+input {
+    margin:5px;
+}
+
 html {
   position: relative;
   min-height: 100%;
@@ -76,7 +80,10 @@ body {
 }
 
 p {
-    text-align:justify;
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80%
 }
 
 .text-center li {
@@ -117,6 +124,13 @@ p {
 .fillView {
     min-height:30vh;
     /*height:100%;*/
+}
+
+.formBackground {
+    margin:10px;
+    padding:20px;
+    background-color: var(--mid-bg);
+    border-radius:10px;
 }
 
 .editProject {
@@ -235,6 +249,15 @@ p {
         background-color: var(--accent-light);
     }
 
+    .taskBar p {
+        margin: 0;
+        text-align: left;
+    }
+
+    .taskBar h1 {
+        font-size:15px;
+    }
+
     .taskBar a {
         font-size: 20px;
         text-decoration: none;
@@ -253,18 +276,17 @@ p {
     }
 
     .replies li {
+        margin-left:auto;
+        margin-right:auto;
         padding: 20px;
         padding-top: 5px;
         padding-bottom: 5px;
         list-style: none;
-        width: 100%;
+        width: 80%;
         background-color: var(--mid-bg);
         text-align: left;
     }
 
-    .replies li p{
-        margin:0px;
-    }
 
     .replies h4 {
         font-size:15px;

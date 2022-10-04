@@ -145,8 +145,10 @@ namespace StructchaWebApp.Pages.Shared
         private void setProjectPostList() //-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_Going to test when posting is implemented
         {
             int projectCount = projectList.Count;
-            SqlParameter[] sqlParameters = new SqlParameter[projectCount];
-            string queryBuilder = "SELECT [Id] FROM [dbo].[Posts] WHERE [PostTitle] IS NOT NULL AND [IdProject] IN ({0}) ORDER BY TimeOfPost ASC";
+            SqlParameter[] sqlParameters = new SqlParameter[projectCount+1];
+            string companyCode = Company.CompanyID(user.Company, null);
+            sqlParameters[projectCount] = new SqlParameter("@usersCompany",companyCode);
+            string queryBuilder = "SELECT [Id] FROM [dbo].[Posts] WHERE [PostTitle] IS NOT NULL AND ([IdProject] IN ({0}) OR ([IdProject] IS NULL AND [IdCompany] = @usersCompany)) ORDER BY TimeOfPost ASC";
             string formattedIn = "";
             if(projectCount > 0)
             {
@@ -179,14 +181,15 @@ namespace StructchaWebApp.Pages.Shared
         {
             string option = "";
 
-            SqlParameter[] sqlParameters = { new SqlParameter("@uId", user.Id) };
+            SqlParameter[] sqlParameters = { new SqlParameter("@uId", user.Id), new SqlParameter("@company", user.Company) };
 
 
 
             if (t == 0)
             {
-                sqlParameters = new SqlParameter[1 + usersRoles.Count];
-                sqlParameters[0] = new SqlParameter("@uId", user.Id);
+                sqlParameters = new SqlParameter[2 + usersRoles.Count];
+                sqlParameters[0] = new SqlParameter("@uId", "%" + user.Id+ "%");
+                sqlParameters[1 + usersRoles.Count] = new SqlParameter("@company", user.Company);
                 string rolesIds = "";
 
                 for(int i=0; i < usersRoles.Count;i++)
@@ -194,10 +197,10 @@ namespace StructchaWebApp.Pages.Shared
                     string role = usersRoles[i];
                     string roleId = rm.FindByNameAsync(role).Result.Id;
                     rolesIds = String.Concat(rolesIds," OR [IdRoles] LIKE @role"+i.ToString());
-                    sqlParameters[i+1] = new SqlParameter("@role"+i.ToString(), roleId);
+                    sqlParameters[i+1] = new SqlParameter("@role"+i.ToString(), "%"+roleId+"%");
                 }
 
-                option = String.Format("([IdUsers] = @uId{0})",rolesIds);
+                option = String.Format("([IdUsers] LIKE @uId{0})",rolesIds);
                 //option = "IdUsers";
             }
             else if (t == 1)
@@ -205,7 +208,7 @@ namespace StructchaWebApp.Pages.Shared
                 option = "[IdAssigner] = @uId";
             }
 
-            string query = String.Format("SELECT [Id] FROM [dbo].[Tasks] WHERE [PostTitle] IS NOT NULL AND {0} ORDER BY [Priority] DESC, TimeOfPost ASC",option);
+            string query = String.Format("SELECT [Id] FROM [dbo].[Tasks] WHERE [PostTitle] IS NOT NULL AND {0} AND [IdCompany] = @company ORDER BY [Priority] DESC, TimeOfPost ASC",option);
             List<string> taskIds =  idListRetrieve(query, sqlParameters);
             var taskList = new List<ProjectTask>();
 
@@ -260,13 +263,24 @@ namespace StructchaWebApp.Pages.Shared
             roleSelectList = stringArrayToSelectList(roles);
         }
 
-        public void createPost(string projectCode, string postTitle, string postBody)
+        public void createPost(string? projectCode, string company, string postTitle, string postBody)
         {
             conn.Open();
-            string query = "INSERT INTO [dbo].[Posts] (IDUserOP,IdProject,PostTitle,PostBody,TimeOfPost) VALUES (@user, @project, @title, @body, GETDATE())";
+            string query = "INSERT INTO [dbo].[Posts] (IDUserOP,IdProject,IdCompany,PostTitle,PostBody,TimeOfPost) VALUES (@user, @project, @company,@title, @body, GETDATE())";
             var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@user", user.Id);
-            cmd.Parameters.AddWithValue("@project", projectCode);
+            if(projectCode != null)
+            {
+                cmd.Parameters.AddWithValue("@project", projectCode);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@project", DBNull.Value);
+            }
+
+            string? companyId = Company.CompanyID(company,conn);
+            
+            cmd.Parameters.AddWithValue("@company", companyId);
             cmd.Parameters.AddWithValue("@title", postTitle);
             cmd.Parameters.AddWithValue("@body", postBody);
 
@@ -276,7 +290,7 @@ namespace StructchaWebApp.Pages.Shared
 
         private string[]? getIdentityID(string[] input, int t) //gets the id of roles and users, 0 for user, 1 for roles
         {
-            if(input[0] != "")
+           if(input.Length != 0)
             {
                 string[]? id = new string[input.Length];
 

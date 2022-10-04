@@ -62,17 +62,14 @@ namespace StructchaWebApp.Pages
 
         public void OnPostNewProjectPost()
         {
-            string projectCode = Request.Form["PostProjectCode"];
+            string? projectCode = Request.Form["PostProjectCode"];
             string postTitle = Request.Form["PostTitle"];
             string postBody = Request.Form["PostBody"];
-
-            userHomePage.createPost(projectCode,postTitle,postBody);
-        }
-
-
-        private void htmlListToAssignments()
-        {
-
+            if(projectCode == "No Project")
+            {
+                projectCode = null;
+            }
+            userHomePage.createPost(projectCode,user.Company,postTitle,postBody);
         }
 
         public void OnPostNewProjectTask()

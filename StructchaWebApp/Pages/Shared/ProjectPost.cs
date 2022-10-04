@@ -10,6 +10,9 @@ namespace StructchaWebApp.Pages.Shared
         public string Id { get; set; }        
         public string UserName { get; set; }
         public string ProjectName { get; set; }
+        public string CompanyName { get; set; }
+
+        private string IdCompany { get; set; }
         private string UserId { get; set; }
         public Reply[] replies { get; set; }
         public string? ProjectId { get; set; }
@@ -54,7 +57,8 @@ namespace StructchaWebApp.Pages.Shared
 
                     //values which can be null;
 
-                    // IdCompany = reader.GetString(3);
+                    IdCompany = reader.GetString(3);
+                    
                     // IdRoles = reader.GetString(4);
                     Title = reader.GetString(5);
                     bool edited = reader.IsDBNull(8);
@@ -66,7 +70,12 @@ namespace StructchaWebApp.Pages.Shared
                         TimeOfEdit = null;
                     }                    
                 }
+                reader.Close();
             }
+
+            CompanyName = Company.NameOfCompany(IdCompany, _connection);
+
+
 
             if (ProjectId != null)
             {
@@ -82,7 +91,7 @@ namespace StructchaWebApp.Pages.Shared
                 }
             } else
             {
-                ProjectName = "No Project";
+                ProjectName = CompanyName;
             }
 
             UserName = userManager.FindByIdAsync(UserId).Result.UserName;

@@ -9,8 +9,9 @@
                 if (pp.Title != null)
                 {
                     <li onclick="ShowIndexPartial(@pp.Id, 0)">
-                    <label>@pp.ProjectName</label><br /> @* Look into grouping tasks into each project perhaps*@
-                    <p name="openPost_@pp.Title">@pp.Title</p></li>
+                        <h1>@pp.ProjectName</h1> @* Look into grouping tasks into each project perhaps*@
+                        <p name="openPost_@pp.Title">@pp.Title</p>
+                    </li>
                 }
             }
         }

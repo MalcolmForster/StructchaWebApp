@@ -24,7 +24,7 @@
                 if (pt.Title != null)
                 {
                     <li onclick="ShowIndexPartial(@pt.Id, 1)">
-                        <label>@pt.ProjectName: Priority @pt.Priority.ToString()</label><br /> @* Look into grouping tasks into each project perhaps*@
+                        <h1>@pt.ProjectName: Priority @pt.Priority.ToString()</h1> @* Look into grouping tasks into each project perhaps*@
                         <p name="openPost_@pt.Title">@pt.Title</p>
                     </li>
                 }
@@ -35,7 +35,7 @@
                 if (pt.Title != null)
                 {
                     <li style="background-color:seagreen" onclick="ShowIndexPartial(@pt.Id, 1)">
-                        <label>@pt.ProjectName: Completed</label><br /> @* Look into grouping tasks into each project perhaps*@
+                        <h1>@pt.ProjectName: Completed</h1> @* Look into grouping tasks into each project perhaps*@
                         <p name="openPost_@pt.Title">@pt.Title</p>
                     </li>
                 }

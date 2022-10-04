@@ -7,11 +7,18 @@
 
 @{
     ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name);
-    ViewData["Title"] = user.FirstName + " " + user.LastName + "'s Dashboard";
+    ViewData["Title"] = "User Dashboard";
 }
 
 @{
-    <h2>@user.FirstName @user.LastName's dashboard</h2>
+    if (user.FirstName != "")
+    {
+        <h2>@user.FirstName @user.LastName's dashboard</h2>
+    }
+    else
+    {
+        <h2>@user.UserName's dashboard</h2>
+    }
     <label>@user.Company</label>
 
     if (DashboardModel.superAdmin(User.Claims.First().Value))

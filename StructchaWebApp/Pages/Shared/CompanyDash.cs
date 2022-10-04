@@ -49,7 +49,7 @@ namespace StructchaWebApp.Pages.Shared
         //Changes the accepted user's company value from "" to the company name, allowing them access to that companies items within their assigned roles.
         public void acceptUserToCompany(string uId)
         {
-            ApplicationUser userToAccept = userManager.FindByIdAsync(uId).Result;
+            ApplicationUser userToAccept = userManager.FindByEmailAsync(uId).Result;
             userToAccept.Company = user.Company;
             IdentityResult deleteTask = userManager.UpdateAsync(userToAccept).Result;
         }
@@ -57,7 +57,7 @@ namespace StructchaWebApp.Pages.Shared
         //Deletes entire user from database
         public void deleteUserFromCompany(string uId)
         {
-            ApplicationUser userToDelete = userManager.FindByIdAsync(uId).Result;
+            ApplicationUser userToDelete = userManager.FindByEmailAsync(uId).Result;
             IdentityResult deleteTask = userManager.DeleteAsync(userToDelete).Result;
         }
 
