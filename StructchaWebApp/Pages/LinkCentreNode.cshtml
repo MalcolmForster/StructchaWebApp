@@ -1,0 +1,76 @@
+﻿@page
+@using StructchaWebApp.Pages.Shared;
+@using Microsoft.AspNetCore.Identity
+@model LinkCentreNode
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+        ViewData["Title"] = "Linking CenterNode";
+}
+
+@{
+    if (SignInManager.IsSignedIn(User))
+    {
+        ApplicationUser? user = await UserManager.FindByNameAsync(User?.Identity?.Name);
+        if (Model.currentLinks.Count > 0)
+        {
+            <h2>Current CentreNode Links:</h2>
+            <form method="post" asp-page-handler="RemoveLinked">
+                <ul>
+                    @foreach (LinkCentreNode.CentreNodeSessions cns in Model.currentLinks)
+                    {
+                        <li>@cns.MachineName, @cns.osVersion<button name="RemoveNodeDevice" type="submit" value="@cns.hash">Remove</button></li>
+                    }
+                </ul>            
+            </form>
+
+        }
+        else
+        {
+            <h2>No current CentreNode Links found.</h2>
+        }      
+        
+        if(Model.validHashParameter){
+            <h2>Linking CenterNode to @user.UserName</h2>
+            <form method="post">
+                <input type="submit" name="linkCenterNode" value="Accept" />
+                <input type="submit" name="linkCenterNode" value="Reject" />
+            </form>
+        }
+
+
+    } else {
+        <h2>Please sign into structcha and try again</h2>
+
+        //<form id="account" method="post" asp-page-handler="LoginViaLink">
+        //    <h2>Use a local account to log in.</h2>
+        //    <hr />
+        //    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        //    <div class="form-floating">
+        //        <input asp-for="@Model.loginModel.Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+        //        <label asp-for="@Model.loginModel.Input.Email" class="form-label"></label>
+        //        <span asp-validation-for="@Model.loginModel.Input.Email" class="text-danger"></span>
+        //    </div>
+        //    <div class="form-floating">
+        //        <input asp-for="@Model.loginModel.Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+        //        <label asp-for="@Model.loginModel.Input.Password" class="form-label"></label>
+        //        <span asp-validation-for="@Model.loginModel.Input.Password" class="text-danger"></span>
+        //    </div>
+        //   @* <div>
+        //        <div class="checkbox">
+        //            <label asp-for="@Model.loginModel.Input.RememberMe" class="form-label">
+        //                <input class="form-check-input" asp-for="@Model.loginModel.Input.RememberMe" />
+        //                @Html.DisplayNameFor(m => m.this.Model.loginModel.Input.RememberMe)
+        //            </label>
+        //        </div>
+        //    </div> *@
+        //    <div>
+        //        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+        //    </div>
+        //</form>
+    }
+
+
+
+}
