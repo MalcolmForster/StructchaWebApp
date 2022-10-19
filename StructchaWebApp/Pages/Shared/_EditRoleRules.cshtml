@@ -1,0 +1,53 @@
+﻿@{
+    /*
+    * Create new projects for the company
+    * -Make a project code
+    * View all projects in the company
+    * Close projects when completed
+    * Adjust who is on the project with role, team, and individual management
+           * Adjust contractors/outside companies
+    */
+}
+
+@*Projectadmin is a partial with tools to create and edit the companies projects, it used the ProjectAdmin class to display what is requested*@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Data.Sql
+@model DashboardModel
+
+<div class="dash-div" name="EditRoleRules">
+    <h3>Change what roles can do</h3>
+    <p>This section allows you to alter what each role can access and do in your company.</p>
+    <div class="EditRoles" name="EditRoles">
+        <table>
+            @{
+                <tr>
+                    <th>Role Name</th>
+                    <th>Post company wide posts</th>
+                    <th>Post project wide posts</th>
+                    <th>Reply to company posts</th>
+                    <th>Reply to project posts</th>
+                    <th>Create Project</th>
+                    <th>Assign users and roles to project</th>
+                    <th>Create Project Task</th>
+                    <th>Complete project Task</th>
+                    <th>Check project Task</th>
+                </tr>
+                foreach (IdentityRole role in Model.companyDash.AllUserRoles())
+                {
+                    <tr>
+                        <td style="text-align:left;" name=@role.Name>@role.Name</td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-CompanyWide") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-ProjectWide") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-ReplyCompany") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-ReplyProject") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-CreateProject") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-AssignProject") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-CreateTask") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-CompleteTask") /></td>
+                        <td><input type="checkbox" onchange="AlterRoleRules" id=@String.Concat(role.Name,"-CheckTask") /></td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

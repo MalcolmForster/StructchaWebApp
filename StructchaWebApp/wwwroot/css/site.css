@@ -266,6 +266,22 @@ p {
         border-radius: 5px;
     }
 
+.EditRoles {
+    text-align:center;
+}
+    
+    .EditRoles th {
+        font-size:12px;
+    }
+
+    .EditRoles tr {
+        border-block-width:3px;
+        border-radius:5px;
+    }
+
+    .EditRoles td {
+        height:50px;
+    }
 
 .replies {
     padding: 0px;

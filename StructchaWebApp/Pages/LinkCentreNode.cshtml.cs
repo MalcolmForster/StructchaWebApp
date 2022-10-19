@@ -145,6 +145,11 @@ namespace StructchaWebApp.Pages
             conn.Close();
         }
 
+        private void reloadPage()
+        {
+
+        }
+
         public void OnPost()
         {
             string response = Request.Form["linkCenterNode"];
@@ -173,7 +178,6 @@ namespace StructchaWebApp.Pages
         public void OnPostRemoveLinked()
         {
             string device = Request.Form["RemoveNodeDevice"];
-
             deactivateDevice(device);
         }
 

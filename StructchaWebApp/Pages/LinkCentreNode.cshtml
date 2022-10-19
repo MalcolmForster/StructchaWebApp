@@ -16,7 +16,7 @@
         if (Model.currentLinks.Count > 0)
         {
             <h2>Current CentreNode Links:</h2>
-            <form method="post" asp-page-handler="RemoveLinked">
+            <form method="post" asp-page-handler="RemoveLinked" >
                 <ul>
                     @foreach (LinkCentreNode.CentreNodeSessions cns in Model.currentLinks)
                     {
@@ -31,9 +31,9 @@
             <h2>No current CentreNode Links found.</h2>
         }      
         
-        if(Model.validHashParameter){
+        if(Model.validHashParameter) {
             <h2>Linking CenterNode to @user.UserName</h2>
-            <form method="post">
+            <form method="post" href="~/Pages/LinkCentreNode.cshtml">
                 <input type="submit" name="linkCenterNode" value="Accept" />
                 <input type="submit" name="linkCenterNode" value="Reject" />
             </form>
