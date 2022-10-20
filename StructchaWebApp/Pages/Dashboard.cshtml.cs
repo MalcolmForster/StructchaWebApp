@@ -75,10 +75,10 @@ namespace StructchaWebApp.Pages
             {
                 companyDash.selectedUserRoles(checkingUser);
             }
-            return PartialView("~/Pages/Shared/_CompanyAdminSettings.cshtml",user);
+            return PartialView("~/Pages/Shared/_CompanyAdminSettings.cshtml");
         }
 
-        private PartialViewResult PartialView(string partialName, string userBeingAltered)
+        private PartialViewResult PartialView(string partialName)
         {
             PartialViewResult result = new PartialViewResult();
             result.ViewName = partialName;
@@ -150,21 +150,17 @@ namespace StructchaWebApp.Pages
             finishedProjects = projectAdmin.getProjects(1);
         }
 
-        public void OnPostEditCurrentProject()
+        public ActionResult OnPostEditCurrentProject(string pressedButton)
         {
-            //Edit roles and individuals and companies which have access to the data here
-            //Edit start date of the project
-            //Sign the project off as completed
-
-            //Working on how to keep the div open
-
-            var request = Request.Form["projectEditButton"].ToString().Split('_');
+            var request = pressedButton.ToString().Split('_');
             string operation = request[0];
             string projectCode = request[1];
             var parameters = Request.Form[operation].ToString();
+            projectAdmin.editProject(projectCode, user.Company, operation, parameters);
+            currentProjects = projectAdmin.getProjects(0);
+            finishedProjects = projectAdmin.getProjects(1);
 
-            projectAdmin.editProject(projectCode, user.Company, operation, parameters);       
-            
+            return PartialView("~/Pages/Shared/_ProjectAdmin.cshtml");
         }
 
         public void OnPostEditCompletedProject()

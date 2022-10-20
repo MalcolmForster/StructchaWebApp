@@ -40,12 +40,7 @@ namespace StructchaWebApp.Pages.Shared
             EndDate = null;
             TimeFinished = null;
             Companies =  new List<string>();
-            AccessRoles = new Dictionary<string, string[]>();
-            AccessIndividual = new Dictionary<string, string[]>();
-            BlockIndividual = new Dictionary<string, string[]>();
-            SelectListRoles = new Dictionary<string, IEnumerable<SelectListItem>>();
-            SelectListIndividuals = new Dictionary<string, IEnumerable<SelectListItem>>();
-            SelectListBlocks = new Dictionary<string, IEnumerable<SelectListItem>>();
+
             getProjectInfo();
             FindLeadCompany();
             SetAccess();
@@ -141,6 +136,11 @@ namespace StructchaWebApp.Pages.Shared
 
         private void SetAccess()
         {
+            AccessRoles = new Dictionary<string, string[]>();
+            AccessIndividual = new Dictionary<string, string[]>();
+            BlockIndividual = new Dictionary<string, string[]>();
+
+
             foreach (KeyValuePair<string, JsonNode?> kvp in AccessJson)
             {
                 string key = kvp.Key;
@@ -181,6 +181,10 @@ namespace StructchaWebApp.Pages.Shared
 
         private void SetSelectLists()
         {
+            SelectListRoles = new Dictionary<string, IEnumerable<SelectListItem>>();
+            SelectListIndividuals = new Dictionary<string, IEnumerable<SelectListItem>>();
+            SelectListBlocks = new Dictionary<string, IEnumerable<SelectListItem>>();
+
             SelectListCompanies = convertToSelectList(Companies.ToArray());
             Dictionary<string, string[]>[] jsonInfoDictonary = { AccessRoles, AccessIndividual, BlockIndividual };
             Dictionary<string, IEnumerable<SelectListItem>>[] selectListDictonary = { SelectListRoles, SelectListIndividuals, SelectListBlocks };
@@ -216,6 +220,9 @@ namespace StructchaWebApp.Pages.Shared
             {
                 rmvProjectAccess(company, accessType, parameters);
             }
+
+            SetAccess();
+            SetSelectLists();
         }
 
         private void addProjectAccess(string company, string accessType,string parameters)

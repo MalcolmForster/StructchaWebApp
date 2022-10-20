@@ -295,8 +295,9 @@ function showUsersRoles(formEle) {
 
 }
 
-function ajaxPost(jsonData, handler, returnDiv) {
 
+//----------A GENERIC AJAXPOST FUNCTION FOR USE WITH MANY ----------------
+function ajaxPost(jsonData, handler, returnDiv) {
     $.ajax({
         type: 'post',
         //contentType: 'application/json; charset=utf-8',
@@ -316,6 +317,7 @@ function ajaxPost(jsonData, handler, returnDiv) {
     });
 }
 
+//displays the current roles of the selected user, and the remove and add role abilities
 document.getElementById('userSelect').onchange = function showUsersRoles(event) {
     event.preventDefault;
     var userid = $("#userSelect").val();
@@ -325,7 +327,7 @@ document.getElementById('userSelect').onchange = function showUsersRoles(event) 
     ajaxPost(jsonData, handler, div);
 }
 
-
+//handles adding role to a user with the use of ajaxPost method.
 $(document).on('click', '#addUserRole', function addUserRole(event) {
     event.preventDefault;
     var user = $("#userBeingAltered").val();
@@ -336,6 +338,8 @@ $(document).on('click', '#addUserRole', function addUserRole(event) {
     ajaxPost(jsonData, handler, div);
 });
 
+
+//handles deleting role from a user with the use of ajaxPost method.
 $(document).on('click', '#deleteUserRole', function (event) {
     event.preventDefault;
     var user = $("#userBeingAltered").val();
@@ -346,4 +350,15 @@ $(document).on('click', '#deleteUserRole', function (event) {
     ajaxPost(jsonData, handler, div);
 });
 
+//handles posting datato
+$(document).on('click', '#projectEditButton', function (event) {
+    event.preventDefault;
+    var value = $(this).val();
+    var jsonData = { pressedButton : value };
+    var handler = "/Dashboard?handler=EditCurrentProject"; 
+    const splitValue = value.split('_');
+    var div = "#edit_" + splitValue[1];
+
+    ajaxPost(jsonData, handler, div);
+});
 

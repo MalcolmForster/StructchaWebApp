@@ -150,7 +150,13 @@ p {
     }
 
     .editProject button {
-        margin:2px
+        margin:2px;
+        width :75px;
+    }
+
+    .editProject select, .editProject input {
+        margin: 2px;
+        width: 240px;
     }
 
     .editProject h4 {

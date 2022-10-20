@@ -46,7 +46,8 @@
             {
                 foreach (Project project in Model.currentProjects)
                 {
-                    <form class="formBackground" asp-page-handler="EditCurrentProject" method="post" name="thisProject">
+                    //asp-page-handler="EditCurrentProject" method="post"
+                    <form class="formBackground" name="thisProject" id="thisProject">
                         @{
                             if (@project.Title != null)
                             {
@@ -59,11 +60,8 @@
                             {
                                 <h2>@project.Location</h2>
                             }
-                        }
-
-                        
+                        }                        
                         <label>Lead Company: @project.LeadCompany.CompanyName</label>
-
                         <br />
                         <label>Start Date: @project.StartDate</label>
 
@@ -72,48 +70,47 @@
                         <button style="display:none" type="button" value="@project.ProjectCode" id="hideButton_@project.ProjectCode" onclick="toggleProjectEditDiv('hide_@project.ProjectCode')">Hide below Project</button>
 
                         <br />
-
                         <div style="display:none" class="editProject" id="edit_@project.ProjectCode">
 
                             <label>Add another company: </label>
                             <input name="addCompany" type="text" />
-                            <button type="submit" name="projectEditButton" value="addCompany_@project.ProjectCode">Add</button><br />
+                            <button type="button" name="projectEditButton" value="addCompany_@project.ProjectCode">Add</button><br />
 
                             <label>Remove company: </label>
-                            <select name="removeCompany" asp-items="@project.SelectListCompanies"><option disabled hidden selected>Select company to be removed</option></select>
-                            <button type="submit" name="projectEditButton" value="removeCompany_@project.ProjectCode">Remove</button><br />
+                            <select name="removeCompany" asp-items="@project.SelectListCompanies"><option disabled hidden selected>Select company</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="removeCompany_@project.ProjectCode">Remove</button><br />
 
                             <label>Add roles: </label>
-                            <select name="addRoles" asp-items="@Model.projectAdmin.userRoles"><option disabled hidden selected>Select a new role to add to project</option></select>
-                            <button type="submit" name="projectEditButton" value="addRoles_@project.ProjectCode">Add</button><br />
+                            <select name="addRoles" asp-items="@Model.projectAdmin.userRoles"><option disabled hidden selected>Select role</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="addRoles_@project.ProjectCode">Add</button><br />
 
                             <label>Remove roles: </label>
-                            <select name="removeRoles" asp-items="@project.SelectListRoles[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select a role to remove from project</option></select>
-                            <button type="submit" name="projectEditButton" value="removeRoles_@project.ProjectCode">Remove</button><br />
+                            <select name="removeRoles" asp-items="@project.SelectListRoles[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select role</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="removeRoles_@project.ProjectCode">Remove</button><br />
 
                             <label>Add individual user: </label>
-                            <select name="addIndividual" asp-items="@Model.projectAdmin.companyUsers"><option disabled hidden selected>Select an individual user to add to project</option></select>
-                            <button type="submit" name="projectEditButton" value="addIndividual_@project.ProjectCode">Add</button><br />
+                            <select name="addIndividual" asp-items="@Model.projectAdmin.companyUsers"><option disabled hidden selected>Select user</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="addIndividual_@project.ProjectCode">Add</button><br />
 
                             <label>Remove individual user: </label>
-                            <select name="removeIndividual" asp-items="@project.SelectListIndividuals[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select an individual user to remove from project</option></select>
-                            <button type="submit" name="projectEditButton" value="removeIndividual_@project.ProjectCode">Remove</button><br />
+                            <select name="removeIndividual" asp-items="@project.SelectListIndividuals[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select user</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="removeIndividual_@project.ProjectCode">Remove</button><br />
 
                             <label>Block individual user: </label>
-                            <select name="blockIndividual" asp-items="@Model.projectAdmin.companyUsers"><option disabled hidden selected>Select an individual user to block from project</option></select>
-                            <button type="submit" name="projectEditButton" value="blockIndividual_@project.ProjectCode">Add</button><br />
+                            <select name="blockIndividual" asp-items="@Model.projectAdmin.companyUsers"><option disabled hidden selected>Select user</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="blockIndividual_@project.ProjectCode">Add</button><br />
 
                             <label>Remove blocked individual user: </label>
-                            <select name="unblockIndividual" asp-items="@project.SelectListBlocks[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select an individual user to unblock from project</option></select>
-                            <button type="submit" name="projectEditButton" value="unblockIndividual_@project.ProjectCode">Remove</button><br />
+                            <select name="unblockIndividual" asp-items="@project.SelectListBlocks[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select user</option></select>
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="unblockIndividual_@project.ProjectCode">Remove</button><br />
 
                             <label>Adjust start date: </label>
                             <input type="date" name="startEdit" />
-                            <button type="submit" name="projectEditButton" value="startEdit_@project.ProjectCode">Submit</button><br />
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="startEdit_@project.ProjectCode">Submit</button><br />
 
                             <label>Sign project as completed: </label>
                             <input type="date" name="finishEdit" />
-                            <button type="submit" name="projectEditButton" value="finishEdit_@project.ProjectCode">Submit</button><br />
+                            <button type="button" name="projectEditButton" id="projectEditButton" value="finishEdit_@project.ProjectCode">Submit</button><br />
                         </div>
                     </form>
                 }
