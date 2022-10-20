@@ -28,10 +28,9 @@
 
     if (DashboardModel.companyOwner(User.Claims.First().Value))
     {
-        <partial name="~/Pages/Shared/_EditRoleRules.cshtml" />
-        <partial name="~/Pages/Shared/_ProjectAdmin.cshtml" />        
         <partial name="~/Pages/Shared/_CompanyAdminSettings.cshtml" />
-
+        <partial name="~/Pages/Shared/_EditRoleRules.cshtml" />
+        <partial name="~/Pages/Shared/_ProjectAdmin.cshtml" />
     }
 
     if (DashboardModel.companyOwner(User.Claims.First().Value))

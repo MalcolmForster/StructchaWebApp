@@ -1,3 +1,4 @@
+using MessagePack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -67,32 +68,44 @@ namespace StructchaWebApp.Pages
             adminDash.deleteCompany(s);
         }
 
-        public void OnPostFindUser()
+        public ActionResult OnPostFindUser(string user)
         {
-            checkingUser = Request.Form["userSelect"];
-            if(checkingUser != null)
+            checkingUser = user;
+            if (checkingUser != null)
             {
                 companyDash.selectedUserRoles(checkingUser);
-            }            
+            }
+            return PartialView("~/Pages/Shared/_CompanyAdminSettings.cshtml",user);
         }
 
-        public void OnPostUserRoleAdd()
+        private PartialViewResult PartialView(string partialName, string userBeingAltered)
         {
-            var userBeingAltered = Request.Form["userBeingAltered"];
-            var newUserRole = Request.Form["userNewRole"];
+            PartialViewResult result = new PartialViewResult();
+            result.ViewName = partialName;
+            result.ViewData = new ViewDataDictionary<DashboardModel>(ViewData, this);
+            
+            return result;
+        }
+
+        public ActionResult OnPostUserRoleAdd(string userBeingAltered, string newUserRole)
+        {
+            //var userBeingAltered = Request.Form["userBeingAltered"];
+            //var newUserRole = Request.Form["userNewRole"];
             companyDash.assignRole(userBeingAltered, newUserRole);
+            return OnPostFindUser(userBeingAltered);
         }
 
-        public void OnPostUserRoleRemove()
+        public ActionResult OnPostUserRoleRemove(string userBeingAltered, string newUserRole)
         {
-            var userBeingAltered = Request.Form["userBeingAltered"];
-            string roleToDel = Request.Form["deleteUserRole"];
+            //var userBeingAltered = Request.Form["userBeingAltered"];
+            //string roleToDel = Request.Form["deleteUserRole"];
 
             string _remove = "_remove";
-            int len = roleToDel.Length - _remove.Length;
-            roleToDel = roleToDel.Substring(0, len);
-            roleToDel = roleToDel.Replace("_", " ");
-            companyDash.unAssignRole(userBeingAltered, roleToDel);
+            int len = newUserRole.Length - _remove.Length;
+            newUserRole = newUserRole.Substring(0, len);
+            newUserRole = newUserRole.Replace("_", " ");
+            companyDash.unAssignRole(userBeingAltered, newUserRole);
+            return OnPostFindUser(userBeingAltered);
         }
 
         public void OnPostUnassignedCompanyUsers()
@@ -121,7 +134,6 @@ namespace StructchaWebApp.Pages
             }
             else if (command.Contains("_RmvRole"))
             {
-
                 companyDash.rmvAppRole(app, role);
             }
         }

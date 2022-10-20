@@ -84,6 +84,8 @@ function changeMainDisplay(i) {
 }
 
 
+
+
 function updateNewTaskAccessSelectors() {
     //$("#TaskAssignUser").empty();
     //$("#TaskAssignRole").empty();
@@ -255,9 +257,6 @@ function addTaskAddUser() {
     }
 }
 
-
-
-
 function addTaskAddRole() {
 
     var roleToAdd = $("#TaskAssignRole").val();
@@ -278,5 +277,73 @@ function unblockTaskRoleUser() {
 
     updateNewTaskInfo();
 }
+
+
+function showUsersRoles(formEle) {
+
+    formEle.submit();
+    //var userselected = document.getElementById("userSelect").value;
+    //var userName = JSON.stringify({ username : userselected });
+
+    //$.ajax({
+    //    type: 'post',
+    //    dataType: 'json',
+    //    data: userName,
+    //    contentType: 'application/html; charset=utf-8',
+    //    url: "/Dashboard?handler=FindUser",
+    //});
+
+}
+
+function ajaxPost(jsonData, handler, returnDiv) {
+
+    $.ajax({
+        type: 'post',
+        //contentType: 'application/json; charset=utf-8',
+        //dataType: 'json',
+        data: jsonData,
+        url: handler,
+        dataType: "html",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (result) {
+            var $div = $(result);
+            var divHTML = $div.find(returnDiv).html();
+            $(returnDiv).html(divHTML);
+        }
+    });
+}
+
+document.getElementById('userSelect').onchange = function showUsersRoles(event) {
+    event.preventDefault;
+    var userid = $("#userSelect").val();
+    var handler = "/Dashboard?handler=FindUser";
+    var div = "#roleEditingDiv";
+    var jsonData = { user: userid};
+    ajaxPost(jsonData, handler, div);
+}
+
+
+$(document).on('click', '#addUserRole', function addUserRole(event) {
+    event.preventDefault;
+    var user = $("#userBeingAltered").val();
+    var role = $("#userNewRole").val();
+    var jsonData = { userBeingAltered: user, newUserRole: role };
+    var handler = "/Dashboard?handler=UserRoleAdd";
+    var div = "#roleEditingDiv";
+    ajaxPost(jsonData, handler, div);
+});
+
+$(document).on('click', '#deleteUserRole', function (event) {
+    event.preventDefault;
+    var user = $("#userBeingAltered").val();
+    var role = $("#deleteUserRole").val();
+    var jsonData = { userBeingAltered: user, newUserRole: role };
+    var handler = "/Dashboard?handler=UserRoleRemove";
+    var div = "#roleEditingDiv";
+    ajaxPost(jsonData, handler, div);
+});
 
 

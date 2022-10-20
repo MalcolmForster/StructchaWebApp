@@ -30,55 +30,57 @@
             }
         }
 
-        <div name="editCompanyRoles">
+        <div name="editCompanyRoles" id="editCompanyRoles">
             <h4>Assign roles to users</h4>
-            <form id="assignRoles" method="post" asp-page-handler="FindUser" style="text-align:center">
-                <select name="userSelect" asp-items="Model.companyDash.CompanyUsersSL()">
+            <form id="assignRoles" style="text-align:center">
+                <select name="userSelect" id="userSelect" asp-items="Model.companyDash.CompanyUsersSL()">
                     <option value="" disabled selected>Select user to edit</option>
                 </select><br />
-                <button type="submit">Find users roles</button>
+                <!--<button type="submit">Find users roles</button>-->
             </form>
+            <div name="roleEditingDiv" id="roleEditingDiv">
+                @{
+                    if (Model.checkingUser != "")
+                    {
 
-            @{
-                if (Model.checkingUser != "")
-                {
-                    <div name="roleEditingDiv">
                         <h3>Edit roles for @Model.companyDash.checkingUserName</h3>
-                        @{
-                            if (checkedUserRoles == null || checkedUserRoles.Count == 0)
-                            {
-                                <p style="text-align:center">No roles for user selected</p>
-                            }
-                            else
-                            {
-                                <form asp-page-handler="UserRoleRemove" method="post" style="text-align:center">
-                                    <input name="userBeingAltered" type="hidden" value="@Model.checkingUser" />
-                                    @{
-                                        //var usersRoles = Model.companyDash.selectedUserRoles();
-                                        foreach (string s in checkedUserRoles)
-                                        {
-                                            <l>@s </l>
-                                            <button type="submit" name="deleteUserRole" value=@String.Concat(s.Replace(" ","_"),"_Remove")>Remove</button>
-                                            <br />
-                                        }
+                        <input name="userBeingAltered" id="userBeingAltered" type="hidden" value="@Model.checkingUser" />
+
+                        if (checkedUserRoles == null || checkedUserRoles.Count == 0)
+                        {
+                            <p style="text-align:center">No roles for user selected</p>
+                        }
+                        else
+                        {
+                            <form style="text-align:center">
+                                @{
+                                    //var usersRoles = Model.companyDash.selectedUserRoles();
+                                    foreach (string s in checkedUserRoles)
+                                    {
+                                        <l>@s </l>
+                                        <button type="button" name="deleteUserRole" id="deleteUserRole" value=@String.Concat(s.Replace(" ","_"),"_Remove")>Remove</button>
+                                        <br />
                                     }
-                                </form>
-                            }
+                                }
+                            </form>
                         }
 
-                        <form asp-page-handler="UserRoleAdd" method="post" style="text-align:center">
+
+                        <form style="text-align:center">
+                            @*<form asp-page-handler="UserRoleAdd" method="post" style="text-align:center"> *@
                             <input name="userBeingAltered" type="hidden" value="@Model.checkingUser" />
                             @{
-                                <select name="userNewRole" asp-items=Model.companyDash.AllUserRolesSL()>
+                                <select name="userNewRole" id="userNewRole" asp-items=Model.companyDash.AllUserRolesSL()>
                                     <option value="" disabled selected>Select New Role to add</option>
                                 </select>
-                                <button type="submit">Add this role to user</button>
+                                <button id="addUserRole" type="button">Add this role to user</button>
                             }
                         </form>
                         <br />
-                    </div>
+
+                    }
                 }
-            }
+            </div>
         </div>
 
 
