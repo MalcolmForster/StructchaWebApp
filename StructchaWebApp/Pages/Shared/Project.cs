@@ -227,7 +227,6 @@ namespace StructchaWebApp.Pages.Shared
 
         private void addProjectAccess(string company, string accessType,string parameters)
         {
-
             JsonObject newJson = AccessJson;
             if (company == LeadCompany.CompanyName)
             {

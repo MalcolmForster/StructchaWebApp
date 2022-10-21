@@ -150,12 +150,12 @@ namespace StructchaWebApp.Pages
             finishedProjects = projectAdmin.getProjects(1);
         }
 
-        public ActionResult OnPostEditCurrentProject(string pressedButton)
+        public ActionResult OnPostEditCurrentProject(string pressedButton, string parameters)
         {
             var request = pressedButton.ToString().Split('_');
             string operation = request[0];
             string projectCode = request[1];
-            var parameters = Request.Form[operation].ToString();
+            //parameters = Request.Form[operation].ToString();
             projectAdmin.editProject(projectCode, user.Company, operation, parameters);
             currentProjects = projectAdmin.getProjects(0);
             finishedProjects = projectAdmin.getProjects(1);

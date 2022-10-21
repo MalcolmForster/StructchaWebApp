@@ -40,8 +40,6 @@ $(window).on("load", function () {
     }).scroll(); //invoke scroll-handler on page-load
 });
 
-
-
 function toggleProjectEditDiv(div) {
     if (div.includes('show_')) {
         div = div.replace('show_', '');
@@ -352,13 +350,17 @@ $(document).on('click', '#deleteUserRole', function (event) {
 
 //handles posting datato
 $(document).on('click', '#projectEditButton', function (event) {
-    event.preventDefault;
+    event.preventDefault;    
     var value = $(this).val();
-    var jsonData = { pressedButton : value };
-    var handler = "/Dashboard?handler=EditCurrentProject"; 
     const splitValue = value.split('_');
-    var div = "#edit_" + splitValue[1];
+    var editDivId = "#edit_" + splitValue[1];
+    var theDiv = document.getElementById("edit_" + splitValue[1])
+    theDiv.style.display = "block";
+    var theSelect = $("#" + value)
+    var para = theSelect.find(':selected').val(); 
+    var jsonData = { pressedButton : value, parameters : para };
+    var handler = "/Dashboard?handler=EditCurrentProject";
 
-    ajaxPost(jsonData, handler, div);
+    ajaxPost(jsonData, handler, editDivId);
 });
 
