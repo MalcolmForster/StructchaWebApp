@@ -28,27 +28,26 @@
             }
         </ul>
 
-
         @if (Model.Completed == false)
         {
-            <form id="ReplyForm" method="post" asp-page-handler="TaskReply">
+            <form id="ReplyForm">
                 <label>Reply:</label><br />
-                <textarea style="width:100%; max-width:800px" name="ReplyBody" rows="3"></textarea><br />
-                <input name="ReplyTo" type="hidden" value="@Model.Id" />
-                <input type="submit" /><br />
+                <textarea style="width:100%; max-width:800px" name="ReplyBody" id="ReplyBody" rows="3"></textarea><br />
+                <input name="ReplyTo" id="ReplyTo" type="hidden" value="@Model.Id" />
+                <button type="button" id="SubmitReplyTask">Post Reply</button><br />
             </form>
 
-            <form name="TaskCompeted" asp-page-handler="TaskComplete">
-                <button type="submit" name="CompletionButton" value="@Model.Id">Mark as completed</button>
-                <input name="setto" type="hidden" value="1" />
+            <form name="TaskCompleted" id="TaskCompleted">
+                <button type="button" name="CompletionButton" id="CompletionButton" value="@Model.Id">Mark as completed</button>
+                <input name="SetTo" id="SetTo" type="hidden" value="1" />
             </form>
             //if the user is lower down ladder, they can only request the task is completed, needs to be signed off by a more senior position.
         }
         else
         {
-            <form name="TaskCompeted" asp-page-handler="TaskComplete">
-                <button type="submit" name="CompletionButton" value="@Model.Id">Mark as incomplete</button>
-                <input name="SetTo" type="hidden" value="0" />
+            <form name="TaskCompleted" id="TaskCompleted">
+                <button type="button" name="CompletionButton" id="CompletionButton" value="@Model.Id">Mark as incomplete</button>
+                <input name="SetTo" id="SetTo" type="hidden" value="0" />
             </form>
         }
     </div>

@@ -7,6 +7,7 @@ using StructchaWebApp.Data;
 using StructchaWebApp.Pages.Shared;
 using System.Data;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace StructchaWebApp.Pages
 {
@@ -105,15 +106,25 @@ namespace StructchaWebApp.Pages
         //    }
         //    return (new PartialViewResult() { ViewName="_Error"});            
         //}
-        public void NewReply(string type)
+        public void NewReply(string type, string body, string id)
         {
-            string body = Request.Form["ReplyBody"];
-            string id = Request.Form["ReplyTo"];
+            //string body = Request.Form["ReplyBody"];
+            //string id = Request.Form["ReplyTo"];
 
             if (type == "task" || type == "post")
             {
                 userHomePage.createReply(type, id, body);
             }
+        }
+
+        public ActionResult OnGetTaskBarRefresh()
+        {
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_TaskBar",
+                ViewData = new ViewDataDictionary<IndexModel>(ViewData, this)
+            };
+            return result;
         }
 
         public ActionResult OnGetSendSelected(string code)
@@ -185,23 +196,28 @@ namespace StructchaWebApp.Pages
             };
             return result;
         }
-        public void OnPostTaskReply()
+
+        public ActionResult OnPostTaskReply(string replyBody, string Id)
         {
-            NewReply("task"); 
+            NewReply("task", replyBody, Id);
+            return OnGetTaskPartial(Id);
         }
 
-        public void OnPostPostReply()
+        public ActionResult OnPostPostReply(string replyBody, string Id)
         {
-            NewReply("post");
-        }
-        
-        public void OnPostTaskComplete()
+            NewReply("post", replyBody, Id);
+            return OnGetPostPartial(Id);
+        }        
+
+        public ActionResult OnPostTaskComplete(string setTo,string taskId)
         {
-            string taskId = Request.Form["CompletionButton"];
-            string i = Request.Form["SetTo"];
+            //string taskId = Request.Form["CompletionButton"];
+            //string i = Request.Form["SetTo"];
 
             ProjectTask task = new ProjectTask(taskId,userManager,_connection);
-            task.SetComplete(i);
+            task.SetComplete(setTo);
+
+            return OnGetTaskPartial(taskId);
         }
 
 

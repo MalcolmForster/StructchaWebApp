@@ -23,11 +23,11 @@
                 }
         </ul>
 
-        <form id="ReplyForm" method="post" asp-page-handler="PostReply">
+        <form id="ReplyForm">
             <label>Reply:</label><br />
-            <textarea name="ReplyBody" rows="3" cols="80"></textarea><br />
-            <input name="ReplyTo" type="hidden" value="@Model.Id"/>
-            <input type="submit"/><br />
+            <textarea style="width:100%; max-width:800px" name="ReplyBody" id="ReplyBody" rows="3"></textarea><br />
+            <input name="ReplyTo" id="ReplyTo" type="hidden" value="@Model.Id" />
+            <button type="button" id="SubmitReplyPost">Post Reply</button><br />
         </form>
 
     </div>

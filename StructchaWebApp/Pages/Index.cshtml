@@ -51,7 +51,6 @@
                     }
                 }
 
-
                 @{
                     if (Model.userHomePage.StructchaFEAAccess)
                     {
@@ -78,7 +77,9 @@
                 }
             </div>
 
-            <div name="taskBar" class="task-bar">
+            <partial name="~/Pages/Shared/_TaskBar.cshtml" model="Model" />
+
+@*            <div name="taskBar" id="taskBar" class="task-bar">
                 <div class="taskBarSection">
                     <h3>Project Updates</h3>
                     <button name="changeToNewPost" onclick="changeMainDisplay(0)">Post a project update</button>
@@ -87,11 +88,11 @@
 
                         if (projectPosts != null && projectPosts.Count > 0)
                         {
-                                        <partial name="~/Pages/Shared/_TaskBarPostPartial.cshtml" model="projectPosts" />
+                            <partial name="~/Pages/Shared/_TaskBarPostPartial.cshtml" model="projectPosts" />
                         }
                         else
                         {
-                                        <p>No posts found</p>
+                            <p>No posts found</p>
                         }
 
                     }
@@ -106,11 +107,11 @@
 
                         if (assignments != null && assignments.Count > 0)
                         {
-                                        <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments" />
+                            <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments" />
                         }
                         else
                         {
-                                        <p>No tasks found</p>
+                            <p>No tasks found</p>
                         }
 
                     }
@@ -125,15 +126,15 @@
 
                         if (selfAssigned != null && selfAssigned.Count > 0)
                         {
-                                        <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="selfAssigned" />
+                            <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="selfAssigned" />
                         }
                         else
                         {
-                                        <p>No tasks found</p>
+                            <p>No tasks found</p>
                         }
                     }
                 </div>
-            </div>
+            </div>*@
 
 
             <div name="mainView" id="mainView" class="main-view">

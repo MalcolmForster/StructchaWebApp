@@ -18,6 +18,7 @@
     6. Check every minute or so to see if the app is still connected
 */
 
+//making divs appear overtop of eachother like a slideshow/powerpoint. Used for the product showcase side of Structcha
 $(window).on("load", function () {
     var navHeight = $('#header').height();
     $(window).scroll(function () {
@@ -40,6 +41,7 @@ $(window).on("load", function () {
     }).scroll(); //invoke scroll-handler on page-load
 });
 
+//hides or shows the divs which are used to edit projects in dashboard, also alters the button that is used
 function toggleProjectEditDiv(div) {
     if (div.includes('show_')) {
         div = div.replace('show_', '');
@@ -61,245 +63,11 @@ function toggleProjectEditDiv(div) {
     return false;
 }
 
-function changeMainDisplay(i) {  
 
-    var handler = "";
-    if (i == 0) {
-        handler = '/?handler=NewProjectPost';
-    } else if (i == 1) {
-        handler = '/?handler=NewProjectTask';
-    }
-    
-    $.ajax({
-        type: 'get',
-        dataType: 'html',
-        contentType: 'application/html; charset=utf-8',
-        url: handler,      
-        success: function (result) {
-            $("#mainView").html(result);
-        }
-    });
-}
-
-
-
-
-function updateNewTaskAccessSelectors() {
-    //$("#TaskAssignUser").empty();
-    //$("#TaskAssignRole").empty();
-
-    var selectedProject = $("#TaskProjectCode :selected").val();
-    var turl = '/Index?handler=SendSelected&code=' + selectedProject;
-
-    $.ajax({
-        type: 'get',
-        dataType: 'html',
-        contentType: 'application/html; charset=utf-8',
-        url: turl,
-        success: function (result) {
-            $("#dynamicTaskSelectors").html(result);
-        }
-    });
-};
-
-
-function ShowIndexPartial(Id, t) {
-    if (t == 0) {
-        handler = '/Index?handler=PostPartial&postId=';
-    } else if (t == 1) {
-        handler = '/Index?handler=TaskPartial&taskId=';
-    }
-
-    $.ajax({
-        type: 'get',
-        dataType: 'html',
-        contentType: 'application/html; charset=utf-8',
-        url: (handler + Id),
-        success: function (result) {
-            $("#mainView").html(result);
-        }
-    });
-};
-
-//$(document).ready(function () {
-//    document.ReplyForm.submit('submit', function (e) {
-//        console.log("Working");
-//        //$.ajax({
-//        //    type: 'post',
-//        //    dataType: 'json',
-//        //    data: $('#ReplyForm').serialize(),
-//        //    url: '/Index?handler=NewReply',
-//        //    contentType: "application/json; charset=utf-8",
-//        //});
-//    });
-//});
-
-//function ChangeAppRoles(handler, json, returnDiv)
-//{
-//    $.ajax({
-//        type: 'post',
-//        data: json,
-//        dataType: 'json',
-//        url: (handler),
-//        success: function (result) {
-//            $(returnDiv).html(result);
-//        }
-//    });
-//}
-
-//function AddSoftwareToRole() {
-//    handler = "/Index?handler=AddAppRole";
-//    div = "#companyAdminTool";
-//    software = $(this).val();
-//    selectID = software + "_AddRole";
-//    roleSelected = $('select[id = ' + selectID + '] option').filter(':selected').val();
-//    json = {
-//        "app": software,
-//        "role": roleSelected
-//    }
-//    ChangeAppRoles(handler, div);
-//}
-
-//function RemoveSoftwareFromRole() {
-//    handler = "/Index?handler=RemoveAppRole";
-//    div = "#companyAdminTool";
-//    software = $(this).val();
-//    selectID = software + "_RmvRole";
-//    roleSelected = $('select[id = ' + selectID + '] option').filter(':selected').val();
-//    json = {
-//        "app": software,
-//        "role": roleSelected
-//    }
-//    ChangeAppRoles(handler, json, div);
-//}
-
-function toggleDisplay(item) {
-    var displayed = $(item).css('display');
-    if (displayed == 'none') {
-        $(item).show('fast');
-    } else {
-        $(item).hide('fast');
-    }
-}
-
-function ShowHint(obj) {
-    var label = '#'+$(obj).val();
-    var item = $(label);
-    toggleDisplay(item);
-}
-
-function ToggleAdvancedTaskAssignment() {
-    var item = $('#AdvancedTaskAssign');
-    toggleDisplay(item);
-}
-
-function updateNewTaskInfo() {
-    //$("#AdvancedTaskAssign").load("/Pages/Shared/_NewProjectTask.cshtml #AdvancedTaskAssign");
-
-    $.ajax({
-        type: 'get',
-        dataType: 'html',
-        contentType: 'application/html; charset=utf-8',
-        url: "/Index?handler=NewProjectTask",
-        success: function (result) {
-            var newDiv = $(result).find("#AdvancedTaskAssign").html(); 
-            //var newDiv = result.getElementById("#AdvancedTaskAssign");
-            $("#AdvancedTaskAssign").html(newDiv);
-        }
-    });
-}
-
-var t = $("input[name='__RequestVerificationToken']").val(); //there is a better method where the data is passed from the page view I believe, check bookmarked stoackoverflow page
-
-function deleteTaskUser(num, name) {
-    var list = "";
-    if (num == 0) { //remove user from the AssignedUsersList
-        list = "_AssignUsers";
-    } else if (num == 1) {
-        list = "_AssignRoles";
-    }
-
-
-    document.getElementById(name+list).remove();
-
-    //listElement.parentNode.removeChild(name);
-
-    //$(list).remove('#'+name);
-}
-
-function addTaskAddUser() {
-    //$.ajax({
-    //    type: 'post',
-    //    headers:
-    //    {
-    //        "RequestVerificationToken": t
-    //    },
-    //    dataType: 'json',
-    //    data: { test: "Another test user yo" },
-    //    url: "/Index?handler=NewTaskAddUser",
-    //    success: updateNewTaskInfo(),
-    //    error: function (responseText, textStatus, XMLHttpRequest) {
-    //        return;
-    //    }
-    //});
-
-    //updateNewTaskInfo();
-
-
-    //turned into a method of staying client side
-
-    var userToAdd = $("#TaskAssignUser").val();
-
-    if (userToAdd != "") {
-        $('#AssignedUsersList').append('<li id="' + userToAdd + '_AssignUsers">' + userToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(0,\'' + userToAdd + '\')">Remove</button><input name="userAssigned" type="hidden" value="' + userToAdd +'"/></li>');
-    }
-}
-
-function addTaskAddRole() {
-
-    var roleToAdd = $("#TaskAssignRole").val();
-
-    if (roleToAdd != "") {
-        $('#AssignedRolesList').append('<li id="' + roleToAdd + '_AssignRoles">' + roleToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(1,\'' + roleToAdd + '\')">Remove</button><input name="roleAssigned" type="hidden" value="'+roleToAdd+'"/></li>');
-    }
-}
-
-function blockTaskRoleUser() {
-
-
-    updateNewTaskInfo();
-}
-
-function unblockTaskRoleUser() {
-
-
-    updateNewTaskInfo();
-}
-
-
-function showUsersRoles(formEle) {
-
-    formEle.submit();
-    //var userselected = document.getElementById("userSelect").value;
-    //var userName = JSON.stringify({ username : userselected });
-
-    //$.ajax({
-    //    type: 'post',
-    //    dataType: 'json',
-    //    data: userName,
-    //    contentType: 'application/html; charset=utf-8',
-    //    url: "/Dashboard?handler=FindUser",
-    //});
-
-}
-
-
-//----------A GENERIC AJAXPOST FUNCTION FOR USE WITH MANY ----------------
+//----------A GENERIC AJAXPOST FUNCTION FOR USE WITH MANY----------------
 function ajaxPost(jsonData, handler, returnDiv) {
     $.ajax({
         type: 'post',
-        //contentType: 'application/json; charset=utf-8',
-        //dataType: 'json',
         data: jsonData,
         url: handler,
         dataType: "html",
@@ -309,21 +77,202 @@ function ajaxPost(jsonData, handler, returnDiv) {
         },
         success: function (result) {
             var $div = $(result);
-            var divHTML = $div.find(returnDiv).html();
-            $(returnDiv).html(divHTML);
+            var test = $div.find(returnDiv);
+            if ($div.find(returnDiv).length != 0) {
+                var divHTML = $div.find(returnDiv).html();
+                $(returnDiv).html(divHTML);
+            } else {
+                $(returnDiv).html(result);
+            }            
         }
     });
 }
 
+//-----------A GENERIC AJAXGET FUNCTION-----------------------
+function ajaxGet(handler, returnDiv) {
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        contentType: 'application/html; charset=utf-8',
+        url: handler,
+        success: function (result) {
+            $(returnDiv).html(result);
+        }
+    });
+}
+
+function UpdateTaskBar(loop) {
+    if ($('#taskBar').length) {
+        var handler = "/Index?handler=TaskBarRefresh";
+        ajaxGet(handler, '#taskBar');        
+        if (loop) {
+            setTimeout(function () { UpdateTaskBar(true); }, 10000);
+        }        
+    }
+}
+
+// Changes the index's mainView div to the new post or task partial ready for user input
+function changeMainDisplay(i) {  
+    var handler = "";
+    if (i == 0) {
+        handler = '/?handler=NewProjectPost';
+    } else if (i == 1) {
+        handler = '/?handler=NewProjectTask';
+    }
+
+    ajaxGet(handler, "#mainView");    
+    //$.ajax({
+    //    type: 'get',
+    //    dataType: 'html',
+    //    contentType: 'application/html; charset=utf-8',
+    //    url: handler,      
+    //    success: function (result) {
+    //        $("#mainView").html(result);
+    //    }
+    //});
+}
+
+// When adding a new task, this updates the user and role select boxes to match the selected project users and roles which have access to the project
+function updateNewTaskAccessSelectors() {
+    var selectedProject = $("#TaskProjectCode :selected").val();
+    var handler = '/Index?handler=SendSelected&code=' + selectedProject;
+    ajaxGet(handler, "#dynamicTaskSelectors");
+    //$.ajax({
+    //    type: 'get',
+    //    dataType: 'html',
+    //    contentType: 'application/html; charset=utf-8',
+    //    url: handler,
+    //    success: function (result) {
+    //        $("#dynamicTaskSelectors").html(result);
+    //    }
+    //});
+};
+
+// Changes the index's mainView to view a post or task
+function ShowIndexPartial(Id, t) {
+    if (t == 0) {
+        handler = '/Index?handler=PostPartial&postId=' + Id;
+    } else if (t == 1) {
+        handler = '/Index?handler=TaskPartial&taskId=' + Id;
+    }
+    ajaxGet(handler,"#mainView");
+
+    //$.ajax({
+    //    type: 'get',
+    //    dataType: 'html',
+    //    contentType: 'application/html; charset=utf-8',
+    //    url: (handler + Id),
+    //    success: function (result) {
+    //        $("#mainView").html(result);
+    //    }
+    //});
+};
+
+
+
+// method to hide and show divs
+function toggleDisplay(item) {
+    var displayed = $(item).css('display');
+    if (displayed == 'none') {
+        $(item).show();
+    } else {
+        $(item).hide();
+    }
+}
+
+// show/hide hints using inline onclick command
+function ShowHint(obj) {
+    var label = '#'+$(obj).val();
+    var item = $(label);
+    toggleDisplay(item);
+}
+
+// show/hide further advanced task assignment div, used to add/block individual users which are in the roles selected
+function ToggleAdvancedTaskAssignment() {
+    var item = $('#AdvancedTaskAssign');
+    toggleDisplay(item);
+}
+
+// updates the AdvancedTaskAssign div to show which users and roles have been added to the task, not used anymore?
+function updateNewTaskInfo() {
+    $.ajax({
+        type: 'get',
+        dataType: 'html',
+        contentType: 'application/html; charset=utf-8',
+        url: "/Index?handler=NewProjectTask",
+        success: function (result) {
+            var newDiv = $(result).find("#AdvancedTaskAssign").html();
+            $("#AdvancedTaskAssign").html(newDiv);
+        }
+    });
+}
+
+//var t = $("input[name='__RequestVerificationToken']").val(); //there is a better method where the data is passed from the page view I believe, check bookmarked stoackoverflow page
+
+// remove user from task
+function deleteTaskUser(num, name) {
+    var list = "";
+    if (num == 0) { //remove user from the AssignedUsersList
+        list = "_AssignUsers";
+    } else if (num == 1) {
+        list = "_AssignRoles";
+    }
+    document.getElementById(name+list).remove();
+}
+
+// add user to task
+function addTaskAddUser() {
+
+    var userToAdd = $("#TaskAssignUser").val();
+
+    if (userToAdd != "") {
+        $('#AssignedUsersList').append('<li id="' + userToAdd + '_AssignUsers">' + userToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(0,\'' + userToAdd + '\')">Remove</button><input name="userAssigned" type="hidden" value="' + userToAdd +'"/></li>');
+    }
+}
+
+// add role to a task
+function addTaskAddRole() {
+
+    var roleToAdd = $("#TaskAssignRole").val();
+
+    if (roleToAdd != "") {
+        $('#AssignedRolesList').append('<li id="' + roleToAdd + '_AssignRoles">' + roleToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(1,\'' + roleToAdd + '\')">Remove</button><input name="roleAssigned" type="hidden" value="'+roleToAdd+'"/></li>');
+    }
+}
+
+// block role user from task WIP
+function blockTaskRoleUser() {
+
+
+    updateNewTaskInfo();
+}
+
+// unblock role user from task WIP
+function unblockTaskRoleUser() {
+
+
+    updateNewTaskInfo();
+}
+
+// Dont think its used anymore, been replaced with ajax methods
+//function showUsersRoles(formEle) {
+//    formEle.submit();
+//}
+
+
+
+
+
+
 //displays the current roles of the selected user, and the remove and add role abilities
-document.getElementById('userSelect').onchange = function showUsersRoles(event) {
+$(document).on('change', '#userSelect', function showUsersRoles(event) {
     event.preventDefault;
     var userid = $("#userSelect").val();
     var handler = "/Dashboard?handler=FindUser";
     var div = "#roleEditingDiv";
-    var jsonData = { user: userid};
+    var jsonData = { user: userid };
     ajaxPost(jsonData, handler, div);
-}
+});
 
 //handles adding role to a user with the use of ajaxPost method.
 $(document).on('click', '#addUserRole', function addUserRole(event) {
@@ -336,7 +285,6 @@ $(document).on('click', '#addUserRole', function addUserRole(event) {
     ajaxPost(jsonData, handler, div);
 });
 
-
 //handles deleting role from a user with the use of ajaxPost method.
 $(document).on('click', '#deleteUserRole', function (event) {
     event.preventDefault;
@@ -348,7 +296,7 @@ $(document).on('click', '#deleteUserRole', function (event) {
     ajaxPost(jsonData, handler, div);
 });
 
-//handles posting datato
+//handles the buttons which are used in the post editing forms with ajax
 $(document).on('click', '#projectEditButton', function (event) {
     event.preventDefault;    
     var value = $(this).val();
@@ -361,6 +309,59 @@ $(document).on('click', '#projectEditButton', function (event) {
     var jsonData = { pressedButton : value, parameters : para };
     var handler = "/Dashboard?handler=EditCurrentProject";
 
-    ajaxPost(jsonData, handler, editDivId);
+    ajaxPost(jsonData, handler, editDivId);    
 });
 
+
+
+
+// marks task as done or incompleted
+$(document).on('click', '#CompletionButton', function (event) {
+    event.preventDefault;
+    var SetTo = $("#SetTo").val();
+    var taskId = $("#CompletionButton").val();
+    var jsonData = { setTo: SetTo, taskId: taskId };
+    var handler = "/Index?handler=TaskComplete";
+    var mainDiv = "#mainView";
+
+    ajaxPost(jsonData, handler, mainDiv);
+    UpdateTaskBarLink(taskId);
+    // ajaxGet() //going to update taskbar colours
+});
+
+// adds replies to posts and tasks using ajax
+function replyToPostOrTask(i) {
+    var ReplyBody = $("#ReplyBody").val();
+    var id = $("#ReplyTo").val();
+    if (i == 0) {
+        var handler = "/Index?handler=PostReply";
+    } else if (i == 1) {
+        var handler = "/Index?handler=TaskReply";
+    }    
+    var mainDiv = "#mainView";
+    var jsonData = { replyBody: ReplyBody, Id: id };
+
+    ajaxPost(jsonData, handler, mainDiv);    
+}
+
+//Detects if user wants to post reply to a post
+$(document).on('click', '#SubmitReplyPost', function (event) {
+    event.preventDefault;
+    replyToPostOrTask(0);
+});
+
+//Detects if user wants to post reply to a task
+$(document).on('click', '#SubmitReplyTask', function (event) {
+    event.preventDefault;
+    replyToPostOrTask(1);
+});
+
+
+
+
+//detects if the webpage has the taskBar div showing
+$(window).on('load', function () {
+    if ($('#taskBar').length) {
+        UpdateTaskBar(true);
+    }
+});
