@@ -72,7 +72,7 @@
                         <br />
                         <div class="editProject" style="display:none" name="editProjectDiv" id="edit_@project.ProjectCode">
 
-                            <label>Add another company: </label>
+                            <label>Add another company: (WIP) </label>
                             <input name="addCompany" type="text" />
                             <button type="button" name="projectEditButton" value="addCompany_@project.ProjectCode">Add</button><br />
 
@@ -104,11 +104,11 @@
                             <select name="unblockIndividual" id="unblockIndividual_@project.ProjectCode" asp-items="@project.SelectListBlocks[project.LeadCompany.CompanyName]"><option disabled hidden selected>Select user</option></select>
                             <button type="button" name="projectEditButton" id="projectEditButton" value="unblockIndividual_@project.ProjectCode">Remove</button><br />
 
-                            <label>Adjust start date: </label>
+                            <label>Adjust start date: (WIP)</label>
                             <input type="date" name="startEdit" />
                             <button type="button" name="projectEditButton" id="projectEditButton" value="startEdit_@project.ProjectCode">Submit</button><br />
 
-                            <label>Sign project as completed: </label>
+                            <label>Sign project as completed: (WIP)</label>
                             <input type="date" name="finishEdit" />
                             <button type="button" name="projectEditButton" id="projectEditButton" value="finishEdit_@project.ProjectCode">Submit</button><br />
                         </div>
