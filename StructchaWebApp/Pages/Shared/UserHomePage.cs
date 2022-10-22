@@ -148,7 +148,7 @@ namespace StructchaWebApp.Pages.Shared
             SqlParameter[] sqlParameters = new SqlParameter[projectCount+1];
             string companyCode = Company.CompanyID(user.Company, null);
             sqlParameters[projectCount] = new SqlParameter("@usersCompany",companyCode);
-            string queryBuilder = "SELECT [Id] FROM [dbo].[Posts] WHERE [PostTitle] IS NOT NULL AND ([IdProject] IN ({0}) OR ([IdProject] IS NULL AND [IdCompany] = @usersCompany)) ORDER BY TimeOfPost ASC";
+            string queryBuilder = "SELECT [Id] FROM [dbo].[Posts] WHERE [PostTitle] IS NOT NULL AND ([IdProject] IN ({0}) OR ([IdProject] IS NULL AND [IdCompany] = @usersCompany)) ORDER BY TimeOfPost DESC";
             string formattedIn = "";
             if(projectCount > 0)
             {

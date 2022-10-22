@@ -1,20 +1,18 @@
 ﻿@model List<ProjectPost>
 
-<div class="taskBar">
-    <ul>
-        @{
-            List<ProjectPost> projectPosts = Model;
-            foreach (ProjectPost pp in projectPosts)
+<ul>
+    @{
+        List<ProjectPost> projectPosts = Model;
+        foreach (ProjectPost pp in projectPosts)
+        {
+            if (pp.Title != null)
             {
-                if (pp.Title != null)
-                {
-                    <li onclick="ShowIndexPartial(@pp.Id, 0)">
-                        <h1>@pp.ProjectName</h1> @* Look into grouping tasks into each project perhaps*@
-                        <p name="openPost_@pp.Title">@pp.Title</p>
-                    </li>
-                }
+                <li onclick="ShowIndexPartial(@pp.Id, 0)">
+                    <h1>@pp.ProjectName</h1> @* Look into grouping tasks into each project perhaps*@
+                    <p name="openPost_@pp.Title">@pp.Title</p>
+                </li>
             }
         }
-    </ul>
-</div>
+    }
+</ul>
 

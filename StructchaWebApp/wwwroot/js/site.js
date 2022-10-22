@@ -102,9 +102,10 @@ function ajaxGet(handler, returnDiv) {
 }
 
 function UpdateTaskBar(loop) {
-    if ($('#taskBar').length) {
-        var handler = "/Index?handler=TaskBarRefresh";
-        ajaxGet(handler, '#taskBar');        
+    if ($('#taskBar').length) {       
+        ajaxGet("/Index?handler=TaskBarSectionPosts", '#postList');        
+        ajaxGet("/Index?handler=TaskBarSectionTasks", '#assignedTasks');        
+        ajaxGet("/Index?handler=TaskBarSectionSelf", '#selfTasks');        
         if (loop) {
             setTimeout(function () { UpdateTaskBar(true); }, 10000);
         }        

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.SqlClient;
 using StructchaWebApp.Data;
 using StructchaWebApp.Pages.Shared;
+using System.Collections.Generic;
 using System.Data;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -123,6 +124,37 @@ namespace StructchaWebApp.Pages
             {
                 ViewName = "_TaskBar",
                 ViewData = new ViewDataDictionary<IndexModel>(ViewData, this)
+            };
+            return result;
+        }
+
+        private ActionResult TaskBarTasks(List<ProjectTask> list)
+        {
+
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_TaskBarTaskPartial",
+                ViewData = new ViewDataDictionary<List<ProjectTask>>(ViewData, list)
+            };
+            return result;
+        }
+
+        public ActionResult OnGetTaskBarSectionTasks()
+        {
+            return TaskBarTasks(userHomePage.taskList);
+        }
+
+        public ActionResult OnGetTaskBarSectionSelf()
+        {
+            return TaskBarTasks(userHomePage.ownTaskList);
+        }
+
+        public ActionResult OnGetTaskBarSectionPosts()
+        {
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_TaskBarPostPartial",
+                ViewData = new ViewDataDictionary<List<ProjectPost>>(ViewData, userHomePage.projectPostList)
             };
             return result;
         }

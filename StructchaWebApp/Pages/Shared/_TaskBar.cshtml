@@ -9,6 +9,7 @@
     <div class="taskBarSection">
         <h3>Project Updates</h3>
         <button name="changeToNewPost" onclick="changeMainDisplay(0)">Post a project update</button>
+        <div class="taskBar" id="postList">
         @{
             List<ProjectPost> projectPosts = Model.userHomePage.projectPostList;
 
@@ -22,29 +23,33 @@
             }
 
         }
+        </div>
 
     </div>
+
     <div class="taskBarSection">
         <h3>Assigned Tasks</h3>
         <button name="changeToNewTask" onclick="changeMainDisplay(1)">Create new task</button>
-        @{
-            //string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
-            List<ProjectTask> assignments = Model.userHomePage.taskList;
+        <div class="taskBar" id="assignedTasks">
+            @{
+                //string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
+                List<ProjectTask> assignments = Model.userHomePage.taskList;
+                if (assignments != null && assignments.Count > 0)
+                {
 
-            if (assignments != null && assignments.Count > 0)
-            {
-                <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments" />
-            }
-            else
-            {
-                <p>No tasks found</p>
-            }
-
+                    <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments" />
+                }
+                else
+                {
+                    <p>No tasks found</p>
+                }
         }
-
+        </div>
     </div>
+
     <div class="taskBarSection">
         <h3>Tasks started by you</h3>
+        <div class="taskBar" id="selfTasks">
         @{
             //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
             //string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
@@ -59,5 +64,6 @@
                 <p>No tasks found</p>
             }
         }
+        </div>
     </div>
 </div>
