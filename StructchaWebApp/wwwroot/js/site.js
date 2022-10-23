@@ -151,12 +151,17 @@ function updateNewTaskAccessSelectors() {
 
 // Changes the index's mainView to view a post or task
 function ShowIndexPartial(Id, t) {
-    if (t == 0) {
+    if (t == 0) {        
         handler = '/Index?handler=PostPartial&postId=' + Id;
     } else if (t == 1) {
         handler = '/Index?handler=TaskPartial&taskId=' + Id;
     }
-    ajaxGet(handler,"#mainView");
+    ajaxGet(handler, "#mainView");
+
+    //Find a better way to do this
+    ajaxGet("/Index?handler=TaskBarSectionPosts", '#postList');
+    ajaxGet("/Index?handler=TaskBarSectionTasks", '#assignedTasks');
+    ajaxGet("/Index?handler=TaskBarSectionSelf", '#selfTasks');
 
     //$.ajax({
     //    type: 'get',

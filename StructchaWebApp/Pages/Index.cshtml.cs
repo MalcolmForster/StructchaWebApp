@@ -203,13 +203,14 @@ namespace StructchaWebApp.Pages
             {
                 _connection.Open();
             }            
-            ProjectTask projectTask = new ProjectTask(taskId, userManager, _connection);
+            ProjectTask projectTask = new ProjectTask(taskId, userManager, user.Id, _connection);
             _connection.Close();
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_TaskPartial",
                 ViewData = new ViewDataDictionary<ProjectTask>(ViewData, projectTask)
             };
+            projectTask.addUserViewed(user.Id);
             return result;
         }
 
@@ -219,13 +220,14 @@ namespace StructchaWebApp.Pages
             {
                 _connection.Open();
             }
-            ProjectPost projectPost = new ProjectPost(postId, userManager, _connection);
+            ProjectPost projectPost = new ProjectPost(postId, userManager, user.Id, _connection);
             _connection.Close();
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_PostPartial",
                 ViewData = new ViewDataDictionary<ProjectPost>(ViewData, projectPost)
             };
+            projectPost.addUserViewed(user.Id);
             return result;
         }
 
@@ -246,7 +248,7 @@ namespace StructchaWebApp.Pages
             //string taskId = Request.Form["CompletionButton"];
             //string i = Request.Form["SetTo"];
 
-            ProjectTask task = new ProjectTask(taskId,userManager,_connection);
+            ProjectTask task = new ProjectTask(taskId,userManager,user.Id,_connection);
             task.SetComplete(setTo);
 
             return OnGetTaskPartial(taskId);

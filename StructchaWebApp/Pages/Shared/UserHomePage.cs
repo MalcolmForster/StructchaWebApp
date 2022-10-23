@@ -166,7 +166,7 @@ namespace StructchaWebApp.Pages.Shared
                 List<ProjectPost> projectPosts = new List<ProjectPost>();
                 foreach (string s in projectPostIds)
                 {
-                    projectPosts.Add(new ProjectPost(s, um, conn));
+                    projectPosts.Add(new ProjectPost(s, um, user.Id, conn));
                 }
 
                 if (projectPosts.Count > 0)
@@ -214,12 +214,12 @@ namespace StructchaWebApp.Pages.Shared
 
             foreach(string s in taskIds)
             {
-                ProjectTask projectTask = new ProjectTask(s, um, conn);
+                ProjectTask projectTask = new ProjectTask(s, um, user.Id, conn);
                 foreach(Project p in projectList)
                 {
                     if(p.Location == projectTask.ProjectLocation && (p.Title == null || p.Title == projectTask.ProjectName))
                     {
-                        taskList.Add(new ProjectTask(s, um, conn));
+                        taskList.Add(new ProjectTask(s, um, user.Id, conn));
                         break;
                     }
                 }       
@@ -325,13 +325,14 @@ namespace StructchaWebApp.Pages.Shared
                 table = "[Posts]";
                 userCol = "[IdUserOp]";
             }
-            string query = String.Format("INSERT INTO [dbo].{0} ({1},[PostBody],[TimeOfPost],[ReplyTo]) VALUES (@user,@body,GETDATE(),@replyTo)", table, userCol);
+            string query = String.Format("INSERT INTO [dbo].{0} ({1},[PostBody],[TimeOfPost],[ReplyTo]) VALUES (@user,@body,GETDATE(),@replyTo); " +
+                "UPDATE [dbo].{0} SET [SeenReplies] = @user WHERE Id = @replyTo;", table, userCol);
             var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@user",user.Id);
             cmd.Parameters.AddWithValue("@body",body);
             cmd.Parameters.AddWithValue("@replyTo",replyTo);
             conn.Open();
-            cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
             conn.Close();            
         }
 

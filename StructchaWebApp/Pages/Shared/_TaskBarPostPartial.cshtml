@@ -7,7 +7,17 @@
         {
             if (pp.Title != null)
             {
-                <li onclick="ShowIndexPartial(@pp.Id, 0)">
+                string s = "";
+                if (!pp.UserViewedBody)
+                {
+                    s = "background-color:red";
+                }
+                else if (!@pp.UserViewedReplies)
+                {
+                    s = "background-color:blue";
+                }
+
+                <li style="@s" onclick="ShowIndexPartial(@pp.Id, 0)">
                     <h1>@pp.ProjectName</h1> @* Look into grouping tasks into each project perhaps*@
                     <p name="openPost_@pp.Title">@pp.Title</p>
                 </li>

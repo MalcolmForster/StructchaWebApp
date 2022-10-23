@@ -11,7 +11,8 @@ namespace StructchaWebApp.Pages.Shared
         public string UserName { get; set; }
         public string ProjectName { get; set; }
         public string CompanyName { get; set; }
-
+        public bool UserViewedBody { get; set; }
+        public bool UserViewedReplies { get; set; }
         private string IdCompany { get; set; }
         private string UserId { get; set; }
         public Reply[] replies { get; set; }
@@ -22,7 +23,7 @@ namespace StructchaWebApp.Pages.Shared
         public DateTime? TimeOfEdit { get; set; }
         private SqlConnection _connection { get; set; }
 
-        public ProjectPost(string postID, UserManager<ApplicationUser> userManager, SqlConnection conn)
+        public ProjectPost(string postID, UserManager<ApplicationUser> userManager, string userId, SqlConnection conn)
         {
             Id = postID;
             string query = "SELECT * FROM [dbo].[Posts] WHERE [Id] = @id";
@@ -68,10 +69,29 @@ namespace StructchaWebApp.Pages.Shared
                     } else
                     {
                         TimeOfEdit = null;
-                    }                    
+                    }
+
+                    if (!reader.IsDBNull(12))
+                    {
+                        UserViewedBody = Viewed(userId, reader.GetString(12));
+                    }
+                    else
+                    {
+                        UserViewedBody = false;
+                    }
+                    if (!reader.IsDBNull(13))
+                    {
+                        UserViewedReplies = Viewed(userId, reader.GetString(13));
+                    }
+                    else
+                    {
+                        UserViewedReplies = false;
+                    }
                 }
                 reader.Close();
             }
+
+
 
             CompanyName = Company.NameOfCompany(IdCompany, _connection);
 
@@ -96,6 +116,18 @@ namespace StructchaWebApp.Pages.Shared
 
             UserName = userManager.FindByIdAsync(UserId).Result.UserName;
             findReplies(userManager);
+        }
+
+        private bool Viewed(string userId, string viewedList)
+        {
+            if (viewedList.Contains(userId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void findReplies(UserManager<ApplicationUser> um)
@@ -132,6 +164,33 @@ namespace StructchaWebApp.Pages.Shared
                 }
             }
         }
+        public void addUserViewed(string userId)
+        {
 
+            string query =
+                "IF ((SELECT [SeenBody] FROM [Posts] WHERE Id = @postId) IS NULL) " +
+                "BEGIN " +
+                "UPDATE [dbo].[Posts] SET [SeenBody] = @user WHERE Id = @postId " +
+                "END " +
+                "ELSE " +
+                "BEGIN " +
+                "UPDATE [dbo].[Posts] SET [SeenBody] = CONCAT(SeenBody,', ', @user) WHERE Id = @postId " +
+                "END; "+
+                "IF ((SELECT [SeenReplies] FROM [Posts] WHERE Id = @postId) IS NULL)  " +
+                "BEGIN " +
+                "UPDATE [dbo].[Posts] SET [SeenReplies] = @user WHERE Id = @postId " +
+                "END " +
+                "ELSE " +
+                "BEGIN " +
+                "UPDATE [dbo].[Posts] SET [SeenReplies] = CONCAT(SeenReplies,', ', @user) WHERE Id = @postId " +
+                "END;";
+
+            SqlCommand cmd = new SqlCommand(query, _connection);
+            cmd.Parameters.AddWithValue("@user",userId);
+            cmd.Parameters.AddWithValue("@postId", Id);
+            _Common.connDB(_connection);
+            cmd.ExecuteNonQuery();
+            _connection.Close();
+        }
     }
 }
