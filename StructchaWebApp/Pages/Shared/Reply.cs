@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
+using StructchaWebApp.Data;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -7,9 +9,13 @@ namespace StructchaWebApp.Pages.Shared
         public string postedBy { get; set; }
         public string body { get; set; }
         public DateTime timePosted { get; set; }
+        private SqlConnection _connection { get; set; }
+        private UserManager<ApplicationUser> userManager { get; set; }
 
-        public Reply(string id, string table, SqlConnection conn)
+        public Reply(string id, string table, UserManager<ApplicationUser> um)
         {
+            _connection = _Common.connDB();
+            userManager = um;
             string OP = "";
             if(table == "Posts")
             {
@@ -19,19 +25,49 @@ namespace StructchaWebApp.Pages.Shared
                 OP = "[IdAssigner]";
             }
             string query = String.Format("SELECT {0},[PostBody],[TimeOfPost] FROM [dbo].[{1}] WHERE [Id] = @id",OP, table);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", id);
 
-            using(var reader = cmd.ExecuteReader())
+            SetInfo(cmd);
+
+            _connection.Close();
+
+            //using(var reader = cmd.ExecuteReader())
+            //{
+            //    while (reader.Read())
+            //    {
+            //        postedBy = getUserName(reader.GetString(0),um,conn);
+            //        body = reader.GetString(1);
+            //        timePosted = reader.GetDateTime(2);
+            //    }
+            //    reader.Close();
+            //}
+        }
+
+
+        private async Task SetInfo(SqlCommand cmd)
+        {
+            using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    postedBy = reader.GetString(0);
                     body = reader.GetString(1);
                     timePosted = reader.GetDateTime(2);
+                    postedBy = await getUserName(reader.GetString(0));
                 }
                 reader.Close();
             }
+        }
+
+
+
+
+        private async Task<string> getUserName(string userId)
+        {
+            ApplicationUser user = await userManager.FindByIdAsync(userId);
+            string userName = user.UserName;
+
+            return userName;
         }
     }
 }

@@ -154,8 +154,8 @@ namespace StructchaWebApp.Pages.Shared
 
                     for (int i = 0; i < repliesList.Count; i++)
                     {
-                        replies[i] = new Reply(repliesList[i], "Posts", _connection);
-                        replies[i].postedBy = um.FindByIdAsync(replies[i].postedBy).Result.UserName;
+                        replies[i] = new Reply(repliesList[i], "Posts", um);
+                        //replies[i].postedBy = um.FindByIdAsync(replies[i].postedBy).Result.UserName;
                     }
                 }
                 else
@@ -166,7 +166,6 @@ namespace StructchaWebApp.Pages.Shared
         }
         public void addUserViewed(string userId)
         {
-
             string query =
                 "IF ((SELECT [SeenBody] FROM [Posts] WHERE Id = @postId) IS NULL) " +
                 "BEGIN " +
@@ -175,7 +174,7 @@ namespace StructchaWebApp.Pages.Shared
                 "ELSE " +
                 "BEGIN " +
                 "UPDATE [dbo].[Posts] SET [SeenBody] = CONCAT(SeenBody,', ', @user) WHERE Id = @postId " +
-                "END; "+
+                "END; " +
                 "IF ((SELECT [SeenReplies] FROM [Posts] WHERE Id = @postId) IS NULL)  " +
                 "BEGIN " +
                 "UPDATE [dbo].[Posts] SET [SeenReplies] = @user WHERE Id = @postId " +

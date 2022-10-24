@@ -86,6 +86,8 @@ namespace StructchaWebApp.Pages.Shared
                 reader.Dispose();
             }
 
+            UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
+
             Project pro = new Project(ProjectCode, conn);
 
             findReplies(userManager);
@@ -100,8 +102,7 @@ namespace StructchaWebApp.Pages.Shared
             {
                 ProjectName = pro.Location;
             }
-            
-            UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
+           
         }
 
         private bool Viewed(string userId, string viewedList)
@@ -115,7 +116,7 @@ namespace StructchaWebApp.Pages.Shared
             }
         }
 
-        private void findReplies(UserManager<ApplicationUser> um) //turn into a new method/class that can be accessed by both tasks and posts
+        private async void findReplies(UserManager<ApplicationUser> um) //turn into a new method/class that can be accessed by both tasks and posts
         {
             string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
             SqlCommand cmd = new SqlCommand(query, _connection);
@@ -136,11 +137,11 @@ namespace StructchaWebApp.Pages.Shared
                     reader.Close();
 
                     replies = new Reply[repliesList.Count];
+                    ApplicationUser[] replyUsers = new ApplicationUser[repliesList.Count];
 
-                    for (int i = 0; i < repliesList.Count; i++)
+                    for(int i = 0; i < repliesList.Count; i++)
                     {
-                        replies[i] = new Reply(repliesList[i], "Tasks", _connection);
-                        replies[i].postedBy = um.FindByIdAsync(replies[i].postedBy).Result.UserName;
+                        replies[i] = new Reply(repliesList[i], "Tasks", um);
                     }
                 }
                 else
@@ -166,7 +167,6 @@ namespace StructchaWebApp.Pages.Shared
 
         public void addUserViewed(string userId)
         {
-
             string query =
                 "IF ((SELECT [SeenBody] FROM [Tasks] WHERE Id = @replyId) IS NULL) " +
                 "BEGIN " +

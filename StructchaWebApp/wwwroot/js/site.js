@@ -61,7 +61,7 @@ function toggleProjectEditDiv(div) {
         hideButton.style.display = "none";
     }
     return false;
-}
+};
 
 
 //----------A GENERIC AJAXPOST FUNCTION FOR USE WITH MANY----------------
@@ -86,7 +86,7 @@ function ajaxPost(jsonData, handler, returnDiv) {
             }            
         }
     });
-}
+};
 
 //-----------A GENERIC AJAXGET FUNCTION-----------------------
 function ajaxGet(handler, returnDiv) {
@@ -99,7 +99,7 @@ function ajaxGet(handler, returnDiv) {
             $(returnDiv).html(result);
         }
     });
-}
+};
 
 function UpdateTaskBar(loop) {
     if ($('#taskBar').length) {       
@@ -110,7 +110,7 @@ function UpdateTaskBar(loop) {
             setTimeout(function () { UpdateTaskBar(true); }, 10000);
         }        
     }
-}
+};
 
 // Changes the index's mainView div to the new post or task partial ready for user input
 function changeMainDisplay(i) {  
@@ -131,7 +131,7 @@ function changeMainDisplay(i) {
     //        $("#mainView").html(result);
     //    }
     //});
-}
+};
 
 // When adding a new task, this updates the user and role select boxes to match the selected project users and roles which have access to the project
 function updateNewTaskAccessSelectors() {
@@ -174,8 +174,6 @@ function ShowIndexPartial(Id, t) {
     //});
 };
 
-
-
 // method to hide and show divs
 function toggleDisplay(item) {
     var displayed = $(item).css('display');
@@ -184,20 +182,20 @@ function toggleDisplay(item) {
     } else {
         $(item).hide();
     }
-}
+};
 
 // show/hide hints using inline onclick command
 function ShowHint(obj) {
     var label = '#'+$(obj).val();
     var item = $(label);
     toggleDisplay(item);
-}
+};
 
 // show/hide further advanced task assignment div, used to add/block individual users which are in the roles selected
 function ToggleAdvancedTaskAssignment() {
     var item = $('#AdvancedTaskAssign');
     toggleDisplay(item);
-}
+};
 
 // updates the AdvancedTaskAssign div to show which users and roles have been added to the task, not used anymore?
 function updateNewTaskInfo() {
@@ -211,7 +209,7 @@ function updateNewTaskInfo() {
             $("#AdvancedTaskAssign").html(newDiv);
         }
     });
-}
+};
 
 //var t = $("input[name='__RequestVerificationToken']").val(); //there is a better method where the data is passed from the page view I believe, check bookmarked stoackoverflow page
 
@@ -224,7 +222,7 @@ function deleteTaskUser(num, name) {
         list = "_AssignRoles";
     }
     document.getElementById(name+list).remove();
-}
+};
 
 // add user to task
 function addTaskAddUser() {
@@ -234,7 +232,7 @@ function addTaskAddUser() {
     if (userToAdd != "") {
         $('#AssignedUsersList').append('<li id="' + userToAdd + '_AssignUsers">' + userToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(0,\'' + userToAdd + '\')">Remove</button><input name="userAssigned" type="hidden" value="' + userToAdd +'"/></li>');
     }
-}
+};
 
 // add role to a task
 function addTaskAddRole() {
@@ -244,21 +242,21 @@ function addTaskAddRole() {
     if (roleToAdd != "") {
         $('#AssignedRolesList').append('<li id="' + roleToAdd + '_AssignRoles">' + roleToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(1,\'' + roleToAdd + '\')">Remove</button><input name="roleAssigned" type="hidden" value="'+roleToAdd+'"/></li>');
     }
-}
+};
 
 // block role user from task WIP
 function blockTaskRoleUser() {
 
 
     updateNewTaskInfo();
-}
+};
 
 // unblock role user from task WIP
 function unblockTaskRoleUser() {
 
 
     updateNewTaskInfo();
-}
+};
 
 // Dont think its used anymore, been replaced with ajax methods
 //function showUsersRoles(formEle) {
@@ -318,9 +316,6 @@ $(document).on('click', '#projectEditButton', function (event) {
     ajaxPost(jsonData, handler, editDivId);    
 });
 
-
-
-
 // marks task as done or incompleted
 $(document).on('click', '#CompletionButton', function (event) {
     event.preventDefault;
@@ -348,7 +343,7 @@ function replyToPostOrTask(i) {
     var jsonData = { replyBody: ReplyBody, Id: id };
 
     ajaxPost(jsonData, handler, mainDiv);    
-}
+};
 
 //Detects if user wants to post reply to a post
 $(document).on('click', '#SubmitReplyPost', function (event) {
@@ -361,9 +356,6 @@ $(document).on('click', '#SubmitReplyTask', function (event) {
     event.preventDefault;
     replyToPostOrTask(1);
 });
-
-
-
 
 //detects if the webpage has the taskBar div showing
 $(window).on('load', function () {
