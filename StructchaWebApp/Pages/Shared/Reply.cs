@@ -31,21 +31,9 @@ namespace StructchaWebApp.Pages.Shared
             SetInfo(cmd);
 
             _connection.Close();
-
-            //using(var reader = cmd.ExecuteReader())
-            //{
-            //    while (reader.Read())
-            //    {
-            //        postedBy = getUserName(reader.GetString(0),um,conn);
-            //        body = reader.GetString(1);
-            //        timePosted = reader.GetDateTime(2);
-            //    }
-            //    reader.Close();
-            //}
         }
 
-
-        private async Task SetInfo(SqlCommand cmd)
+        private void SetInfo(SqlCommand cmd)
         {
             using (var reader = cmd.ExecuteReader())
             {
@@ -53,14 +41,11 @@ namespace StructchaWebApp.Pages.Shared
                 {
                     body = reader.GetString(1);
                     timePosted = reader.GetDateTime(2);
-                    postedBy = await getUserName(reader.GetString(0));
+                    postedBy = userManager.FindByIdAsync(reader.GetString(0)).Result.UserName;
                 }
                 reader.Close();
             }
         }
-
-
-
 
         private async Task<string> getUserName(string userId)
         {

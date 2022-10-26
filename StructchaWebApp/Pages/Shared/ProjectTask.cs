@@ -7,7 +7,7 @@ namespace StructchaWebApp.Pages.Shared
 {
     public class ProjectTask
     {
-        public string type = "reply";
+        //public string type = "reply";
         public string Id { get; set; }
         public string UserName { get; set; }
         private string assignerId { get; set; }

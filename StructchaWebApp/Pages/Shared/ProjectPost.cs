@@ -5,7 +5,7 @@ using StructchaWebApp.Pages.Shared;
 
 namespace StructchaWebApp.Pages.Shared
 {
-    public class ProjectPost
+    public class ProjectPost : ProjectAbstractClass
     {
         public string Id { get; set; }        
         public string UserName { get; set; }
@@ -91,11 +91,7 @@ namespace StructchaWebApp.Pages.Shared
                 reader.Close();
             }
 
-
-
             CompanyName = Company.NameOfCompany(IdCompany, _connection);
-
-
 
             if (ProjectId != null)
             {
@@ -130,7 +126,7 @@ namespace StructchaWebApp.Pages.Shared
             }
         }
 
-        private void findReplies(UserManager<ApplicationUser> um)
+        private async void findReplies(UserManager<ApplicationUser> um)
         {
             string query = "SELECT Id FROM [dbo].[Posts] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
             SqlCommand cmd = new SqlCommand(query, _connection);
@@ -147,16 +143,19 @@ namespace StructchaWebApp.Pages.Shared
                     {
                         repliesList.Add(reader.GetInt32(0).ToString());
                     }
-
+                    string[] repliesArray= repliesList.ToArray();
                     reader.Close();
 
-                    replies = new Reply[repliesList.Count];
+                    var replyTasks = new List<Task<Reply>>();
+                    replies = new Reply[repliesArray.Length];
 
-                    for (int i = 0; i < repliesList.Count; i++)
+                    for (int i = 0; i < repliesArray.Length; i++)
                     {
-                        replies[i] = new Reply(repliesList[i], "Posts", um);
-                        //replies[i].postedBy = um.FindByIdAsync(replies[i].postedBy).Result.UserName;
+                        string s = repliesArray[i];
+                        Task<Reply> task = Task.Run(() => new Reply(s, "Posts", um));
+                        replyTasks.Add(task);
                     }
+                    replies = await Task.WhenAll(replyTasks);
                 }
                 else
                 {

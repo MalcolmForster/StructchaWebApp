@@ -180,10 +180,7 @@ namespace StructchaWebApp.Pages.Shared
         private List<ProjectTask> findTasks(int t) //coming back to this, going to make methods that can create task first
         {
             string option = "";
-
             SqlParameter[] sqlParameters = { new SqlParameter("@uId", user.Id), new SqlParameter("@company", user.Company) };
-
-
 
             if (t == 0)
             {

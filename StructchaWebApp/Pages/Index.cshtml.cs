@@ -130,7 +130,6 @@ namespace StructchaWebApp.Pages
 
         private ActionResult TaskBarTasks(List<ProjectTask> list)
         {
-
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_TaskBarTaskPartial",

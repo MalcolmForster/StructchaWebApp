@@ -8,7 +8,7 @@
         <label>Replies:</label><br />
 
         <ul class="replies">
-                @if (Model.replies.Length == 0)
+                @if (Model.replies == null || Model.replies.Length == 0)
                 {
                     <li style="text-align:center">No replies found</li>
                 }
