@@ -61,8 +61,8 @@ namespace StructchaWebApp.Pages.Shared
 
         private List<string> idListRetrieve(string query, SqlParameter[]? sqlParameters)
         {
-            var connection = _Common.connDB();
-            SqlCommand cmd = new SqlCommand(query, connection);
+            _Common.connDB(conn);
+            SqlCommand cmd = new SqlCommand(query, conn);
             if(sqlParameters != null)
             {
                 cmd.Parameters.AddRange(sqlParameters);
@@ -71,13 +71,12 @@ namespace StructchaWebApp.Pages.Shared
 
             using (SqlDataReader rdr = cmd.ExecuteReader())
             {
-                while (rdr.Read())
+                while(rdr.Read())
                 {
                     var value = (rdr.GetValue(0));
                     list.Add(value.ToString());
                 }
-            }
-            connection.Close();
+            }            
             return list;
         }
 
@@ -178,7 +177,7 @@ namespace StructchaWebApp.Pages.Shared
           
         }
 
-        private async Task<List<ProjectTask>> findTasks(int t) //coming back to this, going to make methods that can create task first
+        private List<ProjectTask> findTasks(int t) //coming back to this, going to make methods that can create task first
         {
             string option = "";
             SqlParameter[] sqlParameters = { new SqlParameter("@uId", user.Id), new SqlParameter("@company", user.Company) };
@@ -190,28 +189,15 @@ namespace StructchaWebApp.Pages.Shared
                 sqlParameters[1 + usersRoles.Count] = new SqlParameter("@company", user.Company);
                 string rolesIds = "";
 
-                var userRolesTasks = new List<Task<IdentityRole>>();
-
-                for (int i = 0; i < usersRoles.Count; i++)
+                for(int i=0; i < usersRoles.Count;i++)
                 {
                     string role = usersRoles[i];
-                    var task = Task.Run(() => rm.FindByNameAsync(role));
-                    userRolesTasks.Add(task);
+                    string roleId = rm.FindByNameAsync(role).Result.Id;
+                    rolesIds = String.Concat(rolesIds," OR [IdRoles] LIKE @role"+i.ToString());
+                    sqlParameters[i+1] = new SqlParameter("@role"+i.ToString(), "%"+roleId+"%");
                 }
 
-                var userRoles = await Task.WhenAll(userRolesTasks);
-
-                for(int i = 0; i < usersRoles.Count; i++)
-                {
-                    string roleId = userRoles[i].Id;
-                    //string role = usersRoles[i];
-                    //var roleTask = await Task.Run(() => rm.FindByNameAsync(role));
-                    //string roleId = roleTask.Id;
-                    rolesIds = String.Concat(rolesIds, " OR [IdRoles] LIKE @role" + i.ToString());
-                    sqlParameters[i + 1] = new SqlParameter("@role" + i.ToString(), "%" + roleId + "%");
-                }
-
-                option = String.Format("([IdUsers] LIKE @uId{0})", rolesIds);
+                option = String.Format("([IdUsers] LIKE @uId{0})",rolesIds);
                 //option = "IdUsers";
             }
             else if (t == 1)
@@ -238,15 +224,10 @@ namespace StructchaWebApp.Pages.Shared
             return taskList;
         }
 
-        private async void setTaskList()
+        private void setTaskList()
         {
-            var taskListTasks = findTasks(0);
-            var ownTaskListTasks = findTasks(1);
-            await Task.WhenAll(taskListTasks, ownTaskListTasks);
-
-            taskList = await taskListTasks;
-            ownTaskList = await ownTaskListTasks;
-            //Task.WaitAll();
+            taskList = findTasks(0);
+            ownTaskList = findTasks(1);
         }
 
         private IEnumerable<SelectListItem> stringArrayToSelectList(string[] strings)
@@ -388,11 +369,9 @@ namespace StructchaWebApp.Pages.Shared
             conn.Close();
         }
 
-        public async Task userAppAccess()
+        public void userAppAccess()
         {
-            var roles = await um.GetRolesAsync(user);
-
-            IList<string> usersRoles = roles; 
+            IList<string> usersRoles =  um.GetRolesAsync(user).Result;
             
             bool JD = false;
             bool SF = false;
