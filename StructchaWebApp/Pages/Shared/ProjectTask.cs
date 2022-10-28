@@ -5,9 +5,8 @@ using StructchaWebApp.Data;
 
 namespace StructchaWebApp.Pages.Shared
 {
-    public class ProjectTask
+    public class ProjectTask : PostTaskAbstract
     {
-        //public string type = "reply";
         public string Id { get; set; }
         public string UserName { get; set; }
         private string assignerId { get; set; }
@@ -24,9 +23,11 @@ namespace StructchaWebApp.Pages.Shared
         public DateTime? TimeOfEdit { get; set; }
         public int Priority { get; set; }
         private SqlConnection _connection { get; set; }
-        public ProjectTask(string id, UserManager<ApplicationUser> userManager, string userId, SqlConnection conn)
+
+        public ProjectTask(string postID, UserManager<ApplicationUser> userManager, string userId, SqlConnection conn) : base('t', postID, userManager, userId, conn)
         {
-            Id = id;
+            //findConnection(conn);
+            Id = postID;
             string query = "SELECT * FROM [dbo].[Tasks] WHERE [Id] = @id";
 
             if (conn == null)
@@ -38,9 +39,9 @@ namespace StructchaWebApp.Pages.Shared
                 _connection = conn;
             }
 
-            _Common.connDB(_connection);
+            var connection = _Common.connDB();
 
-            var cmd = new SqlCommand(query, _connection);
+            var cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@id", Id);
 
             using (var reader = cmd.ExecuteReader())
@@ -69,7 +70,8 @@ namespace StructchaWebApp.Pages.Shared
                     if (!reader.IsDBNull(14))
                     {
                         UserViewedBody = Viewed(userId, reader.GetString(14));
-                    } else
+                    }
+                    else
                     {
                         UserViewedBody = false;
                     }
@@ -80,84 +82,86 @@ namespace StructchaWebApp.Pages.Shared
                     else
                     {
                         UserViewedReplies = false;
-                    }                    
+                    }
                 }
                 reader.Close();
                 reader.Dispose();
             }
 
             UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
+            connection.Close();
 
-            Project pro = new Project(ProjectCode, conn);
+            //Project pro = new Project(ProjectCode, conn);
 
-            findReplies(userManager);
+            //findReplies(userManager);
 
-            ProjectLocation = pro.Location;
+            //ProjectLocation = pro.Location;
 
-            if (pro.Title != null)
-            {
-                ProjectName = pro.Title;
-            }
-            else
-            {
-                ProjectName = pro.Location;
-            }
-           
+            //if (pro.Title != null)
+            //{
+            //    ProjectName = pro.Title;
+            //}
+            //else
+            //{
+            //    ProjectName = pro.Location;
+            //}
+
         }
 
-        private bool Viewed(string userId, string viewedList)
-        {
-            if(viewedList.Contains(userId))
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
-        }
+        //private bool Viewed(string userId, string viewedList)
+        //{
+        //    if (viewedList.Contains(userId))
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
-        private async void findReplies(UserManager<ApplicationUser> um) //turn into a new method/class that can be accessed by both tasks and posts
-        {
-            string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
-            SqlCommand cmd = new SqlCommand(query, _connection);
-            cmd.Parameters.AddWithValue("@id", Id);
+        //private async void findReplies(UserManager<ApplicationUser> um) //turn into a new method/class that can be accessed by both tasks and posts
+        //{
+        //    string query = "SELECT Id FROM [dbo].[Tasks] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
+        //    SqlCommand cmd = new SqlCommand(query, _connection);
+        //    cmd.Parameters.AddWithValue("@id", Id);
 
-            _Common.connDB(_connection);
+        //    _Common.connDB(_connection);
 
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (reader.HasRows)
-                {
-                    List<string> repliesList = new List<string>();
-                    while (reader.Read())
-                    {
-                        repliesList.Add(reader.GetInt32(0).ToString());
-                    }
+        //    using (var reader = cmd.ExecuteReader())
+        //    {
+        //        if (reader.HasRows)
+        //        {
+        //            List<string> repliesList = new List<string>();
+        //            while (reader.Read())
+        //            {
+        //                repliesList.Add(reader.GetInt32(0).ToString());
+        //            }
 
-                    reader.Close();
+        //            reader.Close();
 
-                    replies = new Reply[repliesList.Count];
-                    ApplicationUser[] replyUsers = new ApplicationUser[repliesList.Count];
+        //            replies = new Reply[repliesList.Count];
+        //            ApplicationUser[] replyUsers = new ApplicationUser[repliesList.Count];
 
-                    for(int i = 0; i < repliesList.Count; i++)
-                    {
-                        replies[i] = new Reply(repliesList[i], "Tasks", um);
-                    }
-                }
-                else
-                {
-                    replies = new Reply[0];
-                }
-            }
-        }
+        //            for (int i = 0; i < repliesList.Count; i++)
+        //            {
+        //                replies[i] = new Reply(repliesList[i], "Tasks", um);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            replies = new Reply[0];
+        //        }
+        //    }
+        //}
 
         public void SetComplete(string i)
         {
             string query = "UPDATE [dbo].[Tasks] SET [Completed] = @int WHERE [Id] = @taskId";
             var cmd = new SqlCommand(query, _connection);
 
-            cmd.Parameters.AddWithValue("@int",i);
-            cmd.Parameters.AddWithValue("@taskId",Id);
+            cmd.Parameters.AddWithValue("@int", i);
+            cmd.Parameters.AddWithValue("@taskId", Id);
 
             _Common.connDB(_connection);
 
@@ -165,33 +169,33 @@ namespace StructchaWebApp.Pages.Shared
             _connection.Close();
         }
 
-        public void addUserViewed(string userId)
-        {
-            string query =
-                "IF ((SELECT [SeenBody] FROM [Tasks] WHERE Id = @replyId) IS NULL) " +
-                "BEGIN " +
-                "UPDATE [dbo].[Tasks] SET [SeenBody] = @user WHERE Id = @replyId " +
-                "END " +
-                "ELSE " +
-                "BEGIN " +
-                "UPDATE [dbo].[Tasks] SET [SeenBody] = CONCAT(SeenBody,', ', @user) WHERE Id = @replyId " +
-                "END; " +
-                "IF ((SELECT [SeenReplies] FROM [Tasks] WHERE Id = @replyId) IS NULL)  " +
-                "BEGIN " +
-                "UPDATE [dbo].[Tasks] SET [SeenReplies] = @user WHERE Id = @replyId " +
-                "END " +
-                "ELSE " +
-                "BEGIN " +
-                "UPDATE [dbo].[Tasks] SET [SeenReplies] = CONCAT(SeenReplies,', ', @user) WHERE Id = @replyId " +
-                "END;";
+        //public void addUserViewed(string userId)
+        //{
+        //    string query =
+        //        "IF ((SELECT [SeenBody] FROM [Tasks] WHERE Id = @replyId) IS NULL) " +
+        //        "BEGIN " +
+        //        "UPDATE [dbo].[Tasks] SET [SeenBody] = @user WHERE Id = @replyId " +
+        //        "END " +
+        //        "ELSE " +
+        //        "BEGIN " +
+        //        "UPDATE [dbo].[Tasks] SET [SeenBody] = CONCAT(SeenBody,', ', @user) WHERE Id = @replyId " +
+        //        "END; " +
+        //        "IF ((SELECT [SeenReplies] FROM [Tasks] WHERE Id = @replyId) IS NULL)  " +
+        //        "BEGIN " +
+        //        "UPDATE [dbo].[Tasks] SET [SeenReplies] = @user WHERE Id = @replyId " +
+        //        "END " +
+        //        "ELSE " +
+        //        "BEGIN " +
+        //        "UPDATE [dbo].[Tasks] SET [SeenReplies] = CONCAT(SeenReplies,', ', @user) WHERE Id = @replyId " +
+        //        "END;";
 
-            SqlCommand cmd = new SqlCommand(query, _connection);
-            cmd.Parameters.AddWithValue("@user", userId);
-            cmd.Parameters.AddWithValue("@replyId", Id);
-            _Common.connDB(_connection);
-            cmd.ExecuteNonQuery();
-            _connection.Close();
-        }
+        //    SqlCommand cmd = new SqlCommand(query, _connection);
+        //    cmd.Parameters.AddWithValue("@user", userId);
+        //    cmd.Parameters.AddWithValue("@replyId", Id);
+        //    _Common.connDB(_connection);
+        //    cmd.ExecuteNonQuery();
+        //    _connection.Close();
+        //}
     }
 
 }
