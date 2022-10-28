@@ -388,7 +388,7 @@ namespace StructchaWebApp.Pages.Shared
             conn.Close();
         }
 
-        public async void userAppAccess()
+        public async Task userAppAccess()
         {
             var roles = await um.GetRolesAsync(user);
 
