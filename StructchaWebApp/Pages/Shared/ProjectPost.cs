@@ -69,6 +69,23 @@ namespace StructchaWebApp.Pages.Shared
             }
 
             CompanyName = Company.NameOfCompany(IdCompany, connection);
+            if (ProjectId != null)
+            {
+                Project pro = new Project(ProjectId);
+
+                if (pro.Title != null)
+                {
+                    ProjectName = pro.Title;
+                }
+                else
+                {
+                    ProjectName = pro.Location;
+                }
+            }
+            else
+            {
+                ProjectName = CompanyName;
+            }
             connection.Close();
 
         }               

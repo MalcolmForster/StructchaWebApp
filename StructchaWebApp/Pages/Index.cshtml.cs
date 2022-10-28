@@ -198,10 +198,7 @@ namespace StructchaWebApp.Pages
 
         public ActionResult OnGetTaskPartial(string taskId)
         {
-            if(_connection.State == ConnectionState.Closed)
-            {
-                _connection.Open();
-            }            
+            _connection = _Common.connDB();         
             ProjectTask projectTask = new ProjectTask(taskId, userManager, user.Id, _connection);
             _connection.Close();
             PartialViewResult result = new PartialViewResult()
@@ -215,10 +212,7 @@ namespace StructchaWebApp.Pages
 
         public ActionResult OnGetPostPartial(string postId)
         {
-            if (_connection.State == ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
+            _connection = _Common.connDB();
             ProjectPost projectPost = new ProjectPost(postId, userManager, user.Id, _connection);
             _connection.Close();
             PartialViewResult result = new PartialViewResult()

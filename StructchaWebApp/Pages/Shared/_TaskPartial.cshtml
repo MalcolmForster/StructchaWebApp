@@ -33,12 +33,12 @@
             <form id="ReplyForm">
                 <label>Reply:</label><br />
                 <textarea style="width:100%; max-width:800px" name="ReplyBody" id="ReplyBody" rows="3"></textarea><br />
-                <input name="ReplyTo" id="ReplyTo" type="hidden" value="@Model.Id" />
+                <input name="ReplyTo" id="ReplyTo" type="hidden" value="@Model.postId" />
                 <button type="button" id="SubmitReplyTask">Post Reply</button><br />
             </form>
 
             <form name="TaskCompleted" id="TaskCompleted">
-                <button type="button" name="CompletionButton" id="CompletionButton" value="@Model.Id">Mark as completed</button>
+                <button type="button" name="CompletionButton" id="CompletionButton" value="@Model.postId">Mark as completed</button>
                 <input name="SetTo" id="SetTo" type="hidden" value="1" />
             </form>
             //if the user is lower down ladder, they can only request the task is completed, needs to be signed off by a more senior position.
@@ -46,7 +46,7 @@
         else
         {
             <form name="TaskCompleted" id="TaskCompleted">
-                <button type="button" name="CompletionButton" id="CompletionButton" value="@Model.Id">Mark as incomplete</button>
+                <button type="button" name="CompletionButton" id="CompletionButton" value="@Model.postId">Mark as incomplete</button>
                 <input name="SetTo" id="SetTo" type="hidden" value="0" />
             </form>
         }

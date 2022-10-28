@@ -7,42 +7,32 @@ namespace StructchaWebApp.Pages.Shared
 {
     public class ProjectTask : PostTaskAbstract
     {
-        public string Id { get; set; }
-        public string UserName { get; set; }
+        //public string Id { get; set; }
+        //public string UserName { get; set; }
         private string assignerId { get; set; }
         private string ProjectCode { get; set; }
-        public string ProjectName { get; set; }
+        //public string ProjectName { get; set; }
         public string ProjectLocation { get; set; }
         public bool Completed { get; set; }
-        public bool UserViewedBody { get; set; }
-        public bool UserViewedReplies { get; set; }
-        public string? Title { get; set; }
-        public string? Body { get; set; }
-        public Reply[] replies { get; set; }
-        public DateTime TimeOfPost { get; set; }
-        public DateTime? TimeOfEdit { get; set; }
+        //public bool UserViewedBody { get; set; }
+        //public bool UserViewedReplies { get; set; }
+        //public string? Title { get; set; }
+        //public string? Body { get; set; }
+        //public DateTime TimeOfPost { get; set; }
+        //public DateTime? TimeOfEdit { get; set; }
         public int Priority { get; set; }
-        private SqlConnection _connection { get; set; }
+        //private SqlConnection _connection { get; set; }
 
         public ProjectTask(string postID, UserManager<ApplicationUser> userManager, string userId, SqlConnection conn) : base('t', postID, userManager, userId, conn)
         {
             //findConnection(conn);
-            Id = postID;
+            //Id = postID;
             string query = "SELECT * FROM [dbo].[Tasks] WHERE [Id] = @id";
-
-            if (conn == null)
-            {
-                _connection = _Common.connDB();
-            }
-            else
-            {
-                _connection = conn;
-            }
 
             var connection = _Common.connDB();
 
             var cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@id", Id);
+            cmd.Parameters.AddWithValue("@id", postId);
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -88,24 +78,29 @@ namespace StructchaWebApp.Pages.Shared
                 reader.Dispose();
             }
 
-            UserName = userManager.FindByIdAsync(assignerId).Result.UserName;
-            connection.Close();
+            //var userTask = Task.Run(() => userManager.FindByIdAsync(assignerId));
+            //ApplicationUser userObject = await userTask;
 
-            //Project pro = new Project(ProjectCode, conn);
+            //UserName = await userManager.FindByIdAsync(assignerId).Result.UserName;
+            
+
+            Project pro = new Project(ProjectCode);
+                       
+
+            ProjectLocation = pro.Location;
+
+            if (pro.Title != null)
+            {
+                ProjectName = pro.Title;
+            }
+            else
+            {
+                ProjectName = pro.Location;
+            }
 
             //findReplies(userManager);
 
-            //ProjectLocation = pro.Location;
-
-            //if (pro.Title != null)
-            //{
-            //    ProjectName = pro.Title;
-            //}
-            //else
-            //{
-            //    ProjectName = pro.Location;
-            //}
-
+            connection.Close();
         }
 
         //private bool Viewed(string userId, string viewedList)
@@ -157,16 +152,16 @@ namespace StructchaWebApp.Pages.Shared
 
         public void SetComplete(string i)
         {
+
+            var connection = _Common.connDB();
             string query = "UPDATE [dbo].[Tasks] SET [Completed] = @int WHERE [Id] = @taskId";
-            var cmd = new SqlCommand(query, _connection);
+            var cmd = new SqlCommand(query, connection);
 
             cmd.Parameters.AddWithValue("@int", i);
-            cmd.Parameters.AddWithValue("@taskId", Id);
-
-            _Common.connDB(_connection);
+            cmd.Parameters.AddWithValue("@taskId", postId);
 
             cmd.ExecuteNonQuery();
-            _connection.Close();
+            connection.Close();
         }
 
         //public void addUserViewed(string userId)

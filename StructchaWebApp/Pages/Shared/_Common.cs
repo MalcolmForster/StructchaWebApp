@@ -16,13 +16,13 @@ namespace StructchaWebApp.Pages.Shared
             return conn;
         }
 
-        public static void connDB(SqlConnection sql)
-        {
-            if (sql.State != System.Data.ConnectionState.Open)
-            {
-                sql.Open();
-            }
-        }
+        //public static void connDB(SqlConnection sql)
+        //{
+        //    if (sql.State != System.Data.ConnectionState.Open || sql.State != System.Data.ConnectionState.Connecting)
+        //    {
+        //        sql.Open();
+        //    }
+        //}
 
         public static string? findUserID(string input)
         {

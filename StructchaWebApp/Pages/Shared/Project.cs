@@ -31,10 +31,10 @@ namespace StructchaWebApp.Pages.Shared
         public Company LeadCompany { get; set; }
         private JsonObject AccessJson { get; set; }
 
-        public Project(string projectCode, SqlConnection conn)
+        public Project(string projectCode)
         {
-            _connection = conn;
-            _Common.connDB(_connection);
+            _connection = _Common.connDB();
+            //_Common.connDB(_connection);
             ProjectCode = projectCode;
             Title = null;
             EndDate = null;
@@ -44,34 +44,20 @@ namespace StructchaWebApp.Pages.Shared
             getProjectInfo();
             FindLeadCompany();
             SetAccess();
-            SetSelectLists();            
-        }
-
-        private SqlConnection connectToDB()
-        {
-            return _Common.connDB();
-        }
-
-        private string? nullCheck(SqlDataReader reader, int i)
-        {
-            string? dbString = null;
-            if (!reader.IsDBNull(i))
-            {
-                reader.GetString(i);
-            }
-            return dbString;
+            SetSelectLists();
+            _connection.Close();
         }
 
         private void getProjectInfo()
         {
-            if(_connection == null)
-            {
-                _connection = connectToDB();
-            }
+            //if(_connection == null)
+            //{
+            //    _connection = connectToDB();
+            //}
 
-            _Common.connDB(_connection);
+            var connection = _Common.connDB();
             string query = "SELECT [Title], [Location], [Companies], [StartDate], [EndDate], [TimeCreated], [TimeFinished] FROM [dbo].[Projects] WHERE [ProjectCode] = @code";
-            var cmd = new SqlCommand(query, _connection);
+            var cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@code", ProjectCode);
             using var rdr = cmd.ExecuteReader();
 
@@ -85,17 +71,13 @@ namespace StructchaWebApp.Pages.Shared
             TimeCreated = rdr.GetDateTime(5);
             if (!rdr.IsDBNull(6)) { TimeFinished = rdr.GetDateTime(6); };
             rdr.Close();
+            connection.Close();
         }
         
         private void FindLeadCompany()
         {
             //This will change to use the data pulled from the database column [Companies], but for now will use the change code to project code
             LeadCompany = new Company(ProjectCode.Substring(0,6),_connection);
-        }
-
-        private void AlterProjectJson()
-        {
-
         }
 
         public List<string> CurrentProjectRoles() //will be used for adding what roles can be assigned on the ProjectAdmin.cs and what roles can be removed from a project
@@ -202,12 +184,13 @@ namespace StructchaWebApp.Pages.Shared
 
         private void alterAccessJson(string jsonString)
         {
-            _Common.connDB(_connection);
+            _connection = _Common.connDB();
             string query = "UPDATE [dbo].[Projects] SET [Companies] = @json WHERE [ProjectCode] = @projectCode";
             var cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@json", jsonString);
             cmd.Parameters.AddWithValue("@projectCode", ProjectCode);
             cmd.ExecuteNonQuery();
+            _connection.Close();
             //AccessJson = JsonObject.Parse(jsonString).AsObject();
         }
 

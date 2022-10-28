@@ -47,7 +47,7 @@ namespace StructchaWebApp.Pages.Shared
             rolesSelected = new List<string>();
             blockedSelected = new List<string>();
             usersInSelectedRoles = new Dictionary<string, string>();
-            _Common.connDB(conn);
+            conn = _Common.connDB();
             imageManager = new ImageManager();           
             //userSelectList = new List<SelectListItem>();
             //roleSelectList = new List<SelectListItem>();
@@ -55,7 +55,7 @@ namespace StructchaWebApp.Pages.Shared
             setProjectPostList();
             setTaskList();
             conn.Close();
-            userAppAccess();
+            //userAppAccess();
             selectedProject = "";
         }
 
@@ -111,7 +111,7 @@ namespace StructchaWebApp.Pages.Shared
 
             foreach (string id in projectIds)
             {
-                Project project = new Project(id,conn);
+                Project project = new Project(id);
                 bool userCanAccess = false;
 
                 //Checking if the project is meant to be accessed by the user
@@ -238,14 +238,14 @@ namespace StructchaWebApp.Pages.Shared
             return taskList;
         }
 
-        private async void setTaskList()
+        private async Task setTaskList()
         {
             var taskListTasks = findTasks(0);
             var ownTaskListTasks = findTasks(1);
-            await Task.WhenAll(taskListTasks, ownTaskListTasks);
-
             taskList = await taskListTasks;
             ownTaskList = await ownTaskListTasks;
+
+            await Task.WhenAll(taskListTasks, ownTaskListTasks);
             //Task.WaitAll();
         }
 
@@ -269,7 +269,7 @@ namespace StructchaWebApp.Pages.Shared
         public void setTaskAccessSelectLists(string selection)
         {
             conn.Open();
-            Project project = new Project(selection,conn);
+            Project project = new Project(selection);
             conn.Close();
 
             string[] indiv = project.AccessIndividual[user.Company];
@@ -354,7 +354,7 @@ namespace StructchaWebApp.Pages.Shared
 
         public void createTask(string projectCode, string taskPriority, string taskTitle, string taskBody, string[] taskRoles, string[] taskUsers)
         {
-            _Common.connDB(conn);
+            conn = _Common.connDB();
             string query = "INSERT INTO [dbo].[Tasks] (IdAssigner,IdUsers,IdProject,IdCompany,IdRoles,Priority,PostTitle,PostBody,TimeOfPost) VALUES (@user, @assignUsers, @project, @company, @assignRoles,@priority,@title, @body, GETDATE())";
             var cmd = new SqlCommand(query, conn);
             string[]? userIds = getIdentityID(taskUsers, 0);

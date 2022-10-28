@@ -17,14 +17,14 @@ namespace StructchaWebApp.Pages.Shared
             _connection = _Common.connDB();
             userManager = um;
             string OP = "";
-            if(table == "Posts")
+            if(table == "[Posts]")
             {
                 OP = "[IdUserOP]";
-            } else if(table == "Tasks")
+            } else if(table == "[Tasks]")
             {
                 OP = "[IdAssigner]";
             }
-            string query = String.Format("SELECT {0},[PostBody],[TimeOfPost] FROM [dbo].[{1}] WHERE [Id] = @id",OP, table);
+            string query = String.Format("SELECT {0},[PostBody],[TimeOfPost] FROM [dbo].{1} WHERE [Id] = @id",OP, table);
             SqlCommand cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@id", id);
 

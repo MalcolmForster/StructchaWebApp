@@ -94,24 +94,25 @@ namespace StructchaWebApp.Pages.Shared
 
             // CompanyName = Company.NameOfCompany(IdCompany, _connection);
 
-            if (ProjectId != null)
-            {
-                Project pro = new Project(ProjectId, _connection);
+            //if (ProjectId != null)
+            //{
+            //    Project pro = new Project(ProjectId, _connection);
 
-                if (pro.Title != null)
-                {
-                    ProjectName = pro.Title;
-                }
-                else
-                {
-                    ProjectName = pro.Location;
-                }
-            }
-            else
-            {
-                ProjectName = CompanyName;
-            }
+            //    if (pro.Title != null)
+            //    {
+            //        ProjectName = pro.Title;
+            //    }
+            //    else
+            //    {
+            //        ProjectName = pro.Location;
+            //    }
+            //}
+            //else
+            //{
+            //    ProjectName = CompanyName;
+            //}
 
+            
             UserName = um.FindByIdAsync(UserId).Result.UserName;
             findReplies(um);
         }
@@ -151,14 +152,13 @@ namespace StructchaWebApp.Pages.Shared
             }
         }
 
-        private async void findReplies(UserManager<ApplicationUser> um)
+        private async Task findReplies(UserManager<ApplicationUser> um)
         {
             //string query = String.Format("SELECT Id FROM [dbo].[Posts] WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC";
             string query = String.Format("SELECT Id FROM [dbo].{0} WHERE [ReplyTo] = @id ORDER BY [TimeOfPost] ASC", table);
             var connection = _Common.connDB();
             SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@id", postId);
-            
+            cmd.Parameters.AddWithValue("@id", postId);            
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -178,7 +178,7 @@ namespace StructchaWebApp.Pages.Shared
                     for (int i = 0; i < repliesArray.Length; i++)
                     {
                         string s = repliesArray[i];
-                        Task<Reply> task = Task.Run(() => new Reply(s, "Posts", um));
+                        Task<Reply> task = Task.Run(() => new Reply(s, table, um));
                         replyTasks.Add(task);
                     }
                     replies = await Task.WhenAll(replyTasks);
@@ -188,6 +188,7 @@ namespace StructchaWebApp.Pages.Shared
                     replies = new Reply[0];
                 }
             }
+            
             connection.Close();
         }
         public void addUserViewed(string userId)
@@ -210,10 +211,10 @@ namespace StructchaWebApp.Pages.Shared
                 "UPDATE [dbo].{0} SET [SeenReplies] = CONCAT(SeenReplies,', ', @user) WHERE Id = @postId " +
                 "END;", table);
 
+            _connection = _Common.connDB();
             SqlCommand cmd = new SqlCommand(query, _connection);
             cmd.Parameters.AddWithValue("@user", userId);
             cmd.Parameters.AddWithValue("@postId", postId);
-            _Common.connDB(_connection);
             cmd.ExecuteNonQuery();
             _connection.Close();
         }

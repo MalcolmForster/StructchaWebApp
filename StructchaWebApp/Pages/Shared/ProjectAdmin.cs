@@ -123,7 +123,7 @@ namespace StructchaWebApp.Pages.Shared
 
             foreach(string code in projectCodes)
             {
-                projectList.Add(new Project(code, conn));
+                projectList.Add(new Project(code));
             }
 
             conn.Close();
@@ -169,7 +169,7 @@ namespace StructchaWebApp.Pages.Shared
         public void editProject(string projectCode, string company, string editOperation, string parameters)
         {
             var conn = _Common.connDB();
-            var editedProject = new Project(projectCode,conn);
+            var editedProject = new Project(projectCode);
             int num = -1;
             string accessType = "";
             string? companyToEdit = null;

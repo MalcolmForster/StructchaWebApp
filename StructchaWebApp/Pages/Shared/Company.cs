@@ -45,20 +45,14 @@ namespace StructchaWebApp.Pages.Shared
         public static string? NameOfCompany(string code, SqlConnection? conn)
         {
             bool closeConn = false;
-            if (conn == null)
-            {
-                closeConn = true;
-                conn = _Common.connDB();
-            }
+            var connection = _Common.connDB();            
 
             string query = "SELECT [Company] FROM [dbo].[CompanyRegister] WHERE [Code] = @code";
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@code", code);
             string? company = cmd.ExecuteScalar()?.ToString();
-            if (closeConn)
-            {
-                conn.Close();
-            }
+
+            connection.Close();
             return company;
         }
 
