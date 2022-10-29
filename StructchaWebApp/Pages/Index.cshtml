@@ -79,64 +79,6 @@
 
             <partial name="~/Pages/Shared/_TaskBar.cshtml" model="Model" />
 
-@*            <div name="taskBar" id="taskBar" class="task-bar">
-                <div class="taskBarSection">
-                    <h3>Project Updates</h3>
-                    <button name="changeToNewPost" onclick="changeMainDisplay(0)">Post a project update</button>
-                    @{
-                        List<ProjectPost> projectPosts = Model.userHomePage.projectPostList;
-
-                        if (projectPosts != null && projectPosts.Count > 0)
-                        {
-                            <partial name="~/Pages/Shared/_TaskBarPostPartial.cshtml" model="projectPosts" />
-                        }
-                        else
-                        {
-                            <p>No posts found</p>
-                        }
-
-                    }
-
-                </div>
-                <div class="taskBarSection">
-                    <h3>Assigned Tasks</h3>
-                    <button name="changeToNewTask" onclick="changeMainDisplay(1)">Create new task</button>
-                    @{
-                        //string[] assignments = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
-                        List<ProjectTask> assignments = Model.userHomePage.taskList;
-
-                        if (assignments != null && assignments.Count > 0)
-                        {
-                            <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="assignments" />
-                        }
-                        else
-                        {
-                            <p>No tasks found</p>
-                        }
-
-                    }
-
-                </div>
-                <div class="taskBarSection">
-                    <h3>Tasks started by you</h3>
-                    @{
-                        //Can pass a ViewDataDictionary to a partial view apparently like @await Html.PartialAsync("_PartialName", customViewData) where customViewData is the dictionary?
-                        //string[] selfAssigned = { "Assignment1", "Assignment2", "Assignment3", "Assignment4" };
-                        List<ProjectTask> selfAssigned = Model.userHomePage.ownTaskList;
-
-                        if (selfAssigned != null && selfAssigned.Count > 0)
-                        {
-                            <partial name="~/Pages/Shared/_TaskBarTaskPartial.cshtml" model="selfAssigned" />
-                        }
-                        else
-                        {
-                            <p>No tasks found</p>
-                        }
-                    }
-                </div>
-            </div>*@
-
-
             <div name="mainView" id="mainView" class="main-view">
                 <div name="mainDisplay" id="mainDisplay" class="main-display">
                     <!--This can be used to display the currently required partial perhaps?-->

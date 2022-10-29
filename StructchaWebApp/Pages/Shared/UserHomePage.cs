@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -53,10 +54,18 @@ namespace StructchaWebApp.Pages.Shared
             //roleSelectList = new List<SelectListItem>();
             setProjectList();
             setProjectPostList();
-            setTaskList();
+            asyncTasks();
             conn.Close();
-            //userAppAccess();
+            
             selectedProject = "";
+        }
+
+        private async void asyncTasks()
+        {
+            Task setTasksTask = setTaskList();
+            Task userApps = userAppAccess();
+            Task.WaitAll(setTasksTask, userApps);
+            
         }
 
         private List<string> idListRetrieve(string query, SqlParameter[]? sqlParameters)
@@ -390,17 +399,21 @@ namespace StructchaWebApp.Pages.Shared
 
         public async Task userAppAccess()
         {
-            var roles = await um.GetRolesAsync(user);
+            var roles = um.GetRolesAsync(user);
+            IList<string> usersRoles = await roles;
+            Task.WaitAll(roles);
 
-            IList<string> usersRoles = roles; 
-            
             bool JD = false;
             bool SF = false;
 
             foreach (string role in usersRoles)
             {
-                IdentityRole roleIdentity = rm.FindByNameAsync(role).Result;
-                IList<Claim> usersClaims = rm.GetClaimsAsync(roleIdentity).Result;
+                Task<IdentityRole> roleTask = Task.Run(() => rm.FindByNameAsync(role));
+                IdentityRole roleIdentity = await roleTask;
+                Task.WaitAll(roleTask);
+                Task<IList<Claim>> claimTask = Task.Run(() => rm.GetClaimsAsync(roleIdentity));                
+                IList<Claim> usersClaims = await claimTask;
+                Task.WaitAll(claimTask);
 
                 foreach (Claim claim in usersClaims)
                 {
