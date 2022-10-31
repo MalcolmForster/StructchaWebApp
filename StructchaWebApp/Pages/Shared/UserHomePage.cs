@@ -64,8 +64,7 @@ namespace StructchaWebApp.Pages.Shared
         {
             Task setTasksTask = setTaskList();
             Task userApps = userAppAccess();
-            Task.WaitAll(setTasksTask, userApps);
-            
+            Task.WaitAll(setTasksTask, userApps);            
         }
 
         private List<string> idListRetrieve(string query, SqlParameter[]? sqlParameters)
