@@ -6,30 +6,31 @@
 <label for="imageSelect">Select an image to attach to post: </label>
 <form name="imageAttach" id="imageAttach">
     <input name="imageSelect" type="file" id="imageSelect" accept="image/png, image/jpeg" multiple />
+    <div class="inputSection" name="uploadedImageDisplay" id="uploadedImageDisplay">
+        @if (Model.imageManager.UserImages.Count > 0)
+        {
+            int counter = 1;
+            @foreach (UserImage ui in Model.imageManager.UserImages)
+            {
+                <div name="uploadedImage" style="display:inline-block;">
+                    <input name="imageInfo" type="hidden" id="@ui.id" value="@counter"/>
+                    <h4 name="draftImageNumber">Image_@counter</h4>
+                    @*<img src="@Url.Action(Model.imageManager.setFileResult(ui.id))" />*@
+                    <img id="@ui.id" class="userImageDraft" src="@ui.getImage()" /><br />
+                    <label>Image Label: </label><input name="draftImageLabel" id="" type="text" value="@ui.label"/><br />
+                    <label>Image Description: </label><br />
+                    <textarea name="draftImageDescription" style="width:200px;">@ui.description</textarea><br />
+                    <button name="deleteUserImage">Delete Image</button>
+                </div>
+                counter++;
+            }
+        }
+        else
+        {
+            <p style="text-align:center">No images uploaded</p>
+        }
+    </div>
 </form>
 
-<div name="uploadedImageDisplay" id="uploadedImageDisplay">
 
-    @if (Model.imageManager.UserImages.Count > 0)
-    {
-        int counter = 1;
-        @foreach (UserImage ui in Model.imageManager.UserImages)
-        {
-            <div style="display:inline-block">
-                <h4>Image_@counter</h4>
-                @*<img src="@Url.Action(Model.imageManager.setFileResult(ui.id))" />*@
-                <img class ="userImageDraft" src="@ui.getImage()" /><br/>
-                <label>Image Label: </label><input type="text"/><br/>
-                <label>Image Description: </label><br/>
-                <textarea style="width:200px;"></textarea><br/>
-                <button name="deleteUserImage">Delete Image</button>
-            </div>
-            counter++;
-        }
-    }
-    else
-    {
-        <p style="text-align:center">No images uploaded</p>
-    }
-</div>
 <br />

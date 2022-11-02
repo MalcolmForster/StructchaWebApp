@@ -344,6 +344,10 @@ p {
         padding:10px;
     }
 
+.inputSection {
+    background-color: var(--mid-bg);
+}
+
 .dash-div {
     background: var(--dark-bg);
     width:100%;

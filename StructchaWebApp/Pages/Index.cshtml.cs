@@ -246,14 +246,13 @@ namespace StructchaWebApp.Pages
             return OnGetTaskPartial(taskId);
         }
 
+
+
         public ActionResult OnPostImageUpload()
         {
+            var currentImages = Request.Form["CurrentImages"];
             var files = Request.Form.Files.ToArray();
-            //foreach (var file in files)
-            //{
-
-            //}
-            userHomePage.imageManager.UploadImage(files);
+            userHomePage.imageManager.UploadImage(currentImages, files);
             
             PartialViewResult result = new PartialViewResult()
             {

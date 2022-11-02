@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Text.Json;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -58,11 +59,33 @@ namespace StructchaWebApp.Pages.Shared
             return destImage;
         }
 
-        public void UploadImage(IFormFile[] files) // When the user selects an image from the file manager, this function automatically uploads it to the server even before the post is accepted
+
+        private class CurrentImageObject
         {
+            public string Number { get; set; }
+            public string id { get; set; }
+            public string Label { get; set; }
+            public string Description { get; set; }
+
+        }
+
+
+        public void UploadImage(Microsoft.Extensions.Primitives.StringValues currentImages, IFormFile[] files) // When the user selects an image from the file manager, this function automatically uploads it to the server even before the post is accepted
+        {
+            var listCurrentImages = new SortedList<int,UserImage>();
+            if (currentImages.Count > 0)
+            {
+                foreach (string imageInfo in currentImages)
+                {
+                    CurrentImageObject cio = JsonSerializer.Deserialize<CurrentImageObject>(imageInfo);
+                    listCurrentImages.Add(Int32.Parse(cio.Number),new UserImage(cio.id, "image/jpeg", cio.Label, cio.Description));
+                }
+                UserImages.AddRange(listCurrentImages.Values);
+            }
+
             //Security check, see if jpeg or png etc
             //List<IFormFile> checkedFiles = new List<IFormFile>();
-            foreach(IFormFile file in files)
+            foreach (IFormFile file in files)
             {
                 string? fileExtension = null;
                 string format = "";

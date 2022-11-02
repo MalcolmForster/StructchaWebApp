@@ -226,9 +226,7 @@ function deleteTaskUser(num, name) {
 
 // add user to task
 function addTaskAddUser() {
-
     var userToAdd = $("#TaskAssignUser").val();
-
     if (userToAdd != "") {
         $('#AssignedUsersList').append('<li id="' + userToAdd + '_AssignUsers">' + userToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(0,\'' + userToAdd + '\')">Remove</button><input name="userAssigned" type="hidden" value="' + userToAdd +'"/></li>');
     }
@@ -247,13 +245,11 @@ function addTaskAddRole() {
 // block role user from task WIP
 function blockTaskRoleUser() {
 
-
     updateNewTaskInfo();
 };
 
 // unblock role user from task WIP
 function unblockTaskRoleUser() {
-
 
     updateNewTaskInfo();
 };
@@ -267,10 +263,30 @@ function unblockTaskRoleUser() {
 //uploads images to the server when user adds them to post
 $(document).on('change', '#imageSelect', function updateUserImages(event) {
     event.preventDefault;
+    var currentImages = $('div[name="uploadedImage"]');
     var formData = new FormData();
     var images = this.files;
     var handler = "/Index?handler=ImageUpload";
     var returnDiv = "#imageUpload";
+
+    for (var child of currentImages) {
+        var imageInfo = $(child).find(':input[name="imageInfo"]')[0];
+        var imageNum = imageInfo.value;
+        var imageId = imageInfo.id;
+        var imageLabel = $(child).find(':input[name="draftImageLabel"]')[0].value;
+        var imageDescription = $(child).find(' textarea[name="draftImageDescription"]')[0].value;
+
+        var currentImageData = {
+            "Number" : imageNum,
+            "id" : imageId,
+            "Label" : imageLabel,
+            "Description" : imageDescription
+        };
+
+        //console.log(imageNum + ' ' + imageId + ' ' + imageLabel + ' ' + imageDescription);
+        formData.append('CurrentImages', JSON.stringify(currentImageData));
+        //console.log(child.$('input[name="imageInfo"]'));
+    }
 
     for (var image of images) {
         formData.append('file', image);
