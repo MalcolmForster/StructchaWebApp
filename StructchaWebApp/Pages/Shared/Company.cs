@@ -7,7 +7,7 @@ namespace StructchaWebApp.Pages.Shared
     public class Company
     {
         private SqlConnection _connection;
-        string CompanyCode { get; set; }
+        public string CompanyCode { get; set; }
         public string? CompanyName { get; set; }
         public Company(string code, SqlConnection? conn)
         {

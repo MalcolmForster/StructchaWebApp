@@ -11,7 +11,9 @@
             <label>Post Title: </label><input type="text" name="PostTitle" width="200"/>
             <h4>Post Body</h4>
             <textarea name="PostBody" type="text" rows="10"cols="50"></textarea><br/>
-            <partial name="~/Pages/Shared/_UploadImage.cshtml"/>
+            <div name="imageUpload" id="imageUpload">
+                <partial name="~/Pages/Shared/_UploadImage.cshtml"/>
+            </div>
             <input type="submit"/>
         </form>
     </div>

@@ -107,7 +107,7 @@ function UpdateTaskBar(loop) {
         ajaxGet("/Index?handler=TaskBarSectionTasks", '#assignedTasks');        
         ajaxGet("/Index?handler=TaskBarSectionSelf", '#selfTasks');        
         if (loop) {
-            setTimeout(function () { UpdateTaskBar(true); }, 10000);
+            //setTimeout(function () { UpdateTaskBar(true); }, 10000);
         }        
     }
 };
@@ -264,8 +264,44 @@ function unblockTaskRoleUser() {
 //}
 
 
+//uploads images to the server when user adds them to post
+$(document).on('change', '#imageSelect', function updateUserImages(event) {
+    event.preventDefault;
+    var formData = new FormData();
+    var images = this.files;
+    var handler = "/Index?handler=ImageUpload";
+    var returnDiv = "#imageUpload";
 
+    for (var image of images) {
+        formData.append('file', image);
+    }
 
+    //ajaxPost(formData, handler, returnDiv);
+    //images.forEach(element => console.log(element));
+
+    $.ajax({
+        type: 'post',
+        data: formData,
+        url: handler,
+        contentType: false,
+        processData: false,
+        dataType: "html",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (result) {
+            var $div = $(result);
+            var test = $div.find(returnDiv);
+            if ($div.find(returnDiv).length != 0) {
+                var divHTML = $div.find(returnDiv).html();
+                $(returnDiv).html(divHTML);
+            } else {
+                $(returnDiv).html(result);
+            }
+        }
+    });
+});
 
 
 //displays the current roles of the selected user, and the remove and add role abilities

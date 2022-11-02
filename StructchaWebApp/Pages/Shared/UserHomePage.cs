@@ -49,7 +49,7 @@ namespace StructchaWebApp.Pages.Shared
             blockedSelected = new List<string>();
             usersInSelectedRoles = new Dictionary<string, string>();
             conn = _Common.connDB();
-            imageManager = new ImageManager();           
+            imageManager = new ImageManager(user);           
             //userSelectList = new List<SelectListItem>();
             //roleSelectList = new List<SelectListItem>();
             setProjectList();

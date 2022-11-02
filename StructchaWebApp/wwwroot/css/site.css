@@ -375,3 +375,8 @@ p {
     .hint:hover {
         background-color:gray;
     }
+
+
+.userImageDraft {
+    height:200px;
+}

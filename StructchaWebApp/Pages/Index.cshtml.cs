@@ -59,7 +59,6 @@ namespace StructchaWebApp.Pages
                 _Common.closeSoftware(user.Id, "Structcha_FEA");
             }
 
-
         }
 
         public void OnPostNewProjectPost()
@@ -247,6 +246,22 @@ namespace StructchaWebApp.Pages
             return OnGetTaskPartial(taskId);
         }
 
+        public ActionResult OnPostImageUpload()
+        {
+            var files = Request.Form.Files.ToArray();
+            //foreach (var file in files)
+            //{
 
+            //}
+            userHomePage.imageManager.UploadImage(files);
+            
+            PartialViewResult result = new PartialViewResult()
+            {
+                ViewName = "_UploadImage",
+                ViewData = new ViewDataDictionary<UserHomePage>(ViewData, userHomePage)
+            };
+            return (result);
+
+        }
     }
 }
