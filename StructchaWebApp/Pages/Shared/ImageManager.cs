@@ -14,7 +14,7 @@ namespace StructchaWebApp.Pages.Shared
         public ImageManager(ApplicationUser user)
         {
             this.user = user;
-            UserImages = new List<UserImage>();
+            UserImages = new List<UserImage>();                       
         }
 
         private string createImageCode()
@@ -36,13 +36,16 @@ namespace StructchaWebApp.Pages.Shared
             foreach(IFormFile file in files)
             {
                 string? fileExtension = null;
+                string format = "";
                 if (file.ContentType == "image/jpeg")
                 {
                     fileExtension = ".jpg";
+                    format = "image/jpeg";
 
                 } else if(file.ContentType == "image/png")
                 {
                     fileExtension = ".png";
+                    format = "image/png";
                 }
 
                 if (fileExtension != null)
@@ -53,7 +56,7 @@ namespace StructchaWebApp.Pages.Shared
                     FileStream stream = new FileStream(Connections.testingUserImageLocation + imageName + fileExtension, FileMode.Create);
                     file.CopyTo(stream);
                     stream.Close();
-                    UserImages.Add(new UserImage(imageName + fileExtension));
+                    UserImages.Add(new UserImage(imageName + fileExtension, format));
                     //checkedFiles.Add(file);
                 }
             }

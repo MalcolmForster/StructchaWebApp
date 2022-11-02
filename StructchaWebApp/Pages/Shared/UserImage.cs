@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Buffers.Text;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -6,11 +7,13 @@ namespace StructchaWebApp.Pages.Shared
     {
         public string id { get; set; }
         public string? name { get; set; }
+        public string format { get; set; }
         //public string path  { get; set; }
 
-        public UserImage(string id)
+        public UserImage(string id, string format)
         {
             this.id = id;
+            this.format = format;
         }
 
         public string getImage()
@@ -19,8 +22,9 @@ namespace StructchaWebApp.Pages.Shared
             //var fs = new FileStream(path + id, FileMode.Open);
             //var fsr = new FileStreamResult(fs, "image/jpeg");
             //fs.Close();
+            string source = "data:"+format+"; base64, "+ Convert.ToBase64String(File.ReadAllBytes(path + id));
 
-            return Convert.ToBase64String(File.ReadAllBytes(path+id));
+            return source;
         }
 
     }
