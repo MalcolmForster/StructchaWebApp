@@ -20,7 +20,7 @@
                     <label>Image Label: </label><input name="draftImageLabel" id="" type="text" value="@ui.label"/><br />
                     <label>Image Description: </label><br />
                     <textarea name="draftImageDescription" style="width:200px;">@ui.description</textarea><br />
-                    <button name="deleteUserImage">Delete Image</button>
+                    <button type="button" name="deleteUserImage" value="@ui.id" onclick="delUserImage(this)">Delete Image</button>
                 </div>
                 counter++;
             }

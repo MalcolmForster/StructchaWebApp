@@ -234,9 +234,7 @@ function addTaskAddUser() {
 
 // add role to a task
 function addTaskAddRole() {
-
     var roleToAdd = $("#TaskAssignRole").val();
-
     if (roleToAdd != "") {
         $('#AssignedRolesList').append('<li id="' + roleToAdd + '_AssignRoles">' + roleToAdd + '<button style="float:right" type="button" onclick="deleteTaskUser(1,\'' + roleToAdd + '\')">Remove</button><input name="roleAssigned" type="hidden" value="'+roleToAdd+'"/></li>');
     }
@@ -244,13 +242,11 @@ function addTaskAddRole() {
 
 // block role user from task WIP
 function blockTaskRoleUser() {
-
     updateNewTaskInfo();
 };
 
 // unblock role user from task WIP
 function unblockTaskRoleUser() {
-
     updateNewTaskInfo();
 };
 
@@ -260,36 +256,43 @@ function unblockTaskRoleUser() {
 //}
 
 
-//uploads images to the server when user adds them to post
-$(document).on('change', '#imageSelect', function updateUserImages(event) {
-    event.preventDefault;
+function updateUserImages(dataInput, operation) {
+
     var currentImages = $('div[name="uploadedImage"]');
-    var formData = new FormData();
-    var images = this.files;
+    var formData = new FormData();    
     var handler = "/Index?handler=ImageUpload";
     var returnDiv = "#imageUpload";
 
     for (var child of currentImages) {
-        var imageInfo = $(child).find(':input[name="imageInfo"]')[0];
-        var imageNum = imageInfo.value;
+        var imageInfo = $(child).find(':input[name="imageInfo"]')[0];        
         var imageId = imageInfo.id;
-        var imageLabel = $(child).find(':input[name="draftImageLabel"]')[0].value;
-        var imageDescription = $(child).find(' textarea[name="draftImageDescription"]')[0].value;
 
-        var currentImageData = {
-            "Number" : imageNum,
-            "id" : imageId,
-            "Label" : imageLabel,
-            "Description" : imageDescription
-        };
+        var keep = true;
+        if (operation == 'delete') {
+            if (imageId == dataInput) {
+                keep = false;
+            }
+        }
 
-        //console.log(imageNum + ' ' + imageId + ' ' + imageLabel + ' ' + imageDescription);
-        formData.append('CurrentImages', JSON.stringify(currentImageData));
-        //console.log(child.$('input[name="imageInfo"]'));
+        if (keep) {
+            var imageNum = imageInfo.value;
+            var imageLabel = $(child).find(':input[name="draftImageLabel"]')[0].value;
+            var imageDescription = $(child).find(' textarea[name="draftImageDescription"]')[0].value;
+            var currentImageData = {
+                "Number": imageNum,
+                "id": imageId,
+                "Label": imageLabel,
+                "Description": imageDescription
+            };
+            formData.append('CurrentImages', JSON.stringify(currentImageData));
+        }
     }
 
-    for (var image of images) {
-        formData.append('file', image);
+    if (operation == 'add') {
+        var images = dataInput.files;
+        for (var image of images) {
+            formData.append('file', image);
+        }
     }
 
     //ajaxPost(formData, handler, returnDiv);
@@ -317,7 +320,80 @@ $(document).on('change', '#imageSelect', function updateUserImages(event) {
             }
         }
     });
+};
+
+//uploads images to the server when user adds them to post
+//$(document).on('change', '#imageSelect', function updateUserImages(event) {
+//    event.preventDefault;
+//    var currentImages = $('div[name="uploadedImage"]');
+//    var formData = new FormData();
+//    var images = this.files;
+//    var handler = "/Index?handler=ImageUpload";
+//    var returnDiv = "#imageUpload";
+
+//    for (var child of currentImages) {
+//        var imageInfo = $(child).find(':input[name="imageInfo"]')[0];
+//        var imageNum = imageInfo.value;
+//        var imageId = imageInfo.id;
+//        var imageLabel = $(child).find(':input[name="draftImageLabel"]')[0].value;
+//        var imageDescription = $(child).find(' textarea[name="draftImageDescription"]')[0].value;
+
+//        var currentImageData = {
+//            "Number" : imageNum,
+//            "id" : imageId,
+//            "Label" : imageLabel,
+//            "Description" : imageDescription
+//        };
+
+//        //console.log(imageNum + ' ' + imageId + ' ' + imageLabel + ' ' + imageDescription);
+//        formData.append('CurrentImages', JSON.stringify(currentImageData));
+//        //console.log(child.$('input[name="imageInfo"]'));
+//    }
+
+//    for (var image of images) {
+//        formData.append('file', image);
+//    }
+
+//    //ajaxPost(formData, handler, returnDiv);
+//    //images.forEach(element => console.log(element));
+
+//    $.ajax({
+//        type: 'post',
+//        data: formData,
+//        url: handler,
+//        contentType: false,
+//        processData: false,
+//        dataType: "html",
+//        headers: {
+//            RequestVerificationToken:
+//                $('input:hidden[name="__RequestVerificationToken"]').val()
+//        },
+//        success: function (result) {
+//            var $div = $(result);
+//            var test = $div.find(returnDiv);
+//            if ($div.find(returnDiv).length != 0) {
+//                var divHTML = $div.find(returnDiv).html();
+//                $(returnDiv).html(divHTML);
+//            } else {
+//                $(returnDiv).html(result);
+//            }
+//        }
+//    });
+//});
+
+$(document).on('change', '#imageSelect', function addUserImages(event) {
+    event.preventDefault;
+    updateUserImages(this,'add');
 });
+
+
+
+function delUserImage(button) {
+    var imgToDelete = button.value;
+    updateUserImages(imgToDelete, 'delete');
+};
+
+    
 
 
 //displays the current roles of the selected user, and the remove and add role abilities
