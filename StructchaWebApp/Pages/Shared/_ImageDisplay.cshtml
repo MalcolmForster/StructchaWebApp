@@ -1,0 +1,22 @@
+﻿@*
+    This paritial is to be added to the bottom of PostPartial and TaskPartial and display the images that are attached to their respective posts.
+*@
+@model ProjectPost
+
+@{
+    if (Model.postImages != null)
+    {
+        <h4>Attached Images</h4>
+        foreach (UserImage ui in Model.postImages)
+        {
+            <div name="PostImageDisplay">
+                <h5>@ui.label</h5>
+                <img style="height:300px;max-width:100%;" src="@ui.getImage()">
+                <p>@ui.description</p>
+            </div>
+        }
+    }
+
+
+
+}

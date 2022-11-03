@@ -23,6 +23,10 @@
                 }
         </ul>
 
+        <div name="postImages">
+            <partial name="~/Pages/Shared/_ImageDisplay.cshtml" model="Model" />
+        </div>
+
         <form id="ReplyForm">
             <label>Reply:</label><br />
             <textarea style="width:100%; max-width:800px" name="ReplyBody" id="ReplyBody" rows="3"></textarea><br />

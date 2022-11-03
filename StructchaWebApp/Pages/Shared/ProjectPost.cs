@@ -11,7 +11,6 @@ namespace StructchaWebApp.Pages.Shared
         public ProjectPost(string postID, UserManager<ApplicationUser> userManager, string userId, SqlConnection conn) : base('p', postID, userManager, userId,conn)
         {
             //The main getting info from
-
             string query = "SELECT * FROM [dbo].[Posts] WHERE [Id] = @id";
             var connection = _Common.connDB();
             var cmd = new SqlCommand(query, connection);
@@ -63,6 +62,14 @@ namespace StructchaWebApp.Pages.Shared
                     else
                     {
                         UserViewedReplies = false;
+                    }
+                    if (!reader.IsDBNull(14))
+                    {
+                        imageJson = reader.GetString(14);
+                        setImages();
+                    } else
+                    {
+                        imageJson = null;
                     }
                 }
                 reader.Close();

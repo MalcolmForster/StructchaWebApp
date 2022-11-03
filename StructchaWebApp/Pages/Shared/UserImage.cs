@@ -6,11 +6,16 @@ namespace StructchaWebApp.Pages.Shared
     public class UserImage
     {
         public string id { get; set; }
-        public string? name { get; set; }
+        //public string? name { get; set; }
         public string format { get; set; }
         public string label { get; set; }
         public string description { get; set; }
         //public string path  { get; set; }
+
+        public UserImage()
+        {
+
+        }
 
         public UserImage(string id, string format)
         {

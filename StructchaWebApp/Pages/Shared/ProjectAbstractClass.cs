@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using StructchaWebApp.Data;
+using System.Text.Json;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -24,6 +25,8 @@ namespace StructchaWebApp.Pages.Shared
         public DateTime? TimeOfEdit { get; set; }
         protected SqlConnection _connection { get; set; }
         protected UserManager<ApplicationUser> um { get; set; }
+        protected string? imageJson { get; set; }
+        public UserImage[] postImages { get; set; }
 
         public PostTaskAbstract(char type, string postID, UserManager<ApplicationUser> userManager, string userId, SqlConnection conn)
         {
@@ -36,83 +39,6 @@ namespace StructchaWebApp.Pages.Shared
             um = userManager;
             UserId = userId;
 
-            //string query = String.Format("SELECT * FROM [dbo].{0} WHERE [Id] = @id", table);
-
-            //var cmd = new SqlCommand(query, _connection);
-            //cmd.Parameters.AddWithValue("@id", postId);
-
-            //using (var reader = cmd.ExecuteReader())
-            //{
-            //    while (reader.Read())
-            //    {
-            //        UserId = reader.GetString(1);
-            //        if (reader.GetValue(2) != DBNull.Value)
-            //        {
-            //            ProjectId = reader.GetString(2);
-            //        }
-            //        else
-            //        {
-            //            ProjectId = null;
-            //        }
-
-            //        Body = reader.GetString(6);
-            //        TimeOfPost = reader.GetDateTime(7);
-
-            //        IdCompany = reader.GetString(3);
-
-            //        // IdRoles = reader.GetString(4);
-            //        Title = reader.GetString(5);
-            //        bool edited = reader.IsDBNull(8);
-            //        if (!edited)
-            //        {
-            //            TimeOfEdit = reader.GetDateTime(8);
-            //        }
-            //        else
-            //        {
-            //            TimeOfEdit = null;
-            //        }
-
-            //        if (!reader.IsDBNull(12))
-            //        {
-            //            UserViewedBody = Viewed(UserId, reader.GetString(12));
-            //        }
-            //        else
-            //        {
-            //            UserViewedBody = false;
-            //        }
-            //        if (!reader.IsDBNull(13))
-            //        {
-            //            UserViewedReplies = Viewed(UserId, reader.GetString(13));
-            //        }
-            //        else
-            //        {
-            //            UserViewedReplies = false;
-            //        }
-            //    }
-            //    reader.Close();
-            //}
-
-            // CompanyName = Company.NameOfCompany(IdCompany, _connection);
-
-            //if (ProjectId != null)
-            //{
-            //    Project pro = new Project(ProjectId, _connection);
-
-            //    if (pro.Title != null)
-            //    {
-            //        ProjectName = pro.Title;
-            //    }
-            //    else
-            //    {
-            //        ProjectName = pro.Location;
-            //    }
-            //}
-            //else
-            //{
-            //    ProjectName = CompanyName;
-            //}
-
-            
             UserName = um.FindByIdAsync(UserId).Result.UserName;
             findReplies(um);
         }
@@ -219,7 +145,11 @@ namespace StructchaWebApp.Pages.Shared
             _connection.Close();
         }
 
-
+        protected void setImages()
+        {
+            //var jsonDic = JsonSerializer.Deserialize<Dictionary<string,imageTest>>(imageJson);
+            postImages = JsonSerializer.Deserialize<Dictionary<int,UserImage>>(imageJson).Values.ToArray();
+        }
 
     }
 }

@@ -58,7 +58,6 @@ namespace StructchaWebApp.Pages
             {
                 _Common.closeSoftware(user.Id, "Structcha_FEA");
             }
-
         }
 
         public void OnPostNewProjectPost()
@@ -120,7 +119,6 @@ namespace StructchaWebApp.Pages
         {
             //string body = Request.Form["ReplyBody"];
             //string id = Request.Form["ReplyTo"];
-
             if (type == "task" || type == "post")
             {
                 userHomePage.createReply(type, id, body);
@@ -170,7 +168,6 @@ namespace StructchaWebApp.Pages
         public ActionResult OnGetSendSelected(string code)
         {
             userHomePage.setTaskAccessSelectLists(code);
-
             PartialViewResult result = new PartialViewResult()
             {
                 ViewName = "_DynamicTaskSelector",
@@ -185,8 +182,7 @@ namespace StructchaWebApp.Pages
             {
                 ViewName = "_NewProjectPost",
                 ViewData = new ViewDataDictionary<UserHomePage>(ViewData, userHomePage)
-            };
-            
+            };            
             return result;
         }
 
@@ -249,10 +245,8 @@ namespace StructchaWebApp.Pages
         {
             //string taskId = Request.Form["CompletionButton"];
             //string i = Request.Form["SetTo"];
-
             ProjectTask task = new ProjectTask(taskId,userManager,user.Id,_connection);
             task.SetComplete(setTo);
-
             return OnGetTaskPartial(taskId);
         }
 
