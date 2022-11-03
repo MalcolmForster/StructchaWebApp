@@ -66,11 +66,21 @@ namespace StructchaWebApp.Pages
             string? projectCode = Request.Form["PostProjectCode"];
             string postTitle = Request.Form["PostTitle"];
             string postBody = Request.Form["PostBody"];
+            string[] imageIds = Request.Form["imageId"];
+            string[] draftImageLabel = Request.Form["draftImageLabel"];
+            string[] draftImageDescription = Request.Form["draftImageDescription"];
+            List<UserImage> images= new List<UserImage>();
+
+            for(int i = 0; i < imageIds.Length; i++)
+            {
+                images.Add(new UserImage(imageIds[i], "image/jpeg", draftImageLabel[i], draftImageDescription[i]));
+            }
+
             if(projectCode == "No Project")
             {
                 projectCode = null;
             }
-            userHomePage.createPost(projectCode,user.Company,postTitle,postBody);
+            userHomePage.createPost(projectCode,user.Company,postTitle,postBody,images);
         }
 
         public void OnPostNewProjectTask()

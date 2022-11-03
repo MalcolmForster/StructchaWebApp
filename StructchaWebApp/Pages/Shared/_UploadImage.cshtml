@@ -4,7 +4,7 @@
 <h4>Image uploading</h4>
 <label>Reference image in the Body above buy using '&&' infront of it, ie "&&Image_1"</label><br/>
 <label for="imageSelect">Select an image to attach to post: </label>
-<form name="imageAttach" id="imageAttach">
+@*<form name="imageAttach" id="imageAttach">*@
     <input name="imageSelect" type="file" id="imageSelect" accept="image/png, image/jpeg" multiple />
     <div class="inputSection" name="uploadedImageDisplay" id="uploadedImageDisplay">
         @if (Model.imageManager.UserImages.Count > 0)
@@ -14,6 +14,7 @@
             {
                 <div name="uploadedImage" style="display:inline-block;">
                     <input name="imageInfo" type="hidden" id="@ui.id" value="@counter"/>
+                    <input name="imageId" type="hidden" value="@ui.id"/>
                     <h4 name="draftImageNumber">Image_@counter</h4>
                     @*<img src="@Url.Action(Model.imageManager.setFileResult(ui.id))" />*@
                     <img id="@ui.id" class="userImageDraft" src="@ui.getImage()" /><br />
@@ -30,7 +31,7 @@
             <p style="text-align:center">No images uploaded</p>
         }
     </div>
-</form>
+@*</form>*@
 
 
 <br />

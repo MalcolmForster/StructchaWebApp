@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.SqlClient;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using StructchaWebApp.Data;
 using System.Data;
@@ -287,10 +288,10 @@ namespace StructchaWebApp.Pages.Shared
             roleSelectList = stringArrayToSelectList(roles);
         }
 
-        public void createPost(string? projectCode, string company, string postTitle, string postBody)
+        public void createPost(string? projectCode, string company, string postTitle, string postBody, List<UserImage> images)
         {
             conn.Open();
-            string query = "INSERT INTO [dbo].[Posts] (IDUserOP,IdProject,IdCompany,PostTitle,PostBody,TimeOfPost) VALUES (@user, @project, @company,@title, @body, GETDATE())";
+            string query = "INSERT INTO [dbo].[Posts] (IDUserOP,IdProject,IdCompany,PostTitle,PostBody,TimeOfPost,Images) VALUES (@user, @project, @company,@title, @body, GETDATE(),@imageJson)";
             var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@user", user.Id);
             if(projectCode != null)
@@ -300,6 +301,27 @@ namespace StructchaWebApp.Pages.Shared
             else
             {
                 cmd.Parameters.AddWithValue("@project", DBNull.Value);
+            }
+
+            if(images.Count > 0)
+            {
+                string imageJsonString = "{";
+                int count = 1;
+                string com = "";
+                foreach(UserImage image in images)
+                {
+                    string imageJson = JsonSerializer.Serialize(image);
+                    string imageInfo = String.Format("{0}\"{1}\":{2}",com,count.ToString(),  imageJson);
+                    imageJsonString = imageJsonString + imageInfo;
+                    com = ", ";
+                    count++;
+                }
+                imageJsonString = imageJsonString + "}";
+                cmd.Parameters.AddWithValue("@imageJson", imageJsonString);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@imageJson", DBNull.Value);
             }
 
             string? companyId = Company.CompanyID(company,conn);
