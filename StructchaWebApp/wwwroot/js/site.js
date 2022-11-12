@@ -107,7 +107,7 @@ function UpdateTaskBar(loop) {
         ajaxGet("/Index?handler=TaskBarSectionTasks", '#assignedTasks');        
         ajaxGet("/Index?handler=TaskBarSectionSelf", '#selfTasks');        
         if (loop) {
-            //setTimeout(function () { UpdateTaskBar(true); }, 10000);
+            setTimeout(function () { UpdateTaskBar(true); }, 10000);
         }        
     }
 };

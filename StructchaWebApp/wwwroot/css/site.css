@@ -54,6 +54,10 @@ button {
     max-width:100%;
 }
 
+.footer {
+    background-color:white;
+}
+
 html {
   font-size: 14px;
 }
@@ -194,6 +198,11 @@ p {
     display:inline-block;
 }
 
+.Large-Button {
+    width: 120px;
+    height: 40px;
+}
+
 
 .taskBarSection {
     height: calc(var(--userInterfaceHeight)/3);
@@ -275,19 +284,19 @@ p {
 .EditRoles {
     text-align:center;
 }
-    
-    .EditRoles th {
-        font-size:12px;
-    }
 
-    .EditRoles tr {
-        border-block-width:3px;
-        border-radius:5px;
-    }
+th {
+    font-size: 12px;
+}
 
-    .EditRoles td {
-        height:50px;
-    }
+tr {
+    border-block-width: 3px;
+    border-radius: 5px;
+}
+
+td {
+    height: 50px;
+}
 
 .replies {
     padding: 0px;

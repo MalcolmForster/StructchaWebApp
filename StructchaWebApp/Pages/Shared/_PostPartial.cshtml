@@ -5,27 +5,28 @@
         <label>@Model.ProjectName - assigned by @Model.UserName</label><br />
         <p>@Model.Body</p>
 
-        <label>Replies:</label><br />
-
-        <ul class="replies">
-                @if (Model.replies == null || Model.replies.Length == 0)
-                {
-                    <li style="text-align:center">No replies found</li>
-                }
-                else
-                {
-                    foreach(Reply r in Model.replies) {
-                        <li>
-                        <h4>@r.postedBy replied on @r.timePosted.ToString()</h4>
-                        <p>@r.body</p>
-                        </li>                        
-                    }
-                }
-        </ul>
-
         <div name="postImages">
             <partial name="~/Pages/Shared/_ImageDisplay.cshtml" model="Model" />
         </div>
+
+        <label>Replies:</label><br />
+
+        <ul class="replies">
+            @if (Model.replies == null || Model.replies.Length == 0)
+            {
+                <li style="text-align:center">No replies found</li>
+            }
+            else
+            {
+                foreach (Reply r in Model.replies)
+                {
+                    <li>
+                        <h4>@r.postedBy replied on @r.timePosted.ToString()</h4>
+                        <p>@r.body</p>
+                    </li>
+                }
+            }
+        </ul>
 
         <form id="ReplyForm">
             <label>Reply:</label><br />

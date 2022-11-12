@@ -100,7 +100,6 @@ namespace StructchaWebApp.Pages.Shared
 
                     var replyTasks = new List<Task<Reply>>();
                     replies = new Reply[repliesArray.Length];
-
                     for (int i = 0; i < repliesArray.Length; i++)
                     {
                         string s = repliesArray[i];

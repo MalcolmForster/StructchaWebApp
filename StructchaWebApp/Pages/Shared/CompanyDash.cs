@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Options;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
+using Microsoft.Extensions.Hosting;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -14,12 +16,21 @@ namespace StructchaWebApp.Pages.Shared
         private RoleManager<IdentityRole> roleManager { get; set; }
         private UserManager<ApplicationUser> userManager { get; set; }
         private ApplicationUser user { get; set; }
-
         public string checkingUserName { get; set; }
-
         public IList<string>? usersRoles { get; set; }
-
         public List<ApplicationUser> unRegUsers { get; set; }
+
+        public StructchaClaim[] roleClaims = {
+            new StructchaClaim("PCWP","Post company wide posts"),
+            new StructchaClaim("PPWP","Post project wide posts"),
+            new StructchaClaim("RCWP","Reply to company posts"),
+            new StructchaClaim("RPP","Reply to project posts"),
+            new StructchaClaim("CrPro","Create Project"),
+            new StructchaClaim("AUR2P","Assign users and roles to project"),
+            new StructchaClaim("CrPT","Create Project Task"),
+            new StructchaClaim("CoPT","Complete project Task"),
+            new StructchaClaim("ChPT","Check project Task")
+        };
 
         public CompanyDash(RoleManager<IdentityRole> rm, UserManager<ApplicationUser> um, ApplicationUser applicationUser)
         {

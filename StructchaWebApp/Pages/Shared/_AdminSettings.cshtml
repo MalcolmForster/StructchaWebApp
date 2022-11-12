@@ -4,13 +4,11 @@
 @*Perhaps need to add the model in here too? Will give it a go*@
 @model DashboardModel
 
-@*@inject RoleManager<IdentityRole> RoleManager*@
-
 @{
     <div class="dash-div" name="superAdminTools">
         <h3>Admin Tools</h3>
         @*---------------------------Role tools--------------------------*@
-        <div name="roleAdminTools">
+        <div class="dash-div EditRoles" name="roleAdminTools">
             <h4>Add/delete current roles</h4>
             @{
                 var roles = Model.companyDash.AllUserRoles();
@@ -21,14 +19,42 @@
                 else
                 {
                     <form asp-page-handler="RoleRemove" method="post" style="text-align:center">
-                        @foreach (IdentityRole s in roles)
-                        {
-                            <l>@s.Name </l>
+                        <table style="width:100%;">
+                            <tr>
+                                <th rowspan="2">Role Name/Delete</th>
+                                <th rowspan="2">Edit Defaults</th>
+                                <th colspan="2">Claims editable by</th>
+                            </tr>
 
-                            <button type="submit" name="deleteRoleButton" value=@String.Concat(s.Name.Replace(" ","_"),"_Remove")>Remove</button>
+                            <tr>                                
+                                <th>Company Admin</th>
+                                <th>Company Owner</th>
+                            </tr>
 
-                            <br />
-                        }
+                            @foreach (IdentityRole s in roles)
+                            {
+                                string name = s.Name.Replace(" ", "_");
+                                <tr>
+                                    <td>
+                                        <l>@s.Name </l>
+                                        <button type="submit" name="deleteRoleButton" value=@String.Concat(name,"_Remove")>Remove</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" onclick="toggleProjectEditDiv('show_@name')" name="editClaimsDefault" value=@String.Concat(name,"_ClaimsDafault")>Edit</button>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="roleClaimsEditable" value=@String.Concat(name,"_ClaimsCA") />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="roleClaimsEditable" value=@String.Concat(name,"_ClaimsCO") />
+                                    </td>
+                                </tr>
+
+                                <tr style="display:none;" name="@name">
+                                    <td colspan="100%" ><p>Testing</p></td>
+                                </tr>
+                            }
+                        </table>
                     </form>
                 }
             }
