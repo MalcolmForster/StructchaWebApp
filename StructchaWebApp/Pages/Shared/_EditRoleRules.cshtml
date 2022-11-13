@@ -32,8 +32,6 @@
                     {
                         <tr>
                             <td style="text-align:left;" name=@role.Name>@role.Name</td>
-
-
                             @foreach (StructchaClaim claim in Model.companyDash.roleClaims)
                             {
                                 <td><input type="checkbox" id=@String.Concat((role.Name).Replace(" ","_"),claim.key) /></td>

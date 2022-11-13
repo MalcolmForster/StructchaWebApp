@@ -59,6 +59,14 @@ function toggleProjectEditDiv(div) {
         x.style.display = "none";
         editButton.style.display = "inline-block";
         hideButton.style.display = "none";
+    } else if (div.includes('showRow_')) {
+        div = div.replace('showRow_', '');
+        var x = document.getElementById('edit_' + div);
+        var editButton = document.getElementById('editButton_' + div);
+        var hideButton = document.getElementById('hideButton_' + div);
+        x.style.display = "table-row";
+        editButton.style.display = "none";
+        hideButton.style.display = "inline-block";
     }
     return false;
 };

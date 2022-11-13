@@ -7,7 +7,7 @@
         public StructchaClaim(string key, string description)
         {
             this.key = key;
-            this.description = description;            
+            this.description = description;      
         }
     }
 }

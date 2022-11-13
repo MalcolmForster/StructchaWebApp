@@ -40,8 +40,10 @@
                                         <button type="submit" name="deleteRoleButton" value=@String.Concat(name,"_Remove")>Remove</button>
                                     </td>
                                     <td>
-                                        <button type="button" onclick="toggleProjectEditDiv('show_@name')" name="editClaimsDefault" value=@String.Concat(name,"_ClaimsDafault")>Edit</button>
+                                        <button type="button" onclick="toggleProjectEditDiv('showRow_@name')" id="editButton_@name" value=@String.Concat(name,"_ClaimsDefault")>Edit</button>
+                                        <button type="button" style="display:none" onclick="toggleProjectEditDiv('hide_@name')" id="hideButton_@name" value=@String.Concat(name,"_ClaimsDefault")>Hide</button>
                                     </td>
+
                                     <td>
                                         <input type="checkbox" name="roleClaimsEditable" value=@String.Concat(name,"_ClaimsCA") />
                                     </td>
@@ -50,8 +52,24 @@
                                     </td>
                                 </tr>
 
-                                <tr style="display:none;" name="@name">
-                                    <td colspan="100%" ><p>Testing</p></td>
+                                <tr style="display:none;" id="edit_@name">
+                                    <td colspan="100%">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                @foreach (StructchaClaim sc in Model.companyDash.roleClaims)
+                                                {
+                                                    <th>@sc.description</th>
+                                                }
+                                            </tr>
+                                            <tr>
+                                                @foreach (StructchaClaim sc in Model.companyDash.roleClaims)
+                                                {
+                                                    <td><input type="checkbox" id="@sc.key"/></td>
+                                                }
+                                            </tr>
+
+                                        </table>
+                                    </td>
                                 </tr>
                             }
                         </table>
