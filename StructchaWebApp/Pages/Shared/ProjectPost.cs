@@ -32,7 +32,6 @@ namespace StructchaWebApp.Pages.Shared
 
                     Body = reader.GetString(6);
                     TimeOfPost = reader.GetDateTime(7);
-
                     IdCompany = reader.GetString(3);
 
                     // IdRoles = reader.GetString(4);
@@ -94,7 +93,6 @@ namespace StructchaWebApp.Pages.Shared
                 ProjectName = CompanyName;
             }
             connection.Close();
-
         }               
     }
 }

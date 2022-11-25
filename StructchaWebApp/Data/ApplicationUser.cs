@@ -9,3 +9,4 @@ namespace StructchaWebApp.Data
         public string Company { get; set; }
     }
 }
+

@@ -32,8 +32,14 @@ namespace StructchaWebApp.Pages
             //Need to add methods to only set the dashBoard sections which are accessable by the users roles
             user = um.FindByNameAsync(httpContextAccessor.HttpContext?.User.Identity?.Name).Result;
             projectAdmin = new ProjectAdmin(user.Company, rm,um);
-            adminDash = new AdminDash(rm);
-            companyDash = new CompanyDash(rm, um, user);
+
+            if (superAdmin(user.Id)) {
+                adminDash = new AdminDash(rm);
+            }
+            if (companyOwner(user.Id))
+            {
+                companyDash = new CompanyDash(rm, um, user);
+            }            
             checkingUser = "";
         }
 
@@ -41,11 +47,11 @@ namespace StructchaWebApp.Pages
         {
             
         }
-        public async Task OnPostNewRoleSubmit()     //This is the oringal method before bugging out? Same with RoleRemove()
+        public async Task OnPostNewRoleSubmit(string roleName)     //This is the oringal method before bugging out? Same with RoleRemove()
         {
-            string s = Request.Form["roleName"];
+            //string s = Request.Form["roleName"];
             //adminDash.addRole(s);
-            await adminDash.addRole(s);
+            await adminDash.addRole(roleName);
         }
 
         public void OnPostNewCompanySubmit()
@@ -56,10 +62,15 @@ namespace StructchaWebApp.Pages
             adminDash.addCompany(company, adminUser);
         }
 
-        public async Task OnPostRoleRemove()
+        public async Task OnPostRoleRemove(string roleName)
         {
-            string s = Request.Form["deleteRoleButton"];
-            await adminDash.deleteRole(s);
+            //string s = Request.Form["deleteRoleButton"];
+            await adminDash.deleteRole(roleName);
+        }
+
+        public static void OnPostAlterDefaultClaims() // <---------------------------------------------------------------------------------- TO BE COMPLETED
+        {
+
         }
 
         public void OnPostCompanyRemove()
@@ -202,6 +213,8 @@ namespace StructchaWebApp.Pages
             string query = "SELECT Activated FROM [dbo].[CompanyRegister] WHERE [AdminUserID] = @userID";
             return adminCheck(query, userID);
         }
+
+
 
         //public void OnPostAddAppRole()
         //{

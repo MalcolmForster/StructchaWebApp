@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using StructchaWebApp.Data;
 
 namespace StructchaWebApp.Pages.Shared
 {
@@ -12,26 +13,27 @@ namespace StructchaWebApp.Pages.Shared
             roleManager = rm;
         }
 
-        public List<IdentityRole> AllUserRoles() // moved to company dash
+        public List<AdminIdentityRole> AllUserRoles() // moved to company dash
         {
             //Perhaps add ability to order alphabetically 
             var roles = roleManager.Roles.ToList();
+            var adminRoles = new List<AdminIdentityRole>();
+
             foreach(IdentityRole role in roles)
             {
-                if(role.Name == "admin")
+                if(role.Name != "admin")
                 {
-                    roles.Remove(role);
-                    break;
-                }                
+                    var adminRole = new AdminIdentityRole(role);
+                    adminRoles.Add(adminRole);
+                }       
             }            
-            return roles;
+            return adminRoles;
         }
 
         //All companies ----------- looking to consolidate all company finding lists to one method
         public List<string> AllCompanies()
         {
             List<string> companyList = new List<string>();
-
             SqlConnection conn =  _Common.connDB();
             string query = "SELECT [Company] FROM [dbo].[CompanyRegister] WHERE NOT [Company] = 'Structcha'";
             SqlCommand comm = new SqlCommand(query, conn);

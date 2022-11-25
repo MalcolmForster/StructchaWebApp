@@ -3,24 +3,27 @@
 <ul>
     @{
         List<ProjectPost> projectPosts = Model;
-        foreach (ProjectPost pp in projectPosts)
+        if (projectPosts != null && projectPosts.Count > 0)
         {
-            if (pp.Title != null)
+            foreach (ProjectPost pp in projectPosts)
             {
-                string s = "";
-                if (!pp.UserViewedBody)
+                if (pp.Title != null)
                 {
-                    s = "background-color:red";
-                }
-                else if (!@pp.UserViewedReplies)
-                {
-                    s = "background-color:blue";
-                }
+                    string s = "";
+                    if (!pp.UserViewedBody)
+                    {
+                        s = "background-color:red";
+                    }
+                    else if (!@pp.UserViewedReplies)
+                    {
+                        s = "background-color:blue";
+                    }
 
-                <li style="@s" onclick="ShowIndexPartial(@pp.postId, 0)">
-                    <h1>@pp.ProjectName</h1> @* Look into grouping tasks into each project perhaps*@
-                    <p name="openPost_@pp.Title">@pp.Title</p>
-                </li>
+                    <li style="@s" onclick="ShowIndexPartial(@pp.postId, 0)">
+                        <h1>@pp.ProjectName</h1> @* Look into grouping tasks into each project perhaps*@
+                        <p name="openPost_@pp.Title">@pp.Title</p>
+                    </li>
+                }
             }
         }
     }

@@ -65,7 +65,7 @@ function toggleProjectEditDiv(div) {
         var editButton = document.getElementById('editButton_' + div);
         var hideButton = document.getElementById('hideButton_' + div);
         x.style.display = "table-row";
-        editButton.style.display = "none";
+        editButton.style.display = "none"; 
         hideButton.style.display = "inline-block";
     }
     return false;
@@ -108,6 +108,22 @@ function ajaxGet(handler, returnDiv) {
         }
     });
 };
+
+function adminAddRole(event) {
+    event.preventDefault;
+    var handler = "/Dashboard?handler=NewRoleSubmit";
+    var jsonData = { "roleName": $("#newRoleName").val() }
+    console.log(jsonData);
+    ajaxPost(jsonData, handler, "#roleAdminTools");
+}
+
+function adminDeleteRole(event) {
+    event.preventDefault;
+    var handler = "/Dashboard?handler=RoleRemove";
+    var jsonData = { "roleName": event.value}
+    console.log(jsonData);
+    ajaxPost(jsonData, handler,"#roleAdminTools");
+}
 
 function UpdateTaskBar(loop) {
     if ($('#taskBar').length) {       

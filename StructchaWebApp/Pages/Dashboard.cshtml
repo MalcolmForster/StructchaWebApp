@@ -23,7 +23,7 @@
 
     if (DashboardModel.superAdmin(User.Claims.First().Value))
     {
-        <partial name="~/Pages/Shared/_AdminSettings.cshtml" />
+        <partial name="~/Pages/Shared/_AdminSettings.cshtml"/>
     }
 
     if (DashboardModel.companyOwner(User.Claims.First().Value))

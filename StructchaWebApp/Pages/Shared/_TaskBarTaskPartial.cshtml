@@ -7,48 +7,60 @@
         List<ProjectTask> toDoTasks = new List<ProjectTask>();
         List<ProjectTask> finishedTasks = new List<ProjectTask>();
 
-        foreach (ProjectTask projectTask in projectTasks)
+
+        if (projectTasks != null && projectTasks.Count > 0)
         {
-            if (projectTask.Completed)
+            foreach (ProjectTask projectTask in projectTasks)
             {
-                finishedTasks.Add(projectTask);
-            }
-            else
-            {
-                toDoTasks.Add(projectTask);
+                if (projectTask.Completed)
+                {
+                    finishedTasks.Add(projectTask);
+                }
+                else
+                {
+                    toDoTasks.Add(projectTask);
+                }
             }
         }
 
-        foreach (ProjectTask pt in toDoTasks)
+
+        if (toDoTasks != null && toDoTasks.Count > 0)
         {
-            string s = "";
-            if (!pt.UserViewedBody)
+            foreach (ProjectTask pt in toDoTasks)
             {
-                s = "background-color:red";
-            }
-            else if (!@pt.UserViewedReplies)
-            {
-                s = "background-color:blue";
-            }
-            if (pt.Title != null)
-            {
+                string s = "";
+                if (!pt.UserViewedBody)
+                {
+                    s = "background-color:red";
+                }
+                else if (!@pt.UserViewedReplies)
+                {
+                    s = "background-color:blue";
+                }
+                if (pt.Title != null)
+                {
                     <li style="@s" onclick="ShowIndexPartial(@pt.postId, 1)">
                         <h1>@pt.ProjectName: Priority @pt.Priority.ToString()</h1> @* Look into grouping tasks into each project perhaps*@
                         <p name="openPost_@pt.Title">@pt.Title</p>
                     </li>
+                }
             }
         }
 
-        foreach (ProjectTask pt in finishedTasks)
+        if (finishedTasks != null && finishedTasks.Count > 0)
         {
-            if (pt.Title != null)
+            foreach (ProjectTask pt in finishedTasks)
             {
-                <li style="background-color:seagreen;" onclick="ShowIndexPartial(@pt.postId, 1)">
+                if (pt.Title != null)
+                {
+                    <li style="background-color:seagreen;" onclick="ShowIndexPartial(@pt.postId, 1)">
                         <h1>@pt.ProjectName: Completed</h1> @* Look into grouping tasks into each project perhaps*@
                         <p name="openPost_@pt.Title">@pt.Title</p>
                     </li>
+                }
             }
         }
+
     }
 </ul>
 

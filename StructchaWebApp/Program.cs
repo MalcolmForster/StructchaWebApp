@@ -15,6 +15,7 @@ builder.Configuration.AddJsonFile("appsettings.json");
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddHttpContextAccessor(); //testing this line to see if it allows for access to username from code behind

@@ -8,10 +8,10 @@
     <div class="dash-div" name="superAdminTools">
         <h3>Admin Tools</h3>
         @*---------------------------Role tools--------------------------*@
-        <div class="dash-div EditRoles" name="roleAdminTools">
+        <div class="dash-div EditRoles" name="roleAdminTools" id="roleAdminTools">
             <h4>Add/delete current roles</h4>
             @{
-                var roles = Model.companyDash.AllUserRoles();
+                var roles = Model.adminDash.AllUserRoles();
                 if (roles.Count == 0)
                 {
                     <p>No Roles Found</p>
@@ -31,13 +31,13 @@
                                 <th>Company Owner</th>
                             </tr>
 
-                            @foreach (IdentityRole s in roles)
+                            @foreach (AdminIdentityRole s in roles)
                             {
-                                string name = s.Name.Replace(" ", "_");
+                                string name = s.BaseRole.Name.Replace(" ", "_");
                                 <tr>
                                     <td>
-                                        <l>@s.Name </l>
-                                        <button type="submit" name="deleteRoleButton" value=@String.Concat(name,"_Remove")>Remove</button>
+                                        <l>@s.BaseRole.Name </l>
+                                        <button type="button" name="deleteRoleButton" onclick="adminDeleteRole(this)" value=@String.Concat(name,"_Remove")>Remove</button>
                                     </td>
                                     <td>
                                         <button type="button" onclick="toggleProjectEditDiv('showRow_@name')" id="editButton_@name" value=@String.Concat(name,"_ClaimsDefault")>Edit</button>
@@ -64,22 +64,30 @@
                                             <tr>
                                                 @foreach (StructchaClaim sc in Model.companyDash.roleClaims)
                                                 {
-                                                    <td><input type="checkbox" id="@sc.key"/></td>
+                                                    if(s.Claims != null && s.Claims.Contains(sc.key))
+                                                    {
+                                                        <td><input type="checkbox" checked="checked" id="@sc.key" /></td>
+                                                    } else
+                                                    {
+                                                        <td><input type="checkbox" id="@sc.key"/></td>
+                                                    }                                                    
                                                 }
                                             </tr>
-
                                         </table>
                                     </td>
                                 </tr>
                             }
                         </table>
+
+                        <button class="Large-Button" type="submit" id="saveRoleClaims">Save</button>
+                        <button class="Large-Button" type="submit" id="cancelRoleClaims">Cancel</button>
                     </form>
                 }
             }
 
             <h5 style="text-align:center">Create a New Role: </h5>
-            <form asp-page-handler="NewRoleSubmit" method="post" style="text-align:center">
-                <input type="text" name="roleName" />
+            <form onsubmit="adminAddRole(this)" style="text-align:center">
+                <input type="text" name="roleName" id="newRoleName"/>
                 <button type="submit" id="CreateRoleButton">Create New Role</button>
             </form>
         </div>
@@ -98,7 +106,7 @@
                 else
                 {
                     <form asp-page-handler="CompanyRemove" method="post" style="text-align:center">
-                        @foreach (String s in companies)
+                        @foreach (string s in companies)
                         {
                             <l>@s </l>
                             <button type="submit" name="deleteCompanyButton" value=@String.Concat(s.Replace(" ","_"),"_Remove")>Remove</button>
