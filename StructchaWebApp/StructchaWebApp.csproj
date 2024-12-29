@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Images\UserImagesPosted\" />
     <Folder Include="Pages\Images\UserImagesDraft\" />
+    <Folder Include="Pages\Images\UserImagesPosted\" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ namespace StructchaWebApp.Pages.Shared
 
         public static SqlConnection connDB()
         {
-            string connectString = Connections.connectionString();
+            string connectString = Connections.ConnectionString();
             SqlConnection conn = new SqlConnection(connectString);
             conn.Open();
             return conn;
